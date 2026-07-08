@@ -25,11 +25,12 @@ const AdminLayout = ({ children }) => {
   };
 
   const navItems = [
-    { path: '/admin', label: 'Dashboard', icon: '📊' },
-    { path: '/admin/staff', label: 'Staff', icon: '👥' },
-    { path: '/admin/students', label: 'Students', icon: '👨‍🎓' }, // Add this
-    { path: '/admin/classes', label: 'Classes', icon: '📚' },
-    { path: '/admin/terms', label: 'Academic Terms', icon: '📅' },
+    { label: "Dashboard", path: "/admin" },
+    { label: "Staff", path: "/admin/staff" },
+    { label: "Students", path: "/admin/students" },
+    { label: "Classes", path: "/admin/classes" },
+    { label: "Academic Terms", path: "/admin/terms" },
+    { label: "Assignments", path: "/admin/assignments" },
   ];
 
   const isActive = (path) => {

@@ -8,6 +8,7 @@ import Staff from './pages/admin/Staff';
 import Students from './pages/admin/Students';
 import Classes from './pages/admin/Classes';
 import Terms from './pages/admin/Terms';
+import Assignments from './pages/admin/Assignments';
 
 function App() {
   return (
@@ -54,6 +55,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <Terms />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/assignments"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Assignments />
               </ProtectedRoute>
             }
           />

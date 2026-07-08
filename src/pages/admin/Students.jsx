@@ -13,16 +13,20 @@ export default function Students() {
   });
   const [formError, setFormError] = useState("");
   const [formLoading, setFormLoading] = useState(false);
+  const [classes, setClasses] = useState([]);
 
   useEffect(() => {
-    fetchStudents();
+    fetchAll();
   }, []);
 
-  async function fetchStudents() {
+  async function fetchAll() {
     setLoading(true);
-    const snapshot = await getDocs(collection(db, "students"));
-    const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-    setStudents(list);
+    const [studentSnap, classSnap] = await Promise.all([
+      getDocs(collection(db, "students")),
+      getDocs(collection(db, "classes")),
+    ]);
+    setStudents(studentSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    setClasses(classSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
     setLoading(false);
   }
 
@@ -108,7 +112,9 @@ export default function Students() {
                   </td>
                   <td className="px-6 py-4 text-gray-600">
                     <span className="px-2 py-1 bg-gray-100 text-gray-500 rounded-full text-xs">
-                      {student.classId ? student.classId : "Unassigned"}
+                      {student.classId
+                        ? classes.find((c) => c.id === student.classId)?.name || "Unknown"
+                        : "Unassigned"}
                     </span>
                   </td>
                   <td className="px-6 py-4">

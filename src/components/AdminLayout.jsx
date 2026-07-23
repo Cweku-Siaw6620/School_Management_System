@@ -31,6 +31,7 @@ const AdminLayout = ({ children }) => {
     { label: "Classes", path: "/admin/classes" },
     { label: "Academic Terms", path: "/admin/terms" },
     { label: "Assignments", path: "/admin/assignments" },
+    { label: "Attendance", path: "/admin/attendance" },
   ];
 
   const isActive = (path) => {

@@ -9,6 +9,8 @@ import Students from './pages/admin/Students';
 import Classes from './pages/admin/Classes';
 import Terms from './pages/admin/Terms';
 import Assignments from './pages/admin/Assignments';
+import Attendance from './pages/admin/Attendance';
+import MarkAttendance from './pages/teacher/MarkAttendance';
 
 function App() {
   return (
@@ -63,6 +65,22 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <Assignments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/attendance"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Attendance />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/teacher/attendance"
+            element={
+              <ProtectedRoute allowedRoles={['teacher', 'headteacher']}>
+                <MarkAttendance />
               </ProtectedRoute>
             }
           />

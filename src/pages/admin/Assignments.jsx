@@ -38,7 +38,6 @@ export default function Assignments() {
     setActiveTab("teacher");
     setSuccessMsg("");
 
-    // Pre-select students already assigned to this class
     const assigned = students
       .filter((s) => s.classId === cls.id)
       .map((s) => s.id);
@@ -62,14 +61,12 @@ export default function Assignments() {
 
     const batch = writeBatch(db);
 
-    // Remove class from students no longer selected
     students
       .filter((s) => s.classId === selectedClass.id && !selectedStudents.includes(s.id))
       .forEach((s) => {
         batch.update(doc(db, "students", s.id), { classId: null });
       });
 
-    // Assign selected students to this class
     selectedStudents.forEach((sid) => {
       batch.update(doc(db, "students", sid), { classId: selectedClass.id });
     });
@@ -86,13 +83,11 @@ export default function Assignments() {
     );
   }
 
-  // Academic staff only for teacher assignment
   const academicStaff = staff.filter((s) =>
     ["Headteacher", "Assistant Headteacher", "Class Teacher", "Subject Teacher"].includes(s.position)
     && s.status === "active"
   );
 
-  // Students not assigned to any class OR already in this class
   const availableStudents = students.filter(
     (s) => s.status === "active" && (s.classId === null || s.classId === selectedClass?.id)
   );
@@ -102,135 +97,171 @@ export default function Assignments() {
     return t ? `${t.firstName} ${t.lastName}` : "Unassigned";
   };
 
+  // Loading skeleton
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="animate-pulse">
+          <div className="mb-6">
+            <div className="h-8 bg-gray-200 rounded w-40"></div>
+            <div className="h-4 bg-gray-200 rounded w-64 mt-2"></div>
+          </div>
+          <div className="flex gap-6">
+            <div className="w-64 shrink-0">
+              <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
+              <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="h-12 bg-gray-200 rounded"></div>
+                ))}
+              </div>
+            </div>
+            <div className="flex-1">
+              <div className="bg-white rounded-xl border border-gray-100 p-8">
+                <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
+                <div className="space-y-3">
+                  <div className="h-4 bg-gray-200 rounded w-full"></div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-10 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
   return (
     <AdminLayout>
+      {/* Page Header */}
       <div className="mb-6">
-        <h2 className="text-xl font-bold text-gray-700">Assignments</h2>
-        <p className="text-sm text-gray-400 mt-1">
+        <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
+          Assignments
+        </h1>
+        <p className="text-sm text-gray-500 mt-1">
           Assign class teachers and students to classes
         </p>
       </div>
 
-      {loading ? (
-        <p className="text-gray-500 text-sm">Loading...</p>
-      ) : (
-        <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Left — Class List */}
+        <div className="lg:w-64 w-full shrink-0">
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2 px-1">
+            Classes
+          </p>
+          <div className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
+            {classes.length === 0 ? (
+              <p className="text-sm text-gray-400 p-4 text-center">No classes found.</p>
+            ) : (
+              classes.map((cls) => (
+                <button
+                  key={cls.id}
+                  onClick={() => handleSelectClass(cls)}
+                  className={`w-full text-left px-4 py-3 transition-colors border-b border-gray-50 last:border-0 ${
+                    selectedClass?.id === cls.id
+                      ? "bg-gray-50 text-gray-900"
+                      : "text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  <p className="text-sm font-medium">{cls.name}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{cls.level}</p>
+                </button>
+              ))
+            )}
+          </div>
+        </div>
 
-          {/* Left — Class List */}
-          <div className="w-64 shrink-0">
-            <p className="text-xs font-semibold text-gray-400 uppercase mb-2 px-1">
-              Select a Class
-            </p>
-            <div className="bg-white rounded-2xl shadow divide-y divide-gray-100 overflow-hidden">
-              {classes.length === 0 ? (
-                <p className="text-sm text-gray-400 p-4">No classes found.</p>
-              ) : (
-                classes.map((cls) => (
+        {/* Right — Assignment Panel */}
+        <div className="flex-1">
+          {!selectedClass ? (
+            <div className="bg-white rounded-xl border border-gray-100 p-12 text-center text-gray-400 text-sm shadow-sm">
+              <div className="text-4xl mb-4 text-gray-300">📋</div>
+              <p>Select a class on the left to manage assignments</p>
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
+              {/* Class Header */}
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                <h3 className="font-semibold text-gray-900">{selectedClass.name}</h3>
+                <p className="text-xs text-gray-500 mt-0.5">{selectedClass.level}</p>
+              </div>
+
+              {/* Tabs */}
+              <div className="flex border-b border-gray-100">
+                {["teacher", "students"].map((tab) => (
                   <button
-                    key={cls.id}
-                    onClick={() => handleSelectClass(cls)}
-                    className={`w-full text-left px-4 py-3 text-sm transition-colors ${
-                      selectedClass?.id === cls.id
-                        ? "bg-blue-50 text-blue-700 font-semibold"
-                        : "text-gray-700 hover:bg-gray-50"
+                    key={tab}
+                    onClick={() => { setActiveTab(tab); setSuccessMsg(""); }}
+                    className={`px-6 py-3 text-sm font-medium capitalize transition-colors relative ${
+                      activeTab === tab
+                        ? "text-gray-900"
+                        : "text-gray-400 hover:text-gray-600"
                     }`}
                   >
-                    <p className="font-medium">{cls.name}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{cls.level}</p>
+                    {tab === "teacher" ? "Class Teacher" : "Students"}
+                    {activeTab === tab && (
+                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900"></span>
+                    )}
                   </button>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* Right — Assignment Panel */}
-          <div className="flex-1">
-            {!selectedClass ? (
-              <div className="bg-white rounded-2xl shadow p-8 text-center text-gray-400 text-sm">
-                Select a class on the left to manage assignments
+                ))}
               </div>
-            ) : (
-              <div className="bg-white rounded-2xl shadow overflow-hidden">
 
-                {/* Class Header */}
-                <div className="px-6 py-4 border-b border-gray-100">
-                  <h3 className="font-bold text-gray-700 text-lg">{selectedClass.name}</h3>
-                  <p className="text-sm text-gray-400">{selectedClass.level}</p>
-                </div>
+              <div className="p-6">
+                {/* Success message */}
+                {successMsg && (
+                  <div className="bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg mb-4">
+                    {successMsg}
+                  </div>
+                )}
 
-                {/* Tabs */}
-                <div className="flex border-b border-gray-100">
-                  {["teacher", "students"].map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => { setActiveTab(tab); setSuccessMsg(""); }}
-                      className={`px-6 py-3 text-sm font-medium capitalize transition-colors ${
-                        activeTab === tab
-                          ? "border-b-2 border-blue-600 text-blue-600"
-                          : "text-gray-400 hover:text-gray-600"
-                      }`}
-                    >
-                      {tab === "teacher" ? "Class Teacher" : "Students"}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="p-6">
-
-                  {/* Success message */}
-                  {successMsg && (
-                    <div className="bg-slate-50 border border-slate-200 text-slate-600 text-sm px-4 py-2 rounded-lg mb-4">
-                      {successMsg}
+                {/* Teacher Tab */}
+                {activeTab === "teacher" && (
+                  <div className="space-y-4 max-w-md">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">
+                        Current Teacher
+                      </label>
+                      <p className="text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg border border-gray-100">
+                        {getTeacherName(selectedClass.teacherId)}
+                      </p>
                     </div>
-                  )}
 
-                  {/* Teacher Tab */}
-                  {activeTab === "teacher" && (
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-2">
-                          Current Teacher
-                        </label>
-                        <p className="text-sm text-gray-500 bg-gray-50 px-3 py-2 rounded-lg">
-                          {getTeacherName(selectedClass.teacherId)}
-                        </p>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-2">
-                          Assign New Teacher
-                        </label>
-                        <select
-                          value={selectedTeacher}
-                          onChange={(e) => setSelectedTeacher(e.target.value)}
-                          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
-                        >
-                          <option value="">Select a teacher</option>
-                          {academicStaff.map((s) => (
-                            <option key={s.id} value={s.id}>
-                              {s.firstName} {s.lastName} — {s.position}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <button
-                        onClick={handleAssignTeacher}
-                        disabled={saving || !selectedTeacher}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">
+                        Assign New Teacher
+                      </label>
+                      <select
+                        value={selectedTeacher}
+                        onChange={(e) => setSelectedTeacher(e.target.value)}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow text-gray-700"
                       >
-                        {saving ? "Saving..." : "Assign Teacher"}
-                      </button>
+                        <option value="">Select a teacher</option>
+                        {academicStaff.map((s) => (
+                          <option key={s.id} value={s.id}>
+                            {s.firstName} {s.lastName} — {s.position}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                  )}
 
-                  {/* Students Tab */}
-                  {activeTab === "students" && (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm text-gray-500">
-                          {selectedStudents.length} student{selectedStudents.length !== 1 ? "s" : ""} selected
-                        </p>
+                    <button
+                      onClick={handleAssignTeacher}
+                      disabled={saving || !selectedTeacher}
+                      className="px-5 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {saving ? "Assigning..." : "Assign Teacher"}
+                    </button>
+                  </div>
+                )}
+
+                {/* Students Tab */}
+                {activeTab === "students" && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-gray-500">
+                        {selectedStudents.length} student{selectedStudents.length !== 1 ? "s" : ""} selected
+                      </p>
+                      {availableStudents.length > 0 && (
                         <button
                           onClick={() =>
                             setSelectedStudents(
@@ -239,61 +270,61 @@ export default function Assignments() {
                                 : availableStudents.map((s) => s.id)
                             )
                           }
-                          className="text-xs text-blue-600 hover:underline"
+                          className="text-xs text-gray-600 hover:text-gray-900 transition-colors"
                         >
                           {selectedStudents.length === availableStudents.length
                             ? "Deselect All"
                             : "Select All"}
                         </button>
-                      </div>
+                      )}
+                    </div>
 
-                      {availableStudents.length === 0 ? (
+                    {availableStudents.length === 0 ? (
+                      <div className="bg-gray-50 rounded-lg p-6 text-center">
                         <p className="text-sm text-gray-400">
                           No available students. All active students are already assigned to other classes.
                         </p>
-                      ) : (
-                        <div className="border border-gray-200 rounded-xl overflow-hidden divide-y divide-gray-100 max-h-72 overflow-y-auto">
-                          {availableStudents.map((student) => (
-                            <label
-                              key={student.id}
-                              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={selectedStudents.includes(student.id)}
-                                onChange={() => toggleStudent(student.id)}
-                                className="accent-blue-600"
-                              />
-                              <div>
-                                <p className="text-sm font-medium text-gray-700">
-                                  {student.firstName} {student.lastName}
-                                </p>
-                                <p className="text-xs text-gray-400 capitalize">
-                                  {student.gender} · {student.dateOfBirth || "—"}
-                                </p>
-                              </div>
-                            </label>
-                          ))}
-                        </div>
-                      )}
+                      </div>
+                    ) : (
+                      <div className="border border-gray-100 rounded-lg overflow-hidden divide-y divide-gray-50 max-h-64 overflow-y-auto">
+                        {availableStudents.map((student) => (
+                          <label
+                            key={student.id}
+                            className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedStudents.includes(student.id)}
+                              onChange={() => toggleStudent(student.id)}
+                              className="w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900"
+                            />
+                            <div>
+                              <p className="text-sm font-medium text-gray-700">
+                                {student.firstName} {student.lastName}
+                              </p>
+                              <p className="text-xs text-gray-400 capitalize">
+                                {student.gender || "—"} · {student.dateOfBirth || "—"}
+                              </p>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    )}
 
-                      <button
-                        onClick={handleAssignStudents}
-                        disabled={saving}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
-                      >
-                        {saving ? "Saving..." : "Save Assignments"}
-                      </button>
-                    </div>
-                  )}
-
-                </div>
+                    <button
+                      onClick={handleAssignStudents}
+                      disabled={saving || availableStudents.length === 0}
+                      className="px-5 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {saving ? "Saving..." : "Save Assignments"}
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </AdminLayout>
   );
 }

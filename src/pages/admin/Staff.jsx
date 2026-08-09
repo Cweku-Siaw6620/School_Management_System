@@ -2,9 +2,24 @@ import { useState, useEffect } from "react";
 import {
   collection, getDocs, doc, updateDoc, setDoc
 } from "firebase/firestore";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, signOut } from "firebase/auth";
+import { getApp, getApps, initializeApp } from "firebase/app";
 import { db, auth } from "../../firebase";
 import AdminLayout from "../../components/AdminLayout";
+
+const secondaryApp = getApps().some((app) => app.name === "staffCreation")
+  ? getApp("staffCreation")
+  : initializeApp({
+      apiKey: "AIzaSyDgxoH7IFqup0_YFK67FGC2Rv_320WTWb4",
+      authDomain: "school-ms-aab5a.firebaseapp.com",
+      projectId: "school-ms-aab5a",
+      storageBucket: "school-ms-aab5a.firebasestorage.app",
+      messagingSenderId: "237378644146",
+      appId: "1:237378644146:web:84e940f8ec094360a341ab",
+      measurementId: "G-801Y3QTRPF"
+    }, "staffCreation");
+
+const staffAuth = getAuth(secondaryApp);
 
 const POSITIONS = [
   "Headteacher",
@@ -59,26 +74,23 @@ export default function Staff() {
       let uid;
 
       if (isAcademic) {
-        // Create Firebase Auth account for academic staff
         const userCredential = await createUserWithEmailAndPassword(
-          auth, formData.email, formData.password
+          staffAuth, formData.email, formData.password
         );
         uid = userCredential.user.uid;
 
-        // Determine system role
         const role = formData.position === "Headteacher" ? "headteacher" : "teacher";
 
-        // Save to users collection
         await setDoc(doc(db, "users", uid), {
           role,
           email: formData.email,
         });
+
+        await signOut(staffAuth);
       } else {
-        // Non-academic staff — just generate a random ID
         uid = crypto.randomUUID();
       }
 
-      // Save to staff collection
       await setDoc(doc(db, "staff", uid), {
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -109,181 +121,306 @@ export default function Staff() {
     fetchStaff();
   }
 
+  // Loading skeleton
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="animate-pulse">
+          <div className="flex items-center justify-between mb-6">
+            <div className="h-8 bg-gray-200 rounded w-32"></div>
+            <div className="h-10 bg-gray-200 rounded-lg w-28"></div>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+            <div className="p-6 space-y-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex items-center space-x-4">
+                  <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/6"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/5"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/6"></div>
+                  <div className="h-6 bg-gray-200 rounded-full w-16"></div>
+                  <div className="h-6 bg-gray-200 rounded-full w-16"></div>
+                  <div className="h-8 bg-gray-200 rounded-lg w-24"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
   return (
     <AdminLayout>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-gray-700">Staff</h2>
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
-        >
-          + Add Staff
-        </button>
+      {/* Page Header */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
+              Staff Management
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Manage your institution's staff members
+            </p>
+          </div>
+          <button
+            onClick={() => setShowModal(true)}
+            className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors shadow-sm"
+          >
+            + Add Staff
+          </button>
+        </div>
       </div>
 
       {/* Staff Table */}
-      {loading ? (
-        <p className="text-gray-500">Loading...</p>
-      ) : staff.length === 0 ? (
-        <p className="text-gray-500">No staff added yet.</p>
+      {staff.length === 0 ? (
+        <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
+          <div className="text-4xl mb-4 text-gray-300">👥</div>
+          <h3 className="text-sm font-medium text-gray-700">No staff members</h3>
+          <p className="text-xs text-gray-400 mt-1">
+            Get started by adding your first staff member
+          </p>
+        </div>
       ) : (
-        <div className="bg-white rounded-2xl shadow overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
-              <tr>
-                <th className="px-6 py-3 text-left">Name</th>
-                <th className="px-6 py-3 text-left">Position</th>
-                <th className="px-6 py-3 text-left">Email</th>
-                <th className="px-6 py-3 text-left">Phone</th>
-                <th className="px-6 py-3 text-left">Login</th>
-                <th className="px-6 py-3 text-left">Status</th>
-                <th className="px-6 py-3 text-left">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {staff.map((member) => (
-                <tr key={member.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-medium text-gray-800">
-                    {member.firstName} {member.lastName}
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">{member.position}</td>
-                  <td className="px-6 py-4 text-gray-600">{member.email || "—"}</td>
-                  <td className="px-6 py-4 text-gray-600">{member.phone || "—"}</td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      member.hasLogin
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-gray-100 text-gray-500"
-                    }`}>
-                      {member.hasLogin ? "Yes" : "No"}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      member.status === "active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-600"
-                    }`}>
-                      {member.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      onClick={() => toggleStatus(member)}
-                      className={`text-xs font-medium px-3 py-1 rounded-lg ${
-                        member.status === "active"
-                          ? "bg-red-100 text-red-600 hover:bg-red-200"
-                          : "bg-green-100 text-green-700 hover:bg-green-200"
-                      }`}
-                    >
-                      {member.status === "active" ? "Deactivate" : "Activate"}
-                    </button>
-                  </td>
+        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b border-gray-100">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Position
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Phone
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Login
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {staff.map((member) => (
+                  <tr key={member.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {member.firstName} {member.lastName}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600">
+                      {member.position}
+                    </td>
+                    <td className="px-6 py-4 text-gray-600">
+                      {member.email || <span className="text-gray-400">—</span>}
+                    </td>
+                    <td className="px-6 py-4 text-gray-600">
+                      {member.phone || <span className="text-gray-400">—</span>}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        member.hasLogin
+                          ? "bg-gray-100 text-gray-700"
+                          : "bg-gray-50 text-gray-400"
+                      }`}>
+                        {member.hasLogin ? "Yes" : "No"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        member.status === "active"
+                          ? "bg-green-50 text-green-700"
+                          : "bg-red-50 text-red-700"
+                      }`}>
+                        {member.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button
+                        onClick={() => toggleStatus(member)}
+                        className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${
+                          member.status === "active"
+                            ? "text-red-600 hover:bg-red-50"
+                            : "text-green-600 hover:bg-green-50"
+                        }`}
+                      >
+                        {member.status === "active" ? "Deactivate" : "Activate"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
       {/* Add Staff Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
-            <h3 className="text-lg font-bold text-gray-700 mb-4">Add New Staff</h3>
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Add New Staff
+              </h3>
+              <button
+                onClick={() => { setShowModal(false); setFormError(""); }}
+                className="text-gray-400 hover:text-gray-600 transition-colors text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
 
             {formError && (
-              <div className="bg-red-100 text-red-600 text-sm px-4 py-2 rounded-lg mb-4">
+              <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg mb-4">
                 {formError}
               </div>
             )}
 
-            <form onSubmit={handleAddStaff} className="space-y-3">
-              <div className="flex gap-3">
-                <input
-                  type="text" placeholder="First Name" required
-                  value={formData.firstName}
-                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                  className="w-1/2 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input
-                  type="text" placeholder="Last Name" required
-                  value={formData.lastName}
-                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                  className="w-1/2 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+            <form onSubmit={handleAddStaff} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="First name"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Last name"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                  />
+                </div>
               </div>
 
-              {/* Position Dropdown */}
-              <select
-                required
-                value={formData.position}
-                onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
-              >
-                <option value="">Select Position</option>
-                {POSITIONS.map((p) => (
-                  <option key={p} value={p}>{p}</option>
-                ))}
-              </select>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                  Position *
+                </label>
+                <select
+                  required
+                  value={formData.position}
+                  onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow text-gray-700"
+                >
+                  <option value="">Select position</option>
+                  {POSITIONS.map((p) => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+              </div>
 
-              {/* Show login fields only for academic staff */}
               {isAcademic && (
                 <>
-                  <input
-                    type="email" placeholder="Email Address" required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <input
-                    type="password" placeholder="Password" required
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="email@school.edu"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      Password *
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      placeholder="Create a password"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                    />
+                  </div>
                 </>
               )}
 
-              {/* Email optional for non-academic */}
               {!isAcademic && (
-                <input
-                  type="email" placeholder="Email Address (optional)"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                    Email Address (optional)
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="email@school.edu"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                  />
+                </div>
               )}
 
-              <input
-                type="tel" placeholder="Phone Number (optional)"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                  Phone Number (optional)
+                </label>
+                <input
+                  type="tel"
+                  placeholder="+1 (555) 000-0000"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                />
+              </div>
 
-              {/* Helper text */}
               {formData.position && (
-                <p className="text-xs text-gray-500">
+                <div className={`text-xs px-3 py-2 rounded-lg ${
+                  isAcademic
+                    ? "bg-gray-50 text-gray-600"
+                    : "bg-gray-50 text-gray-500"
+                }`}>
                   {isAcademic
-                    ? "✅ This staff member will have a login account."
-                    : "ℹ️ This staff member will be recorded but won't have login access."}
-                </p>
+                    ? "✓ This staff member will have login credentials"
+                    : "ℹ This staff member will not have login access"}
+                </div>
               )}
 
               <div className="flex gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => { setShowModal(false); setFormError(""); }}
-                  className="w-1/2 border border-gray-300 text-gray-600 py-2 rounded-lg text-sm hover:bg-gray-50"
+                  className="flex-1 border border-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
-                  type="submit" disabled={formLoading}
-                  className="w-1/2 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-medium disabled:opacity-50"
+                  type="submit"
+                  disabled={formLoading}
+                  className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {formLoading ? "Saving..." : "Add Staff"}
+                  {formLoading ? "Adding..." : "Add Staff"}
                 </button>
               </div>
             </form>

@@ -3,7 +3,7 @@ import {
   collection, getDocs, doc, setDoc, deleteDoc, query, where
 } from "firebase/firestore";
 import { db } from "../../firebase";
-import AdminLayout from "../../components/AdminLayout";
+import HeadmasterLayout from "../../components/HeadmasterLayout";
 
 // Common school subjects in Ghana
 const COMMON_SUBJECTS = [
@@ -150,7 +150,7 @@ export default function Subjects() {
   // Loading skeleton
   if (loading) {
     return (
-      <AdminLayout>
+      <HeadmasterLayout>
         <div className="animate-pulse">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -169,12 +169,12 @@ export default function Subjects() {
             </div>
           </div>
         </div>
-      </AdminLayout>
+      </HeadmasterLayout>
     );
   }
 
   return (
-    <AdminLayout>
+    <HeadmasterLayout>
       {/* Page Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between">
@@ -364,6 +364,6 @@ export default function Subjects() {
           </div>
         </div>
       )}
-    </AdminLayout>
+    </HeadmasterLayout>
   );
 }

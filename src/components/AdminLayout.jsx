@@ -40,15 +40,10 @@ const AdminLayout = ({ children }) => {
   };
 
   const navItems = [
-    { label: "Dashboard", path: "/admin", icon: "📊" },
-    { label: "Staff", path: "/admin/staff", icon: "👥" },
-    { label: "Students", path: "/admin/students", icon: "👨‍🎓" },
-    { label: "Classes", path: "/admin/classes", icon: "📚" },
-    { label: "Academic Terms", path: "/admin/terms", icon: "📅" },
-    { label: "Subjects", path: "/admin/subjects", icon: "📖" },  // ← NEW
-    { label: "Assignments", path: "/admin/assignments", icon: "✏️" },
-    { label: "Attendance", path: "/admin/attendance", icon: "✅" },
-  ];
+  { label: "Dashboard", path: "/admin/dashboard" },
+  { label: "Staff",     path: "/admin/staff" },
+  { label: "Students",  path: "/admin/students" },
+];
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -77,7 +72,7 @@ const AdminLayout = ({ children }) => {
               <span className="text-white text-sm font-semibold">S</span>
             </div>
             <h1 className={`font-semibold text-gray-900 text-lg tracking-tight`}>
-              SMS Admin
+              Admin Panel
             </h1>
           </div>
           <button

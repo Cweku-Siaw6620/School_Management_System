@@ -3,7 +3,7 @@ import {
   collection, getDocs, query, where, orderBy
 } from "firebase/firestore";
 import { db } from "../../firebase";
-import AdminLayout from "../../components/AdminLayout";
+import HeadmasterLayout from "../../components/HeadmasterLayout";
 
 const STATUS_STYLES = {
   present: "bg-slate-100 text-slate-600",
@@ -64,7 +64,7 @@ export default function Attendance() {
   };
 
   return (
-    <AdminLayout>
+    <HeadmasterLayout>
       <div className="mb-6">
         <h2 className="text-xl font-bold text-gray-700">Attendance</h2>
         <p className="text-sm text-gray-400 mt-1">
@@ -190,6 +190,6 @@ export default function Attendance() {
 
         </div>
       )}
-    </AdminLayout>
+    </HeadmasterLayout>
   );
 }

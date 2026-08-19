@@ -3,7 +3,7 @@ import {
   collection, getDocs, doc, updateDoc, writeBatch
 } from "firebase/firestore";
 import { db } from "../../firebase";
-import AdminLayout from "../../components/AdminLayout";
+import HeadmasterLayout from "../../components/HeadmasterLayout";
 
 export default function Assignments() {
   const [classes, setClasses] = useState([]);
@@ -100,7 +100,7 @@ export default function Assignments() {
   // Loading skeleton
   if (loading) {
     return (
-      <AdminLayout>
+      <HeadmasterLayout>
         <div className="animate-pulse">
           <div className="mb-6">
             <div className="h-8 bg-gray-200 rounded w-40"></div>
@@ -127,12 +127,12 @@ export default function Assignments() {
             </div>
           </div>
         </div>
-      </AdminLayout>
+      </HeadmasterLayout>
     );
   }
 
   return (
-    <AdminLayout>
+    <HeadmasterLayout>
       {/* Page Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
@@ -325,6 +325,6 @@ export default function Assignments() {
           )}
         </div>
       </div>
-    </AdminLayout>
+    </HeadmasterLayout>
   );
 }

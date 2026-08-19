@@ -4,7 +4,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useAuth } from "../../context/AuthContext";
-import AdminLayout from "../../components/AdminLayout";
+import TeacherLayout from "../../components/TeacherLayout";
 
 const STATUSES = ["present", "absent", "late", "excused"];
 
@@ -114,7 +114,7 @@ export default function MarkAttendance() {
   };
 
   return (
-    <AdminLayout>
+    <TeacherLayout>
       <div className="mb-6">
         <h2 className="text-xl font-bold text-gray-700">Mark Attendance</h2>
         <p className="text-sm text-gray-400 mt-1">{date}</p>
@@ -215,6 +215,6 @@ export default function MarkAttendance() {
 
         </div>
       )}
-    </AdminLayout>
+    </TeacherLayout>
   );
 }

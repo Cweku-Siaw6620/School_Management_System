@@ -29,7 +29,7 @@ export default function Dashboard() {
       const studentsSnapshot = await getDocs(studentsQuery);
       const activeStudents = studentsSnapshot.size;
 
-      // Fetch active staff (teachers + headteachers)
+      // Fetch active staff (teachers + Headmasters)
       const staffQuery = query(
         collection(db, "staff"),
         where("status", "==", "active")

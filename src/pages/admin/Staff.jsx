@@ -22,10 +22,9 @@ const secondaryApp = getApps().some((app) => app.name === "staffCreation")
 const staffAuth = getAuth(secondaryApp);
 
 const POSITIONS = [
-  "Headteacher",
-  "Assistant Headteacher",
-  "Class Teacher",
-  "Subject Teacher",
+  "Headmaster",
+  "Assistant Headmaster",
+  "Teacher",
   "Accountant",
   "Cook",
   "Cleaner",
@@ -33,28 +32,32 @@ const POSITIONS = [
   "Other",
 ];
 
+// Only these positions get login credentials
 const ACADEMIC_POSITIONS = [
-  "Headteacher",
-  "Assistant Headteacher",
-  "Class Teacher",
-  "Subject Teacher",
+  "Headmaster",
+  "Assistant Headmaster",
+  "Teacher",
 ];
 
 export default function Staff() {
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [subjects, setSubjects] = useState([]);
   const [formData, setFormData] = useState({
     firstName: "", lastName: "", email: "",
     password: "", phone: "", position: "",
   });
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [formError, setFormError] = useState("");
   const [formLoading, setFormLoading] = useState(false);
 
   const isAcademic = ACADEMIC_POSITIONS.includes(formData.position);
+  const isHeadmaster = formData.position === "Headmaster";
 
   useEffect(() => {
     fetchStaff();
+    fetchSubjects();
   }, []);
 
   async function fetchStaff() {
@@ -63,6 +66,24 @@ export default function Staff() {
     const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
     setStaff(list);
     setLoading(false);
+  }
+
+  async function fetchSubjects() {
+    try {
+      // Get all unique subjects from classSubjects
+      const snapshot = await getDocs(collection(db, "classSubjects"));
+      const subjectMap = {};
+      snapshot.docs.forEach(doc => {
+        const data = doc.data();
+        if (!subjectMap[data.name]) {
+          subjectMap[data.name] = data.name;
+        }
+      });
+      const subjectList = Object.keys(subjectMap).map(name => ({ name }));
+      setSubjects(subjectList);
+    } catch (error) {
+      console.error("Error fetching subjects:", error);
+    }
   }
 
   async function handleAddStaff(e) {
@@ -74,12 +95,20 @@ export default function Staff() {
       let uid;
 
       if (isAcademic) {
+        // Only validate subjects for non-Headmaster academic staff
+        if (!isHeadmaster && selectedSubjects.length === 0) {
+          setFormError("Please select at least one subject this teacher teaches");
+          setFormLoading(false);
+          return;
+        }
+
         const userCredential = await createUserWithEmailAndPassword(
           staffAuth, formData.email, formData.password
         );
         uid = userCredential.user.uid;
 
-        const role = formData.position === "Headteacher" ? "headteacher" : "teacher";
+        // Set role: headmaster for Headmaster position, teacher for everyone else
+        const role = formData.position === "Headmaster" ? "headmaster" : "teacher";
 
         await setDoc(doc(db, "users", uid), {
           role,
@@ -97,6 +126,7 @@ export default function Staff() {
         email: formData.email || "",
         phone: formData.phone || "",
         position: formData.position,
+        subjects: isAcademic ? selectedSubjects : [], // Teachers have subjects, non-academic don't
         hasLogin: isAcademic,
         status: "active",
         createdAt: new Date(),
@@ -106,6 +136,7 @@ export default function Staff() {
         firstName: "", lastName: "", email: "",
         password: "", phone: "", position: "",
       });
+      setSelectedSubjects([]);
       setShowModal(false);
       fetchStaff();
     } catch (err) {
@@ -194,6 +225,9 @@ export default function Staff() {
                     Position
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Subjects
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Email
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -222,6 +256,22 @@ export default function Staff() {
                     </td>
                     <td className="px-6 py-4 text-gray-600">
                       {member.position}
+                    </td>
+                    <td className="px-6 py-4">
+                      {member.subjects && member.subjects.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {member.subjects.slice(0, 3).map((subject, index) => (
+                            <span key={index} className="inline-flex px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded">
+                              {subject}
+                            </span>
+                          ))}
+                          {member.subjects.length > 3 && (
+                            <span className="text-xs text-gray-400">+{member.subjects.length - 3} more</span>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-400">—</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-gray-600">
                       {member.email || <span className="text-gray-400">—</span>}
@@ -276,7 +326,11 @@ export default function Staff() {
                 Add New Staff
               </h3>
               <button
-                onClick={() => { setShowModal(false); setFormError(""); }}
+                onClick={() => { 
+                  setShowModal(false); 
+                  setFormError(""); 
+                  setSelectedSubjects([]);
+                }}
                 className="text-gray-400 hover:text-gray-600 transition-colors text-2xl leading-none"
               >
                 ×
@@ -338,6 +392,50 @@ export default function Staff() {
 
               {isAcademic && (
                 <>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      Subjects Taught {!isHeadmaster && "*"}
+                    </label>
+                    <div className="border border-gray-200 rounded-lg p-3 max-h-40 overflow-y-auto">
+                      {subjects.length === 0 ? (
+                        <p className="text-xs text-gray-400 text-center py-2">
+                          No subjects available. 
+                          <br/>
+                          <span className="text-gray-500">Go to Subjects page to create subjects first.</span>
+                        </p>
+                      ) : (
+                        <div className="grid grid-cols-2 gap-2">
+                          {subjects.map((subject) => (
+                            <label key={subject.name} className="flex items-center gap-2 text-sm">
+                              <input
+                                type="checkbox"
+                                checked={selectedSubjects.includes(subject.name)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedSubjects([...selectedSubjects, subject.name]);
+                                  } else {
+                                    setSelectedSubjects(selectedSubjects.filter(s => s !== subject.name));
+                                  }
+                                }}
+                                className="w-4 h-4 text-gray-900 rounded border-gray-300 focus:ring-gray-900"
+                              />
+                              {subject.name}
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {isHeadmaster ? (
+                      <p className="text-xs text-gray-400 mt-1.5">
+                        Optional — Headmaster can select subjects they teach, but it's not required
+                      </p>
+                    ) : (
+                      <p className="text-xs text-gray-400 mt-1.5">
+                        Select all subjects this teacher is qualified to teach
+                      </p>
+                    )}
+                  </div>
+
                   <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1.5">
                       Email Address *
@@ -407,10 +505,20 @@ export default function Staff() {
                 </div>
               )}
 
+              {isAcademic && selectedSubjects.length > 0 && (
+                <div className="text-xs bg-gray-50 text-gray-600 px-3 py-2 rounded-lg">
+                  ✓ Selected {selectedSubjects.length} subject{selectedSubjects.length !== 1 ? "s" : ""}: {selectedSubjects.join(", ")}
+                </div>
+              )}
+
               <div className="flex gap-3 pt-2">
                 <button
                   type="button"
-                  onClick={() => { setShowModal(false); setFormError(""); }}
+                  onClick={() => { 
+                    setShowModal(false); 
+                    setFormError(""); 
+                    setSelectedSubjects([]);
+                  }}
                   className="flex-1 border border-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
                 >
                   Cancel

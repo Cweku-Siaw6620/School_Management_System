@@ -7,13 +7,22 @@ export default function Students() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: "", lastName: "", dateOfBirth: "",
-    gender: "", admissionDate: "", status: "active",
-  });
+  const [formStep, setFormStep] = useState(1);
+  const [classes, setClasses] = useState([]);
   const [formError, setFormError] = useState("");
   const [formLoading, setFormLoading] = useState(false);
-  const [classes, setClasses] = useState([]);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "",
+    gender: "",
+    admissionDate: "",
+    indexNumber: "",
+    guardianName: "",
+    guardianPhone: "",
+    guardianRelationship: "",
+    status: "active",
+  });
 
   useEffect(() => {
     fetchAll();
@@ -30,6 +39,25 @@ export default function Students() {
     setLoading(false);
   }
 
+  // Generate index number: SMS-YYYY-XXXX
+  function generateIndexNumber() {
+    const year = new Date().getFullYear();
+    // Count existing students for this year to determine sequence
+    const thisYearStudents = students.filter(s => {
+      const createdAt = s.createdAt?.toDate?.() || new Date(s.createdAt);
+      return createdAt.getFullYear() === year;
+    });
+    const sequence = String(thisYearStudents.length + 1).padStart(4, '0');
+    return `SMS-${year}-${sequence}`;
+  }
+
+  // Auto-generate index when modal opens or admission date changes
+  useEffect(() => {
+    if (showModal && !formData.indexNumber) {
+      setFormData(prev => ({ ...prev, indexNumber: generateIndexNumber() }));
+    }
+  }, [showModal, formData.admissionDate]);
+
   async function handleAddStudent(e) {
     e.preventDefault();
     setFormError("");
@@ -42,14 +70,15 @@ export default function Students() {
         dateOfBirth: formData.dateOfBirth,
         gender: formData.gender,
         admissionDate: formData.admissionDate,
+        indexNumber: formData.indexNumber,
+        guardianName: formData.guardianName,
+        guardianPhone: formData.guardianPhone,
+        guardianRelationship: formData.guardianRelationship,
         classId: null,
         status: "active",
         createdAt: new Date(),
       });
-      setFormData({
-        firstName: "", lastName: "", dateOfBirth: "",
-        gender: "", admissionDate: "",
-      });
+      resetForm();
       setShowModal(false);
       fetchAll();
     } catch (err) {
@@ -58,10 +87,33 @@ export default function Students() {
     setFormLoading(false);
   }
 
+  function resetForm() {
+    setFormData({
+      firstName: "",
+      lastName: "",
+      dateOfBirth: "",
+      gender: "",
+      admissionDate: "",
+      indexNumber: "",
+      guardianName: "",
+      guardianPhone: "",
+      guardianRelationship: "",
+      status: "active",
+    });
+    setFormStep(1);
+    setFormError("");
+  }
+
   async function toggleStatus(student) {
     const newStatus = student.status === "active" ? "inactive" : "active";
     await updateDoc(doc(db, "students", student.id), { status: newStatus });
     fetchAll();
+  }
+
+  function getClassName(classId) {
+    if (!classId) return "Unassigned";
+    const cls = classes.find((c) => c.id === classId);
+    return cls ? cls.name : "Unassigned";
   }
 
   // Loading skeleton
@@ -77,10 +129,11 @@ export default function Students() {
             <div className="p-6 space-y-4">
               {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="flex items-center space-x-4">
+                  <div className="h-4 bg-gray-200 rounded w-1/6"></div>
                   <div className="h-4 bg-gray-200 rounded w-1/5"></div>
                   <div className="h-4 bg-gray-200 rounded w-1/6"></div>
                   <div className="h-4 bg-gray-200 rounded w-1/6"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/6"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/5"></div>
                   <div className="h-6 bg-gray-200 rounded-full w-20"></div>
                   <div className="h-6 bg-gray-200 rounded-full w-16"></div>
                   <div className="h-8 bg-gray-200 rounded-lg w-24"></div>
@@ -130,25 +183,28 @@ export default function Students() {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Index No.
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Gender
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date of Birth
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    DOB
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Admission Date
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Guardian
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Class
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -156,39 +212,53 @@ export default function Students() {
               <tbody className="divide-y divide-gray-50">
                 {students.map((student) => (
                   <tr key={student.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-3">
+                      <span className="text-xs font-mono text-gray-600">
+                        {student.indexNumber || <span className="text-gray-400">—</span>}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-gray-900">
+                        {student.firstName} {student.lastName}
+                      </p>
+                    </td>
+                    <td className="px-4 py-3 text-gray-600 capitalize">
+                      {student.gender || <span className="text-gray-400">—</span>}
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">
+                      {student.dateOfBirth || <span className="text-gray-400">—</span>}
+                    </td>
+                    <td className="px-4 py-3">
                       <div>
-                        <p className="font-medium text-gray-900">
-                          {student.firstName} {student.lastName}
+                        <p className="text-gray-800 text-xs font-medium">
+                          {student.guardianName || <span className="text-gray-400">—</span>}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {student.guardianPhone || ""}
+                          {student.guardianRelationship && student.guardianPhone && " · "}
+                          {student.guardianRelationship || ""}
                         </p>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-gray-600 capitalize">
-                      {student.gender || <span className="text-gray-400">—</span>}
-                    </td>
-                    <td className="px-6 py-4 text-gray-600">
-                      {student.dateOfBirth || <span className="text-gray-400">—</span>}
-                    </td>
-                    <td className="px-6 py-4 text-gray-600">
-                      {student.admissionDate || <span className="text-gray-400">—</span>}
-                    </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-3">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                        {student.classId
-                          ? classes.find((c) => c.id === student.classId)?.name || "Unknown"
-                          : "Unassigned"}
+                        {getClassName(student.classId)}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-3">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         student.status === "active"
                           ? "bg-green-50 text-green-700"
+                          : student.status === "transferred"
+                          ? "bg-blue-50 text-blue-700"
+                          : student.status === "graduated"
+                          ? "bg-purple-50 text-purple-700"
                           : "bg-red-50 text-red-700"
                       }`}>
-                        {student.status}
+                        {student.status || "active"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => toggleStatus(student)}
                         className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${
@@ -208,20 +278,33 @@ export default function Students() {
         </div>
       )}
 
-      {/* Add Student Modal */}
+      {/* Multi-Step Add Student Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
+            
+            {/* Modal Header */}
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Add New Student
-              </h3>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Add New Student
+                </h3>
+                <p className="text-sm text-gray-500 mt-0.5">
+                  Step {formStep} of 2 — {formStep === 1 ? "Personal Information" : "Guardian Information"}
+                </p>
+              </div>
               <button
-                onClick={() => { setShowModal(false); setFormError(""); }}
+                onClick={() => { resetForm(); setShowModal(false); }}
                 className="text-gray-400 hover:text-gray-600 transition-colors text-2xl leading-none"
               >
                 ×
               </button>
+            </div>
+
+            {/* Step Indicator */}
+            <div className="flex items-center gap-2 mb-6">
+              <div className={`h-1 flex-1 rounded-full transition-colors ${formStep >= 1 ? 'bg-gray-900' : 'bg-gray-200'}`} />
+              <div className={`h-1 flex-1 rounded-full transition-colors ${formStep >= 2 ? 'bg-gray-900' : 'bg-gray-200'}`} />
             </div>
 
             {formError && (
@@ -230,94 +313,192 @@ export default function Students() {
               </div>
             )}
 
-            <form onSubmit={handleAddStudent} className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1.5">
-                    First Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="First name"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
-                  />
+            <form onSubmit={handleAddStudent}>
+              {/* Step 1: Personal Information */}
+              {formStep === 1 && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                        First Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="First name"
+                        value={formData.firstName}
+                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                        Last Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Last name"
+                        value={formData.lastName}
+                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      Gender *
+                    </label>
+                    <select
+                      required
+                      value={formData.gender}
+                      onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow text-gray-700"
+                    >
+                      <option value="">Select gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      Date of Birth *
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      value={formData.dateOfBirth}
+                      onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      Admission Date *
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      value={formData.admissionDate}
+                      onChange={(e) => setFormData({ ...formData, admissionDate: e.target.value })}
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      Student Index Number
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="SMS-2025-0001"
+                        value={formData.indexNumber}
+                        onChange={(e) => setFormData({ ...formData, indexNumber: e.target.value })}
+                        className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow font-mono"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, indexNumber: generateIndexNumber() })}
+                        className="px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50 transition-colors whitespace-nowrap"
+                      >
+                        Generate
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1.5">
+                      Auto-generated format: SMS-YEAR-XXXX. You can also enter manually.
+                    </p>
+                  </div>
+
+                  <div className="flex justify-end pt-4 border-t border-gray-100">
+                    <button
+                      type="button"
+                      onClick={() => setFormStep(2)}
+                      className="px-6 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors"
+                    >
+                      Next →
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1.5">
-                    Last Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Last name"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
-                  />
+              )}
+
+              {/* Step 2: Guardian Information */}
+              {formStep === 2 && (
+                <div className="space-y-4">
+                  <p className="text-xs text-gray-400 -mt-2 mb-1">
+                    Enter guardian details for quick reference. Parents will also be able to create login accounts.
+                  </p>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      Guardian Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Full name of parent/guardian"
+                      value={formData.guardianName}
+                      onChange={(e) => setFormData({ ...formData, guardianName: e.target.value })}
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      Guardian Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="0244-XXX-XXX"
+                      value={formData.guardianPhone}
+                      onChange={(e) => setFormData({ ...formData, guardianPhone: e.target.value })}
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                      Relationship to Student *
+                    </label>
+                    <select
+                      required
+                      value={formData.guardianRelationship}
+                      onChange={(e) => setFormData({ ...formData, guardianRelationship: e.target.value })}
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow text-gray-700"
+                    >
+                      <option value="">Select relationship</option>
+                      <option value="Father">Father</option>
+                      <option value="Mother">Mother</option>
+                      <option value="Uncle">Uncle</option>
+                      <option value="Aunt">Aunt</option>
+                      <option value="Grandparent">Grandparent</option>
+                      <option value="Guardian">Guardian</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div className="flex gap-3 pt-4 border-t border-gray-100">
+                    <button
+                      type="button"
+                      onClick={() => setFormStep(1)}
+                      className="flex-1 border border-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+                    >
+                      ← Back
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={formLoading}
+                      className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {formLoading ? "Adding..." : "Add Student"}
+                    </button>
+                  </div>
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1.5">
-                  Gender *
-                </label>
-                <select
-                  required
-                  value={formData.gender}
-                  onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow text-gray-700"
-                >
-                  <option value="">Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1.5">
-                  Date of Birth *
-                </label>
-                <input
-                  type="date"
-                  required
-                  value={formData.dateOfBirth}
-                  onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1.5">
-                  Admission Date *
-                </label>
-                <input
-                  type="date"
-                  required
-                  value={formData.admissionDate}
-                  onChange={(e) => setFormData({ ...formData, admissionDate: e.target.value })}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-shadow"
-                />
-              </div>
-
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => { setShowModal(false); setFormError(""); }}
-                  className="flex-1 border border-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={formLoading}
-                  className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {formLoading ? "Adding..." : "Add Student"}
-                </button>
-              </div>
+              )}
             </form>
           </div>
         </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { collection, getDocs, doc, updateDoc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import HeadmasterLayout from "../../components/HeadmasterLayout";
+import { Link } from "react-router-dom";
 
 export default function Classes() {
   const [classes, setClasses] = useState([]);
@@ -149,47 +150,60 @@ export default function Classes() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {classes.map((cls) => (
-                    <tr key={cls.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="px-6 py-4">
-                        <p className="font-semibold text-slate-900 font-serif">{cls.name}</p>
-                      </td>
-                      <td className="px-6 py-4 text-slate-600 font-medium">
-                        {cls.level}
-                      </td>
-                      <td className="px-6 py-4 text-slate-600">
-                        {cls.capacity ? `${cls.capacity} Students` : <span className="text-slate-400">—</span>}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/60">
-                          {getTeacherName(cls.teacherId)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
-                          cls.status === "active"
-                            ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                            : "bg-amber-50 text-amber-800 border-amber-200"
-                        }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${cls.status === "active" ? "bg-emerald-600" : "bg-amber-600"}`}></span>
-                          {cls.status === "active" ? "Active" : "Inactive"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <button
-                          onClick={() => toggleStatus(cls)}
-                          className={`text-xs font-medium px-3 py-1.5 rounded-md border transition-colors ${
-                            cls.status === "active"
-                              ? "border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                              : "border-sky-200 text-sky-800 bg-sky-50 hover:bg-sky-100"
-                          }`}
-                        >
-                          {cls.status === "active" ? "Deactivate" : "Activate"}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
+  {classes.map((cls) => (
+    <tr key={cls.id} className="hover:bg-slate-50/50 transition-colors">
+      <td className="px-6 py-4">
+        <Link 
+          to={`/headmaster/classes/${cls.id}`}
+          className="font-semibold text-slate-900 font-serif hover:text-sky-800 hover:underline transition-colors"
+        >
+          {cls.name}
+        </Link>
+      </td>
+      <td className="px-6 py-4 text-slate-600 font-medium">
+        {cls.level}
+      </td>
+      <td className="px-6 py-4 text-slate-600">
+        {cls.capacity ? `${cls.capacity} Students` : <span className="text-slate-400">—</span>}
+      </td>
+      <td className="px-6 py-4">
+        <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/60">
+          {getTeacherName(cls.teacherId)}
+        </span>
+      </td>
+      <td className="px-6 py-4">
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+          cls.status === "active"
+            ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+            : "bg-amber-50 text-amber-800 border-amber-200"
+        }`}>
+          <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${cls.status === "active" ? "bg-emerald-600" : "bg-amber-600"}`}></span>
+          {cls.status === "active" ? "Active" : "Inactive"}
+        </span>
+      </td>
+      <td className="px-6 py-4 text-right">
+        <div className="flex items-center justify-end gap-2">
+          <Link
+            to={`/headmaster/classes/${cls.id}`}
+            className="text-xs font-medium px-3 py-1.5 rounded-md border border-sky-200 text-sky-800 bg-sky-50 hover:bg-sky-100 transition-colors"
+          >
+            View Details
+          </Link>
+          <button
+            onClick={() => toggleStatus(cls)}
+            className={`text-xs font-medium px-3 py-1.5 rounded-md border transition-colors ${
+              cls.status === "active"
+                ? "border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                : "border-sky-200 text-sky-800 bg-sky-50 hover:bg-sky-100"
+            }`}
+          >
+            {cls.status === "active" ? "Deactivate" : "Activate"}
+          </button>
+        </div>
+      </td>
+    </tr>
+  ))}
+</tbody>
               </table>
             </div>
           </div>

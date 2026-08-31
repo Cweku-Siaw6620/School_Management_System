@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, getDocs, doc, updateDoc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
+import { Link } from "react-router-dom";
 import HeadmasterLayout from "../../components/HeadmasterLayout";
 
 export default function Terms() {
@@ -18,7 +19,13 @@ export default function Terms() {
   async function fetchTerms() {
     setLoading(true);
     const snapshot = await getDocs(collection(db, "terms"));
-    const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+    const list = snapshot.docs
+      .map((d) => ({ id: d.id, ...d.data() }))
+      .sort((firstTerm, secondTerm) => {
+        const firstCreatedAt = firstTerm.createdAt?.toDate?.() || firstTerm.createdAt || 0;
+        const secondCreatedAt = secondTerm.createdAt?.toDate?.() || secondTerm.createdAt || 0;
+        return new Date(secondCreatedAt) - new Date(firstCreatedAt);
+      });
     setTerms(list);
     setLoading(false);
   }
@@ -146,7 +153,12 @@ export default function Terms() {
                   {terms.map((term) => (
                     <tr key={term.id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="px-6 py-4">
-                        <p className="font-semibold text-slate-900 font-serif">{term.name}</p>
+                        <Link 
+                          to={`/headmaster/terms/${term.id}`}
+                          className="font-semibold text-slate-900 font-serif hover:text-sky-800 hover:underline transition-colors"
+                        >
+                          {term.name}
+                        </Link>
                       </td>
                       <td className="px-6 py-4 text-slate-600 font-medium">
                         {term.academicYear}

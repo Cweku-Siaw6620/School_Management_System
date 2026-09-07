@@ -10,6 +10,7 @@ import Unauthorized from './pages/Unauthorized';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import Staff from './pages/admin/Staff';
 import Students from './pages/admin/Students';
+import StudentDetail from './pages/admin/StudentDetail';
 
 // Headmaster pages
 import HeadmasterDashboard from './pages/headmaster/HeadmasterDashboard';
@@ -53,6 +54,14 @@ function App() {
               <Students />
             </ProtectedRoute>
           }/>
+          <Route
+            path="/admin/students/:studentId"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <StudentDetail />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Headmaster */}
           <Route path="/headmaster/dashboard" element={

@@ -41,6 +41,8 @@ export default function MarkAttendance() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [alreadyMarked, setAlreadyMarked] = useState(false);
+  const [activeTerm, setActiveTerm] = useState(null);
+  const [termError, setTermError] = useState("");
 
   useEffect(() => {
     fetchTeacherClass();
@@ -49,7 +51,39 @@ export default function MarkAttendance() {
   async function fetchTeacherClass() {
     setLoading(true);
     try {
-      // Find class assigned to current teacher
+      // 1. FETCH ACTIVE TERM
+      const termsQuery = query(
+        collection(db, "terms"),
+        where("isCurrent", "==", true)
+      );
+      const termsSnapshot = await getDocs(termsQuery);
+      
+      if (termsSnapshot.empty) {
+        setTermError("No active term found. Please contact the headmaster to activate a term.");
+        setLoading(false);
+        return;
+      }
+      
+      const term = { id: termsSnapshot.docs[0].id, ...termsSnapshot.docs[0].data() };
+      setActiveTerm(term);
+
+      // 2. VALIDATE TODAY'S DATE IS WITHIN TERM DATES
+      const today = new Date(date);
+      const termStart = new Date(term.startDate);
+      const termEnd = new Date(term.endDate);
+      
+      // Set to start of day for accurate comparison
+      today.setHours(0, 0, 0, 0);
+      termStart.setHours(0, 0, 0, 0);
+      termEnd.setHours(0, 0, 0, 0);
+
+      if (today < termStart || today > termEnd) {
+        setTermError(`Today (${date}) is outside the active term dates (${term.startDate} - ${term.endDate}). Attendance cannot be marked.`);
+        setLoading(false);
+        return;
+      }
+
+      // 3. FIND TEACHER'S CLASS
       const classSnap = await getDocs(collection(db, "classes"));
       const myClass = classSnap.docs
         .map((d) => ({ id: d.id, ...d.data() }))
@@ -61,14 +95,14 @@ export default function MarkAttendance() {
       }
       setAssignedClass(myClass);
 
-      // Fetch active class students
+      // 4. FETCH STUDENTS
       const studentSnap = await getDocs(collection(db, "students"));
       const myStudents = studentSnap.docs
         .map((d) => ({ id: d.id, ...d.data() }))
         .filter((s) => s.classId === myClass.id && s.status === "active");
       setStudents(myStudents);
 
-      // Check existing attendance record for today
+      // 5. CHECK EXISTING ATTENDANCE
       const q = query(
         collection(db, "attendance"),
         where("classId", "==", myClass.id),
@@ -97,6 +131,7 @@ export default function MarkAttendance() {
       }
     } catch (err) {
       console.error("Error fetching class data:", err);
+      setTermError("Failed to load attendance data.");
     } finally {
       setLoading(false);
     }
@@ -119,7 +154,7 @@ export default function MarkAttendance() {
   }
 
   async function handleSubmit() {
-    if (!assignedClass) return;
+    if (!assignedClass || !activeTerm) return;
     setSaving(true);
     setSaved(false);
 
@@ -133,6 +168,7 @@ export default function MarkAttendance() {
           classId: assignedClass.id,
           studentId: student.id,
           date,
+          termId: activeTerm.id,  // ← NEW: Store which term this belongs to
           status: records[student.id] || "present",
           remarks: remarks[student.id] || "",
           markedBy: currentUser.email,
@@ -182,6 +218,29 @@ export default function MarkAttendance() {
     );
   }
 
+  // Show term error if any
+  if (termError) {
+    return (
+      <TeacherLayout>
+        <div className="bg-white border border-amber-200 rounded-2xl p-12 text-center max-w-lg mx-auto my-12 shadow-xs">
+          <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-4 text-xl">
+            ⚠️
+          </div>
+          <h3 className="font-semibold text-slate-800 text-base">Cannot Mark Attendance</h3>
+          <p className="text-xs text-slate-500 mt-1 leading-relaxed">{termError}</p>
+          {!activeTerm && (
+            <button
+              onClick={() => window.location.href = "/headmaster/terms"}
+              className="mt-4 px-4 py-2 bg-sky-900 hover:bg-sky-950 text-white text-xs font-medium rounded-md transition-colors"
+            >
+              Go to Terms
+            </button>
+          )}
+        </div>
+      </TeacherLayout>
+    );
+  }
+
   if (!assignedClass) {
     return (
       <TeacherLayout>
@@ -213,7 +272,14 @@ export default function MarkAttendance() {
                 {assignedClass.name}
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-1">{formattedDate}</p>
+            <p className="text-xs text-slate-500 mt-1">
+              {formattedDate}
+              {activeTerm && (
+                <span className="ml-2 text-emerald-600 font-medium">
+                  • {activeTerm.name}
+                </span>
+              )}
+            </p>
           </div>
 
           <div className="flex items-center gap-2">

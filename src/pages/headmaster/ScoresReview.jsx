@@ -16,27 +16,27 @@ const SCORE_STATUS = {
 
 const getStatusBadge = (status) => {
   const statusMap = {
-    [SCORE_STATUS.DRAFT]: { label: 'Draft', color: 'bg-amber-50 text-amber-700 border-amber-200' },
-    [SCORE_STATUS.SUBMITTED_TO_CLASS_TEACHER]: { label: 'Submitted by Subject Teachers', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-    [SCORE_STATUS.SUBMITTED_TO_HEADMASTER]: { label: 'Submitted by Class Teacher', color: 'bg-purple-50 text-purple-700 border-purple-200' },
-    [SCORE_STATUS.APPROVED]: { label: 'Approved', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' }
+    [SCORE_STATUS.DRAFT]: { label: 'DRAFT', color: 'bg-amber-50 text-amber-900 border-amber-300' },
+    [SCORE_STATUS.SUBMITTED_TO_CLASS_TEACHER]: { label: 'SUBMITTED (SUBJECT)', color: 'bg-sky-50 text-sky-900 border-sky-300' },
+    [SCORE_STATUS.SUBMITTED_TO_HEADMASTER]: { label: 'SUBMITTED (CLASS)', color: 'bg-amber-50 text-amber-950 border-amber-400 font-bold' },
+    [SCORE_STATUS.APPROVED]: { label: 'APPROVED', color: 'bg-emerald-50 text-emerald-900 border-emerald-300' }
   };
   return statusMap[status] || statusMap[SCORE_STATUS.DRAFT];
 };
 
 const getGradeColor = (grade) => {
   const colors = {
-    "A1": "text-emerald-700 bg-emerald-50 border-emerald-200",
-    "B2": "text-green-700 bg-green-50 border-green-200",
-    "B3": "text-sky-700 bg-sky-50 border-sky-200",
-    "C4": "text-blue-700 bg-blue-50 border-blue-200",
-    "C5": "text-indigo-700 bg-indigo-50 border-indigo-200",
-    "C6": "text-amber-700 bg-amber-50 border-amber-200",
-    "D7": "text-orange-700 bg-orange-50 border-orange-200",
-    "E8": "text-red-700 bg-red-50 border-red-200",
-    "F9": "text-rose-700 bg-rose-50 border-rose-200"
+    "A1": "text-emerald-900 bg-emerald-50 border-emerald-300",
+    "B2": "text-emerald-800 bg-emerald-50/70 border-emerald-200",
+    "B3": "text-sky-900 bg-sky-50 border-sky-300",
+    "C4": "text-sky-800 bg-sky-50/70 border-sky-200",
+    "C5": "text-slate-800 bg-stone-100 border-stone-300",
+    "C6": "text-amber-900 bg-amber-50 border-amber-300",
+    "D7": "text-amber-950 bg-amber-100 border-amber-400",
+    "E8": "text-rose-800 bg-rose-50 border-rose-200",
+    "F9": "text-rose-950 bg-rose-100 border-rose-300 font-bold"
   };
-  return colors[grade] || "text-slate-700 bg-slate-50 border-slate-200";
+  return colors[grade] || "text-stone-700 bg-stone-50 border-stone-200";
 };
 
 export default function ScoresReview() {
@@ -45,7 +45,6 @@ export default function ScoresReview() {
   const [loading, setLoading] = useState(true);
   const [approving, setApproving] = useState(false);
   
-  // Data
   const [terms, setTerms] = useState([]);
   const [selectedTermId, setSelectedTermId] = useState("");
   const [classes, setClasses] = useState([]);
@@ -55,7 +54,6 @@ export default function ScoresReview() {
   const [scores, setScores] = useState({});
   const [classStatus, setClassStatus] = useState({});
   
-  // UI states
   const [formError, setFormError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [selectedSubjectId, setSelectedSubjectId] = useState("");
@@ -80,12 +78,10 @@ export default function ScoresReview() {
   async function fetchInitialData() {
     setLoading(true);
     try {
-      // Fetch terms
       const termsSnapshot = await getDocs(collection(db, "terms"));
       const termList = termsSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       setTerms(termList);
       
-      // Auto-select current term
       const currentTerm = termList.find(t => t.isCurrent);
       if (currentTerm) {
         setSelectedTermId(currentTerm.id);
@@ -93,7 +89,6 @@ export default function ScoresReview() {
         setSelectedTermId(termList[0].id);
       }
 
-      // Fetch active classes
       const classesQuery = query(
         collection(db, "classes"),
         where("status", "==", "active")
@@ -113,7 +108,6 @@ export default function ScoresReview() {
     if (!selectedTermId) return;
     
     try {
-      // Get all scores for this term
       const scoresQuery = query(
         collection(db, "scores"),
         where("termId", "==", selectedTermId)
@@ -138,7 +132,6 @@ export default function ScoresReview() {
         
         classStatusMap[classId].total++;
         
-        // Track subject-level status
         if (!classStatusMap[classId].subjects[data.subjectId]) {
           classStatusMap[classId].subjects[data.subjectId] = {
             total: 0,
@@ -168,7 +161,6 @@ export default function ScoresReview() {
     if (!selectedClassId || !selectedTermId) return;
     
     try {
-      // Fetch subjects for this class
       const subjectsQuery = query(
         collection(db, "classSubjects"),
         where("classId", "==", selectedClassId)
@@ -177,7 +169,6 @@ export default function ScoresReview() {
       const subjectList = subjectsSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       setSubjects(subjectList);
 
-      // Fetch students in this class
       const studentsQuery = query(
         collection(db, "students"),
         where("classId", "==", selectedClassId),
@@ -187,7 +178,6 @@ export default function ScoresReview() {
       const studentList = studentsSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       setStudents(studentList);
 
-      // Fetch scores for this class and term
       const scoresQuery = query(
         collection(db, "scores"),
         where("classId", "==", selectedClassId),
@@ -214,7 +204,6 @@ export default function ScoresReview() {
       
       setScores(scoresMap);
       
-      // Auto-select first subject
       if (subjectList.length > 0) {
         setSelectedSubjectId(subjectList[0].id);
       }
@@ -226,16 +215,16 @@ export default function ScoresReview() {
 
   function getClassStatusSummary(classId) {
     const status = classStatus[classId];
-    if (!status) return { label: 'No scores', color: 'bg-slate-100 text-slate-500' };
+    if (!status) return { label: 'NO SCORES', color: 'bg-stone-100 text-stone-600 border-stone-200' };
     
     if (status.approved === status.total && status.total > 0) {
-      return { label: '✅ Approved', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+      return { label: 'APPROVED', color: 'bg-emerald-50 text-emerald-900 border-emerald-300 font-bold' };
     } else if (status.submittedToHeadmaster > 0) {
-      return { label: `📤 ${status.submittedToHeadmaster}/${status.total} submitted to Headmaster`, color: 'bg-purple-50 text-purple-700 border-purple-200' };
+      return { label: `${status.submittedToHeadmaster}/${status.total} SUBMITTED`, color: 'bg-amber-50 text-amber-950 border-amber-400 font-bold' };
     } else if (status.total > 0) {
-      return { label: `📝 ${status.total} scores entered`, color: 'bg-blue-50 text-blue-700 border-blue-200' };
+      return { label: `${status.total} RECORDED`, color: 'bg-sky-50 text-sky-900 border-sky-300' };
     }
-    return { label: 'No scores', color: 'bg-slate-100 text-slate-500' };
+    return { label: 'NO SCORES', color: 'bg-stone-100 text-stone-600 border-stone-200' };
   }
 
   function getSubjectScores(subjectId) {
@@ -249,7 +238,6 @@ export default function ScoresReview() {
     setSuccessMessage("");
     setApproving(true);
 
-    // Check if all scores are submitted to Headmaster
     const classStatusData = classStatus[selectedClassId];
     if (!classStatusData) {
       setFormError("No scores found for this class");
@@ -272,7 +260,6 @@ export default function ScoresReview() {
       const batch = writeBatch(db);
       let updatedCount = 0;
 
-      // Get all scores for this class and term
       const scoresQuery = query(
         collection(db, "scores"),
         where("classId", "==", selectedClassId),
@@ -296,7 +283,6 @@ export default function ScoresReview() {
       await batch.commit();
       setSuccessMessage(`Successfully approved ${updatedCount} scores for this class!`);
       
-      // Refresh data
       await fetchClassStatus();
       await fetchClassData();
       
@@ -322,28 +308,20 @@ export default function ScoresReview() {
     return { total, submitted, approved };
   }
 
-  // Loading state
   if (loading) {
     return (
       <HeadmasterLayout>
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-slate-200/60 rounded w-48"></div>
-          <div className="bg-white border border-slate-200/80 rounded-xl p-6">
-            <div className="space-y-4">
-              {[1, 2].map(i => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="h-10 bg-slate-200/60 rounded w-1/3"></div>
-                  <div className="h-10 bg-slate-200/60 rounded w-1/3"></div>
-                </div>
-              ))}
+        <div className="animate-pulse space-y-6 max-w-7xl mx-auto">
+          <div className="h-16 bg-stone-100 border border-stone-200 rounded-sm"></div>
+          <div className="bg-white border border-stone-200 p-6 rounded-sm space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="h-10 bg-stone-100 rounded-sm"></div>
+              <div className="h-10 bg-stone-100 rounded-sm"></div>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="bg-white border border-slate-200/80 rounded-xl p-4">
-                <div className="h-6 bg-slate-200/60 rounded w-2/3 mb-3"></div>
-                <div className="h-4 bg-slate-200/60 rounded w-1/2"></div>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="h-28 bg-stone-100 border border-stone-200 rounded-sm"></div>
             ))}
           </div>
         </div>
@@ -351,17 +329,16 @@ export default function ScoresReview() {
     );
   }
 
-  // No data
   if (terms.length === 0) {
     return (
       <HeadmasterLayout>
-        <div className="bg-white border border-slate-200/80 rounded-xl p-12 text-center">
-          <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3 font-serif text-xl">
+        <div className="bg-white border border-stone-300/80 rounded-sm p-12 text-center shadow-2xs max-w-7xl mx-auto">
+          <div className="w-12 h-12 bg-stone-50 border border-stone-200 text-stone-400 flex items-center justify-center mx-auto mb-3 font-serif text-xl">
             📅
           </div>
-          <h3 className="font-serif text-base font-semibold text-slate-800">No terms found</h3>
-          <p className="text-xs text-slate-500 mt-1">
-            Please create at least one academic term first.
+          <h3 className="font-serif text-base font-bold text-slate-900">No Academic Terms Established</h3>
+          <p className="text-xs font-serif text-stone-500 mt-1">
+            Please define at least one active term in system administration prior to score review.
           </p>
         </div>
       </HeadmasterLayout>
@@ -373,38 +350,42 @@ export default function ScoresReview() {
 
   return (
     <HeadmasterLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 max-w-7xl mx-auto">
 
-        {/* Page Header */}
-        <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs">
-          <div>
-            <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight">
-              Score Review & Approval
+        {/* Header Banner */}
+        <div className="bg-white border border-stone-300/80 rounded-sm p-6 shadow-2xs relative overflow-hidden">
+          <div className="absolute top-0 left-0 bottom-0 w-1 bg-slate-900"></div>
+          <div className="pl-2">
+            <span className="text-[10px] font-semibold tracking-widest text-stone-500 uppercase">
+              Academic Governance
+            </span>
+            <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight mt-0.5">
+              Score Review & Executive Approval
             </h1>
-            <p className="text-sm text-slate-500 mt-1">
-              Review and approve scores submitted by Class Teachers
+            <p className="text-xs font-serif text-stone-500 mt-0.5">
+              Audit assessment ledgers submitted by Class Teachers prior to final report generation
             </p>
           </div>
         </div>
 
-        {/* Success/Error Messages */}
+        {/* Notifications */}
         {successMessage && (
-          <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm px-4 py-3 rounded-md">
-            {successMessage}
+          <div className="bg-emerald-50 border border-emerald-300 text-emerald-950 font-serif text-xs px-4 py-3 rounded-sm shadow-2xs">
+            ✓ {successMessage}
           </div>
         )}
         {formError && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-md">
-            {formError}
+          <div className="bg-rose-50 border border-rose-300 text-rose-950 font-serif text-xs px-4 py-3 rounded-sm shadow-2xs">
+            ⚠ {formError}
           </div>
         )}
 
-        {/* Selection Controls */}
-        <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs">
+        {/* Parameter Selection Controls */}
+        <div className="bg-white border border-stone-300/80 rounded-sm p-6 shadow-2xs">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
-                Term *
+              <label className="block text-[10px] font-bold text-stone-500 uppercase tracking-wider mb-1">
+                Academic Term <span className="text-rose-700">*</span>
               </label>
               <select
                 required
@@ -413,28 +394,28 @@ export default function ScoresReview() {
                   setSelectedTermId(e.target.value);
                   setSelectedClassId("");
                 }}
-                className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent bg-white"
+                className="w-full bg-stone-50/50 border border-stone-300 rounded-sm px-3 py-2 text-xs font-serif text-slate-900 focus:outline-none focus:border-slate-800"
               >
-                <option value="">Select a term</option>
+                <option value="">Select Academic Term</option>
                 {terms.map(term => (
                   <option key={term.id} value={term.id}>
-                    {term.name} {term.isCurrent ? "(Current)" : ""}
+                    {term.name} {term.isCurrent ? "(Current Academic Period)" : ""}
                   </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
-                Class *
+              <label className="block text-[10px] font-bold text-stone-500 uppercase tracking-wider mb-1">
+                Class Division <span className="text-rose-700">*</span>
               </label>
               <select
                 required
                 value={selectedClassId}
                 onChange={(e) => setSelectedClassId(e.target.value)}
-                className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent bg-white"
+                className="w-full bg-stone-50/50 border border-stone-300 rounded-sm px-3 py-2 text-xs font-serif text-slate-900 focus:outline-none focus:border-slate-800"
               >
-                <option value="">Select a class</option>
+                <option value="">Select Class Division</option>
                 {classes.map(cls => (
                   <option key={cls.id} value={cls.id}>
                     {cls.name}
@@ -445,7 +426,7 @@ export default function ScoresReview() {
           </div>
         </div>
 
-        {/* Class Status Cards */}
+        {/* Class Overview Cards */}
         {selectedTermId && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {classes.map(cls => {
@@ -457,36 +438,38 @@ export default function ScoresReview() {
                 <div
                   key={cls.id}
                   onClick={() => setSelectedClassId(cls.id)}
-                  className={`bg-white border rounded-xl p-4 shadow-xs cursor-pointer transition-all ${
-                    isSelected ? 'border-sky-800 ring-2 ring-sky-200' : 'border-slate-200/80 hover:border-slate-300'
+                  className={`bg-white border rounded-sm p-4 shadow-2xs cursor-pointer transition-all ${
+                    isSelected 
+                      ? 'border-slate-900 ring-1 ring-slate-900/10' 
+                      : 'border-stone-300/80 hover:border-stone-400'
                   }`}
                 >
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h3 className="font-semibold text-slate-900 text-sm">
+                      <h3 className="font-serif font-bold text-slate-900 text-sm">
                         {cls.name}
                       </h3>
-                      <p className="text-xs text-slate-500 mt-0.5">
+                      <p className="font-serif text-[11px] text-stone-500 mt-0.5">
                         {cls.level}
                       </p>
                     </div>
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${status.color}`}>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-serif font-semibold border ${status.color}`}>
                       {status.label}
                     </span>
                   </div>
                   {statusData && (
-                    <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-                      <div className="bg-slate-50 rounded p-2">
-                        <p className="text-sm font-bold text-slate-800">{statusData.total}</p>
-                        <p className="text-[10px] text-slate-500">Total</p>
+                    <div className="mt-3 grid grid-cols-3 gap-2 text-center font-serif border-t border-stone-100 pt-3">
+                      <div className="bg-stone-50/70 border border-stone-200/60 rounded-xs p-1.5">
+                        <p className="text-xs font-bold text-slate-900">{statusData.total}</p>
+                        <p className="text-[9px] text-stone-500 uppercase font-sans">Total</p>
                       </div>
-                      <div className="bg-purple-50 rounded p-2">
-                        <p className="text-sm font-bold text-purple-700">{statusData.submittedToHeadmaster}</p>
-                        <p className="text-[10px] text-purple-600">Submitted</p>
+                      <div className="bg-amber-50/60 border border-amber-200/60 rounded-xs p-1.5">
+                        <p className="text-xs font-bold text-amber-950">{statusData.submittedToHeadmaster}</p>
+                        <p className="text-[9px] text-amber-800 uppercase font-sans">Submitted</p>
                       </div>
-                      <div className="bg-emerald-50 rounded p-2">
-                        <p className="text-sm font-bold text-emerald-700">{statusData.approved}</p>
-                        <p className="text-[10px] text-emerald-600">Approved</p>
+                      <div className="bg-emerald-50/60 border border-emerald-200/60 rounded-xs p-1.5">
+                        <p className="text-xs font-bold text-emerald-950">{statusData.approved}</p>
+                        <p className="text-[9px] text-emerald-800 uppercase font-sans">Approved</p>
                       </div>
                     </div>
                   )}
@@ -496,36 +479,36 @@ export default function ScoresReview() {
           </div>
         )}
 
-        {/* Subject Scores Overview */}
+        {/* Detailed Class Subject Ledger */}
         {selectedClassId && selectedTermId && subjects.length > 0 && (
-          <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs">
-            <div className="flex items-center justify-between mb-4">
+          <div className="bg-white border border-stone-300/80 rounded-sm p-6 shadow-2xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200 mb-4">
               <div>
-                <h3 className="font-serif text-base font-semibold text-slate-800">
-                  {selectedClass?.name} - Subject Scores
+                <h3 className="font-serif text-base font-bold text-slate-900">
+                  {selectedClass?.name} — Subject Record Register
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  {students.length} students • {subjects.length} subjects
+                <p className="text-xs font-serif text-stone-500 mt-0.5">
+                  Enrolled Students: {students.length} • Registered Subjects: {subjects.length}
                 </p>
               </div>
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                 <button
                   onClick={() => setShowScoreModal(true)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 hover:bg-slate-50 text-sm font-medium rounded-md transition-colors"
+                  className="px-3.5 py-1.5 border border-stone-300 text-stone-800 hover:bg-stone-50 text-xs font-serif font-semibold rounded-sm transition-colors"
                 >
-                  View All Scores
+                  Full Score Matrix
                 </button>
                 <button
                   onClick={handleApproveClass}
                   disabled={approving || !classStatusData || classStatusData.submittedToHeadmaster < classStatusData.total}
-                  className="px-4 py-2 bg-sky-900 hover:bg-sky-950 text-white text-sm font-medium rounded-md transition-colors disabled:opacity-50"
+                  className="px-3.5 py-1.5 bg-slate-900 text-amber-300 hover:bg-slate-800 text-xs font-serif font-semibold rounded-sm transition-colors disabled:opacity-50"
                 >
-                  {approving ? "Approving..." : "Approve All Scores"}
+                  {approving ? "Committing Approval..." : "Authorize All Scores"}
                 </button>
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2">
               {subjects.map(subject => {
                 const summary = getStatusSummary(subject.id);
                 const subjectStatusBadge = getStatusBadge(
@@ -537,22 +520,22 @@ export default function ScoresReview() {
                 return (
                   <div
                     key={subject.id}
-                    className="flex items-center justify-between px-4 py-3 bg-slate-50 rounded-lg border border-slate-100 hover:border-slate-200 transition-colors"
+                    className="flex items-center justify-between px-4 py-3 bg-stone-50/50 rounded-sm border border-stone-200 hover:border-stone-300 transition-colors"
                   >
                     <div>
-                      <span className="font-medium text-slate-900 text-sm">
+                      <span className="font-serif font-semibold text-slate-900 text-xs">
                         {subject.name}
                       </span>
-                      <span className="ml-3 text-xs text-slate-400">
-                        {summary.total} student{summary.total !== 1 ? 's' : ''}
+                      <span className="ml-3 font-serif text-[11px] text-stone-500">
+                        ({summary.total} student record{summary.total !== 1 ? 's' : ''})
                       </span>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${subjectStatusBadge.color}`}>
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-serif font-semibold border ${subjectStatusBadge.color}`}>
                         {subjectStatusBadge.label}
                       </span>
-                      <span className="text-xs text-slate-400">
-                        {summary.submitted} submitted • {summary.approved} approved
+                      <span className="text-xs font-serif text-stone-500">
+                        {summary.submitted} Submitted • {summary.approved} Approved
                       </span>
                     </div>
                   </div>
@@ -562,48 +545,48 @@ export default function ScoresReview() {
           </div>
         )}
 
-        {/* View All Scores Modal */}
+        {/* Complete Score Matrix Modal */}
         {showScoreModal && selectedClassId && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-5xl p-6 border border-slate-200/80 max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="bg-white border border-stone-300/80 rounded-sm shadow-2xs w-full max-w-6xl p-6 max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between pb-3 border-b border-stone-200 mb-4">
                 <div>
                   <h3 className="font-serif text-lg font-bold text-slate-900">
-                    All Scores: {selectedClass?.name}
+                    Academic Master Register: {selectedClass?.name}
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs font-serif text-stone-500 mt-0.5">
                     {terms.find(t => t.id === selectedTermId)?.name}
                   </p>
                 </div>
                 <button
                   onClick={() => setShowScoreModal(false)}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="text-stone-400 hover:text-slate-900 font-serif text-xl leading-none"
                 >
-                  ✕
+                  ×
                 </button>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-50 border-b border-slate-200/80">
-                    <tr>
-                      <th className="px-3 py-2 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                        Student
+              <div className="overflow-x-auto border border-stone-200 rounded-sm">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-stone-50/80 border-b border-stone-200">
+                      <th className="py-2.5 px-3 font-serif text-[10px] font-bold text-stone-600 uppercase tracking-wider border-r border-stone-200">
+                        Student Scholar
                       </th>
                       {subjects.map(subject => (
-                        <th key={subject.id} className="px-3 py-2 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                        <th key={subject.id} className="py-2.5 px-3 font-serif text-[10px] font-bold text-stone-600 uppercase tracking-wider text-center border-r border-stone-200 last:border-r-0">
                           {subject.name}
                           <br/>
-                          <span className="font-normal text-slate-400">(C/E/T/G)</span>
+                          <span className="font-sans font-normal text-[9px] text-stone-400">(Class/Exam/Total/Grade)</span>
                         </th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-stone-100 font-serif">
                     {students.map(student => {
                       return (
-                        <tr key={student.id} className="hover:bg-slate-50/50 transition-colors">
-                          <td className="px-3 py-2 font-medium text-slate-800 whitespace-nowrap">
+                        <tr key={student.id} className="hover:bg-stone-50/50 transition-colors">
+                          <td className="py-2.5 px-3 text-xs font-semibold text-slate-900 whitespace-nowrap border-r border-stone-200 bg-stone-50/20">
                             {student.firstName} {student.lastName}
                           </td>
                           {subjects.map(subject => {
@@ -612,17 +595,20 @@ export default function ScoresReview() {
                             const gradeColor = score?.grade ? getGradeColor(score.grade) : '';
                             
                             return (
-                              <td key={subject.id} className="px-3 py-2 text-center">
+                              <td key={subject.id} className="py-2.5 px-3 text-center border-r border-stone-200 last:border-r-0">
                                 {score ? (
-                                  <span className="text-xs">
-                                    {score.classScore || 0}/{score.examScore || 0}/{score.total || 0}
-                                    <br/>
-                                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold border ${gradeColor}`}>
-                                      {score.grade || '-'}
+                                  <div className="text-xs">
+                                    <span className="font-mono text-[11px] text-stone-700">
+                                      {score.classScore || 0}/{score.examScore || 0}/<strong className="text-slate-900">{score.total || 0}</strong>
                                     </span>
-                                  </span>
+                                    <div className="mt-0.5">
+                                      <span className={`inline-flex items-center px-1.5 py-0.2 rounded-xs text-[9px] font-bold border ${gradeColor}`}>
+                                        {score.grade || '-'}
+                                      </span>
+                                    </div>
+                                  </div>
                                 ) : (
-                                  <span className="text-xs text-slate-300">—</span>
+                                  <span className="text-xs text-stone-300 font-mono">—</span>
                                 )}
                               </td>
                             );
@@ -634,12 +620,12 @@ export default function ScoresReview() {
                 </table>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-slate-100 flex justify-end">
+              <div className="mt-4 pt-3 border-t border-stone-200 flex justify-end">
                 <button
                   onClick={() => setShowScoreModal(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-md transition-colors"
+                  className="px-4 py-1.5 bg-slate-900 text-amber-300 text-xs font-serif font-semibold rounded-sm hover:bg-slate-800 transition-colors"
                 >
-                  Close
+                  Dismiss
                 </button>
               </div>
             </div>

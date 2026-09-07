@@ -43,6 +43,7 @@ export default function Scores() {
   const [formError, setFormError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [submissionStatus, setSubmissionStatus] = useState({});
+  const [currentTermName, setCurrentTermName] = useState("");
 
   useEffect(() => {
     fetchTeacherData();
@@ -81,6 +82,7 @@ export default function Scores() {
     try {
       const currentTerm = await getCurrentTerm();
       if (!currentTerm) {
+        setFormError("No active term found. Please contact the headmaster.");
         setLoading(false);
         return;
       }
@@ -113,6 +115,8 @@ export default function Scores() {
         const first = allAssignments[0];
         setSelectedSubjectId(first.subjectId);
         await fetchStudents(first.classId);
+      } else {
+        setFormError("You have not been assigned to teach any subjects this term.");
       }
       setLoading(false);
     } catch (error) {
@@ -130,7 +134,9 @@ export default function Scores() {
       );
       const termsSnapshot = await getDocs(termsQuery);
       if (!termsSnapshot.empty) {
-        return { id: termsSnapshot.docs[0].id, ...termsSnapshot.docs[0].data() };
+        const term = { id: termsSnapshot.docs[0].id, ...termsSnapshot.docs[0].data() };
+        setCurrentTermName(term.name || "Current Term");
+        return term;
       }
       return null;
     } catch (error) {
@@ -149,7 +155,9 @@ export default function Scores() {
       const termList = termsSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       setTerms(termList);
       
-      setSelectedTermId(termList[0]?.id || "");
+      if (termList.length > 0) {
+        setSelectedTermId(termList[0].id);
+      }
     } catch (error) {
       console.error("Error fetching terms:", error);
     }
@@ -269,6 +277,7 @@ export default function Scores() {
           classId: assignment?.classId || "",
           className: assignment?.className || "",
           termId: selectedTermId,
+          termName: currentTermName,
           classScore: score.classScore || 0,
           examScore: score.examScore || 0,
           total: score.total || 0,
@@ -296,6 +305,18 @@ export default function Scores() {
   async function handleSubmitToClassTeacher() {
     setFormError("");
     setSubmitting(true);
+
+    // Check if all students have scores
+    const hasAllScores = students.every(student => {
+      const score = scores[student.id];
+      return score && (score.classScore > 0 || score.examScore > 0);
+    });
+
+    if (!hasAllScores) {
+      setFormError("Please enter scores for all students before submitting.");
+      setSubmitting(false);
+      return;
+    }
 
     if (!confirm("Submit these scores? You will not be able to edit them after submitting.")) {
       setSubmitting(false);
@@ -335,6 +356,27 @@ export default function Scores() {
     );
   }
 
+  // No assignments or no active term
+  if (teacherAssignments.length === 0 || !selectedTermId) {
+    return (
+      <TeacherLayout>
+        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center max-w-lg mx-auto my-12 shadow-xs">
+          <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mx-auto mb-4 text-xl">
+            📝
+          </div>
+          <h3 className="font-semibold text-slate-800 text-base">
+            {!selectedTermId ? "No Active Term" : "No Assigned Subjects"}
+          </h3>
+          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+            {!selectedTermId 
+              ? "Please contact the headmaster to activate a term." 
+              : "You haven't been assigned to teach any subjects this term."}
+          </p>
+        </div>
+      </TeacherLayout>
+    );
+  }
+
   return (
     <TeacherLayout>
       <div className="space-y-6 max-w-5xl mx-auto text-slate-800">
@@ -345,8 +387,13 @@ export default function Scores() {
             <h1 className="font-serif text-2xl font-normal text-slate-900">
               Student Grade Entry
             </h1>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 mt-1 flex items-center gap-2">
               Record assessment and exam scores for your assigned classes.
+              {currentTermName && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-medium border border-emerald-200">
+                  {currentTermName}
+                </span>
+              )}
             </p>
           </div>
 
@@ -401,17 +448,9 @@ export default function Scores() {
             <label className="block text-xs font-medium text-slate-600 mb-1">
               Academic Term
             </label>
-            <select
-              value={selectedTermId}
-              onChange={(e) => setSelectedTermId(e.target.value)}
-              className="w-full border border-slate-300 rounded px-3 py-2 text-sm text-slate-800 bg-white focus:border-slate-500 focus:outline-none"
-            >
-              {terms.map(term => (
-                <option key={term.id} value={term.id}>
-                  {term.name} {term.isCurrent ? "(Current)" : ""}
-                </option>
-              ))}
-            </select>
+            <div className="w-full border border-slate-300 rounded px-3 py-2 text-sm text-slate-800 bg-slate-50">
+              {currentTermName || "No active term"}
+            </div>
           </div>
         </div>
 

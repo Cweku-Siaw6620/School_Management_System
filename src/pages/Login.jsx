@@ -25,7 +25,7 @@ export default function Login() {
         const role = docSnap.data().role;
         if (role === "admin")       navigate("/admin/dashboard");
         else if (role === "headmaster") navigate("/headmaster/dashboard");
-        else if (role === "teacher")    navigate("/teacher/attendance");
+        else if (role === "teacher")    navigate("/teacher/dashboard");
         else if (role === "parent")     navigate("/parent/dashboard");
         else navigate("/unauthorized");
       } else {

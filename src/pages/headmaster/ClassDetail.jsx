@@ -25,7 +25,9 @@ export default function ClassDetail() {
     absent: 0,
     late: 0,
     excused: 0,
-    total: 0
+    total: 0,
+    termName: "",
+    isWithinTerm: true
   });
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
@@ -112,7 +114,8 @@ export default function ClassDetail() {
         await fetchTermAssignments(currentTerm.id, subjectList);
       }
 
-      await fetchAttendanceSummary(classId);
+      // Fetch attendance summary (with term context)
+      await fetchAttendanceSummary(classId, currentTerm);
 
       // Get available students (not assigned to any class)
       const availableQuery = query(
@@ -168,9 +171,31 @@ export default function ClassDetail() {
     }
   }
 
-  async function fetchAttendanceSummary(classId) {
+  async function fetchAttendanceSummary(classId, currentTerm) {
     try {
       const today = new Date().toISOString().split('T')[0];
+      
+      // Check if we have a current term
+      let termName = "No active term";
+      let isWithinTerm = false;
+      
+      if (currentTerm) {
+        termName = currentTerm.name || "Active Term";
+        
+        // Check if today is within term dates
+        const termStart = new Date(currentTerm.startDate);
+        const termEnd = new Date(currentTerm.endDate);
+        const todayDate = new Date(today);
+        
+        todayDate.setHours(0, 0, 0, 0);
+        termStart.setHours(0, 0, 0, 0);
+        termEnd.setHours(0, 0, 0, 0);
+        
+        isWithinTerm = todayDate >= termStart && todayDate <= termEnd;
+      }
+      
+      // Always fetch attendance regardless of term validation
+      // (show what's available, but add context)
       const attendanceQuery = query(
         collection(db, "attendance"),
         where("classId", "==", classId),
@@ -184,10 +209,21 @@ export default function ClassDetail() {
         absent: records.filter(r => r.status === "absent").length,
         late: records.filter(r => r.status === "late").length,
         excused: records.filter(r => r.status === "excused").length,
-        total: records.length
+        total: records.length,
+        termName: termName,
+        isWithinTerm: isWithinTerm
       });
     } catch (error) {
       console.error("Error fetching attendance summary:", error);
+      setAttendanceSummary({
+        present: 0,
+        absent: 0,
+        late: 0,
+        excused: 0,
+        total: 0,
+        termName: "Error",
+        isWithinTerm: false
+      });
     }
   }
 
@@ -526,7 +562,7 @@ export default function ClassDetail() {
                 {classData.name}
               </h1>
               <p className="text-xs text-slate-500 font-medium mt-0.5">
-                {classData.level} &bull; {selectedTerm?.name || "No active term"} &bull; Capacity: {classData.capacity || "Unlimited"}
+                {classData.level} &bull; {selectedTerm?.name || "No active term"} &bull; {students.length} students
               </p>
             </div>
           </div>
@@ -718,8 +754,35 @@ export default function ClassDetail() {
                 <h3 className="font-serif text-base font-bold text-slate-900">
                   Daily Attendance
                 </h3>
-                <span className="text-xs text-slate-400 font-mono">{todayDate}</span>
+                <div className="text-right">
+                  <span className="text-xs text-slate-400 font-mono block">{todayDate}</span>
+                  {attendanceSummary.termName && attendanceSummary.termName !== "Error" && (
+                    <span className="text-[10px] text-slate-400 font-medium block">
+                      {attendanceSummary.termName}
+                    </span>
+                  )}
+                </div>
               </div>
+
+              {/* Info Banner — Shows term status without blocking */}
+              {!attendanceSummary.isWithinTerm && attendanceSummary.termName !== "Error" && attendanceSummary.termName !== "No active term" && (
+                <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg">
+                  <p className="text-xs text-amber-700 text-center">
+                    📅 Today is outside the active term ({attendanceSummary.termName})
+                  </p>
+                  <p className="text-[10px] text-amber-600 text-center">
+                    Attendance may not be available for this date
+                  </p>
+                </div>
+              )}
+
+              {attendanceSummary.termName === "No active term" && (
+                <div className="p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                  <p className="text-xs text-slate-500 text-center">
+                    ⚠️ No active term. Please activate a term first.
+                  </p>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-2">
                 <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-2.5 text-center">
@@ -743,6 +806,9 @@ export default function ClassDetail() {
               <div className="pt-2 text-center border-t border-slate-100">
                 <p className="text-xs text-slate-500 mb-3">
                   {attendanceSummary.total} of {students.length} students logged today
+                  {!attendanceSummary.isWithinTerm && attendanceSummary.termName !== "No active term" && (
+                    <span className="text-amber-500 block text-[10px]">(Outside active term)</span>
+                  )}
                 </p>
                 <button
                   onClick={() => navigate("/headmaster/attendance")}
@@ -984,7 +1050,6 @@ export default function ClassDetail() {
                           ))}
                         </select>
                         
-                        {/* Moved OUTSIDE the select */}
                         {qualifiedTeachers.length === 0 && (
                           <p className="text-xs text-amber-600 mt-2">
                             ⚠️ No teachers are qualified to teach this subject.

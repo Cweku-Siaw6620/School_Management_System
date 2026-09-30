@@ -224,7 +224,7 @@ export default function MarkAttendance() {
       <TeacherLayout>
         <div className="bg-white border border-amber-200 rounded-2xl p-12 text-center max-w-lg mx-auto my-12 shadow-xs">
           <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-4 text-xl">
-            ⚠️
+            
           </div>
           <h3 className="font-semibold text-slate-800 text-base">Cannot Mark Attendance</h3>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed">{termError}</p>
@@ -302,12 +302,12 @@ export default function MarkAttendance() {
         {/* Notifications */}
         {saved && (
           <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-lg flex items-center gap-2">
-            <span>✅</span> Attendance record saved for {date}.
+            <span></span> Attendance record saved for {date}.
           </div>
         )}
         {alreadyMarked && !saved && (
           <div className="p-3 bg-slate-50 border border-slate-200 text-slate-600 text-xs rounded-lg flex items-center gap-2">
-            <span>ℹ️</span> Attendance for today was previously logged. Edits will overwrite the previous submission.
+            <span></span> Attendance for today was previously logged. Edits will overwrite the previous submission.
           </div>
         )}
 

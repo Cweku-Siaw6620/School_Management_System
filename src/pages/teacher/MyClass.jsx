@@ -350,7 +350,7 @@ export default function MyClass() {
       <TeacherLayout>
         <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center max-w-md mx-auto my-12 shadow-xs">
           <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 text-xl">
-            ⚠️
+            
           </div>
           <h3 className="font-semibold text-slate-900 text-base">Class Data Unavailable</h3>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed">{formError}</p>
@@ -407,12 +407,12 @@ export default function MyClass() {
         {/* Dynamic Alerts */}
         {successMessage && (
           <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-lg flex items-center gap-2">
-            <span>✅</span> {successMessage}
+            <span></span> {successMessage}
           </div>
         )}
         {formError && classData && (
           <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-lg flex items-center gap-2">
-            <span>⚠️</span> {formError}
+            <span></span> {formError}
           </div>
         )}
 
@@ -540,7 +540,7 @@ export default function MyClass() {
 
               {!isAllReady && (
                 <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-md p-2.5 mt-3 text-center">
-                  ⚠️ All subject teachers must complete submission before final dispatch.
+                   All subject teachers must complete submission before final dispatch.
                 </p>
               )}
             </div>

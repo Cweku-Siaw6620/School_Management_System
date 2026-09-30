@@ -28,6 +28,12 @@ import MarkAttendance from './pages/teacher/MarkAttendance';
 import MyClass from './pages/teacher/MyClass';
 import Scores from './pages/teacher/Scores';
 
+// Parent pages
+//import ParentLayout from './components/ParentLayout';
+//import ParentDashboard from './pages/parent/ParentDashboard';
+import ParentChildren from './pages/parent/ParentChildren';
+import ChildView from './pages/parent/ChildView';
+
 function App() {
   return (
     <Router>
@@ -144,11 +150,29 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* parent */}
+          <Route
+            path="/parent/children"
+            element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                <ParentChildren />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/parent/child/:studentId"
+            element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                <ChildView />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Redirects */}
           <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="/headmaster" element={<Navigate to="/headmaster/dashboard" replace />} />
           <Route path="/teacher" element={<Navigate to="/teacher/dashboard" replace />} />
+          <Route path="/parent" element={<Navigate to="/parent/children" replace />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
 

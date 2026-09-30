@@ -434,7 +434,7 @@ export default function StudentDetail() {
                   <div className="flex items-center justify-between py-1 border-b border-stone-100">
                     <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">Parent Access</span>
                     <span className={`text-xs font-serif font-bold ${student.parentAccountCreated ? 'text-emerald-800' : 'text-stone-400'}`}>
-                      {student.parentAccountCreated ? '✓ Issued' : 'Unregistered'}
+                      {student.parentAccountCreated ? '✓ Active' : 'Not Created'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-1 border-b border-stone-100">
@@ -557,8 +557,8 @@ export default function StudentDetail() {
 
             <button
               onClick={() => {
-                if (confirm(`Issue parent portal credentials for ${getFullName(student)}?\n\nID: ${student.indexNumber}\nTemporary Pin: ${student.guardianPhone}`)) {
-                  setSuccessMessage("Parent credential issuance queued for setup.");
+               if (confirm(`Issue parent portal credentials for ${getFullName(student)}?\n\nLogin ID: ${student.indexNumber}\nPassword: ${student.guardianPhone} (no spaces/dashes)`)) {
+                  setSuccessMessage(`Parent account ready! Login ID: ${student.indexNumber} | Password: Guardian's Phone Number`);
                   setTimeout(() => setSuccessMessage(""), 3500);
                 }
               }}

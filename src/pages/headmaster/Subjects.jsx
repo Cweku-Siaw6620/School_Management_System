@@ -528,7 +528,7 @@ export default function Subjects() {
             </div>
           ) : assignedSubjects.length === 0 ? (
             <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-lg">
-              <div className="text-4xl mb-3 text-slate-300">📚</div>
+              <div className="text-4xl mb-3 text-slate-300"></div>
               <h3 className="font-serif text-base font-semibold text-slate-700">No subjects assigned</h3>
               <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
                 Assign a subject set or add individual subjects to {selectedClass ? selectedClass.name : "this class"}

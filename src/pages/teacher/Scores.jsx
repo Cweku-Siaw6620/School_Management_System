@@ -340,7 +340,7 @@ export default function Scores() {
       await checkSubmissionStatus();
     } catch (error) {
       console.error("Error submitting scores:", error);
-      setFormError("Could not submit scores. Please try again.");
+      setFormError("Could not submit scores. Save as Draft first.");
     }
     setSubmitting(false);
   }

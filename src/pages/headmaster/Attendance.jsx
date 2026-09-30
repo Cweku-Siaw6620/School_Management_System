@@ -167,7 +167,7 @@ export default function Attendance() {
       {/* Term Warning */}
       {termError && (
         <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg flex items-center gap-2">
-          <span>⚠️</span> {termError}
+          <span></span> {termError}
         </div>
       )}
 

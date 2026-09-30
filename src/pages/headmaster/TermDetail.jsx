@@ -665,7 +665,7 @@ export default function TermDetail() {
 
                 {selectedClassId && targetLevel && (
                   <div className="bg-amber-50 border border-amber-200 rounded-md p-3 text-xs text-amber-800 space-y-1">
-                    <p className="font-semibold">⚠️ Batch Execution Details:</p>
+                    <p className="font-semibold"> Batch Execution Details:</p>
                     <ul className="list-disc list-inside space-y-0.5 text-amber-700">
                       <li>Reassigns all active students to target level</li>
                       <li>Appends current placement details into student audit history</li>

@@ -577,11 +577,11 @@ export default function ClassDetail() {
             </span>
             {hasAssignments ? (
               <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border bg-sky-50 text-sky-700 border-sky-200">
-                ✅ Assigned
+                 Assigned
               </span>
             ) : (
               <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border bg-amber-50 text-amber-700 border-amber-200">
-                ⚠️ No Assignments
+                 No Assignments
               </span>
             )}
           </div>
@@ -675,7 +675,7 @@ export default function ClassDetail() {
                 <div className="py-3 flex items-center justify-between">
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Assignment Status</span>
                   <span className={`text-xs font-medium ${hasAssignments ? 'text-emerald-600' : 'text-amber-600'}`}>
-                    {hasAssignments ? '✅ Assigned for this term' : '⚠️ No teachers assigned yet'}
+                    {hasAssignments ? ' Assigned for this term' : ' No teachers assigned yet'}
                   </span>
                 </div>
               </div>
@@ -779,7 +779,7 @@ export default function ClassDetail() {
               {attendanceSummary.termName === "No active term" && (
                 <div className="p-2 bg-slate-50 border border-slate-200 rounded-lg">
                   <p className="text-xs text-slate-500 text-center">
-                    ⚠️ No active term. Please activate a term first.
+                     No active term. Please activate a term first.
                   </p>
                 </div>
               )}
@@ -903,7 +903,7 @@ export default function ClassDetail() {
 
                 <div className="bg-amber-50 border border-amber-200 rounded-md p-2.5">
                   <p className="text-xs text-amber-700">
-                    ℹ️ Assignment is for <strong>{selectedTerm?.name}</strong>. It will NOT affect previous terms.
+                     Assignment is for <strong>{selectedTerm?.name}</strong>. It will NOT affect previous terms.
                   </p>
                 </div>
 
@@ -1052,7 +1052,7 @@ export default function ClassDetail() {
                         
                         {qualifiedTeachers.length === 0 && (
                           <p className="text-xs text-amber-600 mt-2">
-                            ⚠️ No teachers are qualified to teach this subject.
+                             No teachers are qualified to teach this subject.
                             Go to Staff Management to assign subjects to teachers.
                           </p>
                         )}
@@ -1063,7 +1063,7 @@ export default function ClassDetail() {
 
                 <div className="bg-amber-50 border border-amber-200 rounded-md p-2.5">
                   <p className="text-xs text-amber-700">
-                    ℹ️ Assignment is for <strong>{selectedTerm?.name}</strong>. It will NOT affect previous terms.
+                     Assignment is for <strong>{selectedTerm?.name}</strong>. It will NOT affect previous terms.
                   </p>
                 </div>
 
@@ -1116,7 +1116,7 @@ export default function ClassDetail() {
                     <li>Class Teacher assignment</li>
                     <li>Subject Teacher assignments for all subjects</li>
                   </ul>
-                  <p className="mt-2 text-amber-600">⚠️ Previous term assignments will remain unchanged.</p>
+                  <p className="mt-2 text-amber-600"> Previous term assignments will remain unchanged.</p>
                 </div>
 
                 <div className="flex gap-3 pt-3 border-t border-slate-100">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { collection, getDocs, doc, updateDoc, setDoc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, setDoc, getDoc, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import AdminLayout from "../../components/AdminLayout";
 import { Link } from "react-router-dom";
@@ -68,6 +68,10 @@ export default function Students() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedClassFilter, setSelectedClassFilter] = useState("All");
 
+  // Sibling detection
+  const [existingSiblings, setExistingSiblings] = useState([]);
+  const [checkingPhone, setCheckingPhone] = useState(false);
+
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -89,7 +93,6 @@ export default function Students() {
     indexNumber: "",
     status: "active",
     parentAccountCreated: false,
-    mustChangePassword: true,
   });
 
   useEffect(() => {
@@ -182,12 +185,42 @@ export default function Students() {
     }
   }, [showModal, schoolInitials]);
 
+  // Check for existing siblings when guardian phone changes
+  async function checkForSiblings(phone) {
+    if (!phone || phone.trim().length < 6) {
+      setExistingSiblings([]);
+      return;
+    }
+
+    setCheckingPhone(true);
+    try {
+      const cleanPhone = phone.trim();
+      const siblingsQuery = query(
+        collection(db, "students"),
+        where("guardianPhone", "==", cleanPhone)
+      );
+      const siblingsSnapshot = await getDocs(siblingsQuery);
+      const siblings = siblingsSnapshot.docs.map(d => ({
+        id: d.id,
+        ...d.data()
+      }));
+      setExistingSiblings(siblings);
+    } catch (error) {
+      console.error("Error checking siblings:", error);
+      setExistingSiblings([]);
+    }
+    setCheckingPhone(false);
+  }
+
   async function handleAddStudent(e) {
     e.preventDefault();
     setFormError("");
     setFormLoading(true);
     try {
       const id = crypto.randomUUID();
+      const cleanPhone = formData.guardianPhone.trim();
+
+      // 1. Save the new student
       await setDoc(doc(db, "students", id), {
         firstName: formData.firstName,
         middleName: formData.middleName || "",
@@ -198,7 +231,7 @@ export default function Students() {
         academicYear: formData.academicYear,
         classId: formData.classId || null,
         guardianName: formData.guardianName,
-        guardianPhone: formData.guardianPhone,
+        guardianPhone: cleanPhone,
         guardianRelationship: formData.guardianRelationship,
         guardianEmail: formData.guardianEmail || "",
         emergencyContactName: formData.emergencyContactName,
@@ -209,9 +242,49 @@ export default function Students() {
         indexNumber: formData.indexNumber,
         status: "active",
         parentAccountCreated: false,
-        mustChangePassword: true,
         createdAt: new Date(),
       });
+
+      // 2. Check if any existing student with the same phone has a parentUid
+      let existingParentUid = null;
+      if (existingSiblings.length > 0) {
+        for (const sibling of existingSiblings) {
+          if (sibling.parentUid) {
+            existingParentUid = sibling.parentUid;
+            break;
+          }
+        }
+      }
+
+      // 3. If a parent account exists, link the new student to it
+      if (existingParentUid) {
+        try {
+          // Link the new student to the parent
+          await updateDoc(doc(db, "students", id), {
+            parentUid: existingParentUid,
+            parentAccountCreated: true,
+          });
+
+          // Add new student to parent's studentIds array
+          const parentRef = doc(db, "users", existingParentUid);
+          const parentDoc = await getDoc(parentRef);
+          if (parentDoc.exists()) {
+            const parentData = parentDoc.data();
+            const currentStudentIds = parentData.studentIds || [];
+            if (!currentStudentIds.includes(id)) {
+              await updateDoc(parentRef, {
+                studentIds: [...currentStudentIds, id],
+              });
+            }
+          }
+
+          console.log(` New student linked to existing parent account (${existingSiblings.length} sibling(s) found)`);
+        } catch (linkError) {
+          console.error("Error linking new student to existing parent:", linkError);
+          // Don't block the student enrollment — parent login will auto-link later
+        }
+      }
+
       resetForm();
       setShowModal(false);
       fetchAll();
@@ -243,8 +316,8 @@ export default function Students() {
       indexNumber: "",
       status: "active",
       parentAccountCreated: false,
-      mustChangePassword: true,
     });
+    setExistingSiblings([]);
     setFormStep(1);
     setFormError("");
   }
@@ -357,7 +430,7 @@ export default function Students() {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
               type="text"
@@ -665,11 +738,11 @@ export default function Students() {
                   <div className="space-y-4">
                     <div className="bg-amber-50 border border-amber-200 rounded-md p-3">
                       <p className="text-xs text-amber-900">
-                        <span className="font-bold">Credential Protocol:</span> Parent Portal Credentials will default to:
+                        <span className="font-bold">Parent Portal Credentials:</span>
                         <br />
-                        <span className="font-semibold">Index Number:</span> <code className="font-mono bg-amber-100 px-1 py-0.5 rounded">{formData.indexNumber || "Pending Generation"}</code>
-                        <span className="mx-2">|</span>
-                        <span className="font-semibold">Temporary Pin:</span> Guardian Telephone Number
+                        <span className="font-semibold">Login ID:</span> <code className="font-mono bg-amber-100 px-1 py-0.5 rounded">{formData.indexNumber || "Pending Generation"}</code>
+                        <br />
+                        <span className="font-semibold">Password:</span> Guardian's Phone Number <span className="text-amber-700">(no spaces or dashes)</span>
                       </p>
                     </div>
 
@@ -684,17 +757,76 @@ export default function Students() {
                           className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
                         />
                       </FormField>
-                      <FormField label="Telephone Number" required note="Serves as Initial Access Password">
+                      <FormField label="Telephone Number" required note="Serves as Parent Portal Password (remove spaces and dashes)">
                         <input
                           type="tel"
                           required
                           placeholder="e.g. 0244000000"
                           value={formData.guardianPhone}
-                          onChange={(e) => setFormData({ ...formData, guardianPhone: e.target.value })}
+                          onChange={(e) => {
+                            setFormData({ ...formData, guardianPhone: e.target.value });
+                            // Debounced sibling check
+                            clearTimeout(window._siblingCheckTimeout);
+                            window._siblingCheckTimeout = setTimeout(() => {
+                              checkForSiblings(e.target.value);
+                            }, 500);
+                          }}
                           className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
                         />
                       </FormField>
                     </div>
+
+                    {/* Sibling Detection Banner */}
+                    {checkingPhone && (
+                      <div className="bg-slate-50 border border-slate-200 rounded-md p-3 flex items-center gap-2">
+                        <svg className="w-4 h-4 animate-spin text-slate-500" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span className="text-xs text-slate-500">Checking for existing siblings...</span>
+                      </div>
+                    )}
+
+                    {!checkingPhone && existingSiblings.length > 0 && (
+                      <div className="bg-sky-50 border border-sky-200 rounded-md p-3">
+                        <div className="flex items-start gap-2">
+                          <span className="text-lg">👨‍👩‍👧</span>
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold text-sky-900">
+                              {existingSiblings.length} existing sibling{existingSiblings.length !== 1 ? "s" : ""} found
+                            </p>
+                            <p className="text-[11px] text-sky-700 mt-1">
+                              This guardian phone is already linked to:
+                            </p>
+                            <div className="mt-2 space-y-1">
+                              {existingSiblings.map((sibling) => (
+                                <div key={sibling.id} className="flex items-center gap-2 text-[11px] text-sky-800">
+                                  <span className="font-mono bg-sky-100 px-1.5 py-0.5 rounded">
+                                    {sibling.indexNumber}
+                                  </span>
+                                  <span className="font-medium">
+                                    {sibling.firstName} {sibling.lastName}
+                                  </span>
+                                  <span className="text-sky-600">
+                                    ({getClassName(sibling.classId)})
+                                  </span>
+                                  {sibling.parentAccountCreated && (
+                                    <span className="text-[9px] text-emerald-600 font-semibold">
+                                      ✓ Parent Portal Active
+                                    </span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                            {existingSiblings.some(s => s.parentUid) && (
+                              <p className="text-[10px] text-emerald-700 mt-2 font-medium">
+                                 This student will be automatically linked to the existing parent account.
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField label="Relationship to Student" required>
@@ -810,7 +942,7 @@ export default function Students() {
                         disabled={formLoading}
                         className="flex-1 px-4 py-2 bg-sky-900 text-white text-xs font-semibold rounded-md hover:bg-sky-950 transition-colors disabled:opacity-50"
                       >
-                        {formLoading ? "Enrolling Student..." : "Commit Student Record"}
+                        {formLoading ? "Enrolling Student..." : "Save Student Record"}
                       </button>
                     </div>
                   </div>

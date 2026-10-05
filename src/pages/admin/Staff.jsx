@@ -278,24 +278,24 @@ export default function Staff() {
   if (loading) {
     return (
       <AdminLayout>
-        <div className="font-['Montserrat',sans-serif] animate-pulse p-2">
+        <div className="animate-pulse p-2">
           <div className="flex items-center justify-between mb-8">
             <div className="space-y-2">
-              <div className="h-7 bg-gray-200 rounded w-48"></div>
-              <div className="h-4 bg-gray-100 rounded w-64"></div>
+              <div className="h-7 bg-line rounded w-48"></div>
+              <div className="h-4 bg-brand-soft rounded w-64"></div>
             </div>
-            <div className="h-10 bg-gray-200 rounded-lg w-32"></div>
+            <div className="h-10 bg-line rounded-lg w-32"></div>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
+          <div className="card overflow-hidden">
             <div className="p-6 space-y-4">
               {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="flex items-center space-x-4">
-                  <div className="h-4 bg-gray-200 rounded w-1/6"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/5"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/6"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/5"></div>
-                  <div className="h-6 bg-gray-200 rounded-full w-16"></div>
-                  <div className="h-8 bg-gray-200 rounded-lg w-20"></div>
+                  <div className="h-4 bg-line rounded w-1/6"></div>
+                  <div className="h-4 bg-line rounded w-1/5"></div>
+                  <div className="h-4 bg-line rounded w-1/6"></div>
+                  <div className="h-4 bg-line rounded w-1/5"></div>
+                  <div className="h-6 bg-line rounded-full w-16"></div>
+                  <div className="h-8 bg-line rounded-lg w-20"></div>
                 </div>
               ))}
             </div>
@@ -305,13 +305,13 @@ export default function Staff() {
     );
   }
 
-  const inputClass = "w-full bg-gray-50 border border-gray-200 rounded-lg px-3.5 py-2.5 text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:bg-white transition-all";
+  const inputClass = "input";
 
   const renderStep1 = () => (
     <div className="space-y-5">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">First Name <span className="text-red-500">*</span></label>
+          <label className="label">First Name <span className="text-danger">*</span></label>
           <input
             type="text"
             required
@@ -322,7 +322,7 @@ export default function Staff() {
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Middle Name</label>
+          <label className="label">Middle Name</label>
           <input
             type="text"
             placeholder="Middle name"
@@ -332,7 +332,7 @@ export default function Staff() {
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Last Name <span className="text-red-500">*</span></label>
+          <label className="label">Last Name <span className="text-danger">*</span></label>
           <input
             type="text"
             required
@@ -346,7 +346,7 @@ export default function Staff() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Gender <span className="text-red-500">*</span></label>
+          <label className="label">Gender <span className="text-danger">*</span></label>
           <select
             required
             value={formData.gender}
@@ -359,7 +359,7 @@ export default function Staff() {
           </select>
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Date of Birth</label>
+          <label className="label">Date of Birth</label>
           <input
             type="date"
             value={formData.dateOfBirth}
@@ -371,7 +371,7 @@ export default function Staff() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Phone Number</label>
+          <label className="label">Phone Number</label>
           <input
             type="tel"
             placeholder="0244-XXX-XXX"
@@ -381,7 +381,7 @@ export default function Staff() {
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Email Address</label>
+          <label className="label">Email Address</label>
           <input
             type="email"
             placeholder="email@school.edu"
@@ -393,7 +393,7 @@ export default function Staff() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Residential Address</label>
+        <label className="label">Residential Address</label>
         <input
           type="text"
           placeholder="Full residential address"
@@ -403,13 +403,13 @@ export default function Staff() {
         />
       </div>
 
-      <div className="border-t border-gray-100 pt-4 mt-2">
-        <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-4">
+      <div className="border-t border-line pt-4 mt-2">
+        <h4 className="text-xs font-bold text-ink uppercase tracking-wider mb-4">
           Emergency Contact Information
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Contact Name</label>
+            <label className="label">Contact Name</label>
             <input
               type="text"
               placeholder="Full name"
@@ -419,7 +419,7 @@ export default function Staff() {
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Phone Number</label>
+            <label className="label">Phone Number</label>
             <input
               type="tel"
               placeholder="0244-XXX-XXX"
@@ -429,7 +429,7 @@ export default function Staff() {
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Relationship</label>
+            <label className="label">Relationship</label>
             <select
               value={formData.emergencyContactRelationship}
               onChange={(e) => setFormData({ ...formData, emergencyContactRelationship: e.target.value })}
@@ -447,11 +447,11 @@ export default function Staff() {
         </div>
       </div>
 
-      <div className="flex justify-end pt-4 border-t border-gray-100">
+      <div className="flex justify-end pt-4 border-t border-line">
         <button
           type="button"
           onClick={() => setFormStep(2)}
-          className="px-5 py-2.5 bg-gray-900 text-white text-xs font-semibold rounded-lg hover:bg-gray-800 transition-colors shadow-sm flex items-center gap-2"
+          className="btn btn-primary"
         >
           <span>Employment Info</span>
           <span className="text-sm">→</span>
@@ -465,17 +465,17 @@ export default function Staff() {
 
     return (
       <div className="space-y-5">
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-3.5 flex items-center justify-between">
+        <div className="notice flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Assigned Staff ID</span>
-            <span className="text-sm font-mono font-bold text-gray-900">{staffIdPreview}</span>
+            <span className="text-[10px] font-bold text-ink-muted uppercase tracking-wider block">Assigned Staff ID</span>
+            <span className="text-sm font-mono font-bold text-ink">{staffIdPreview}</span>
           </div>
-          <span className="text-[10px] font-semibold text-gray-500 bg-white px-2.5 py-1 rounded border border-gray-200">Auto-Generated</span>
+          <span className="text-[10px] font-semibold text-ink-muted bg-surface px-2.5 py-1 rounded border border-line">Auto-Generated</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Position <span className="text-red-500">*</span></label>
+            <label className="label">Position <span className="text-danger">*</span></label>
             <select
               required
               value={formData.position}
@@ -497,7 +497,7 @@ export default function Staff() {
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Employment Type <span className="text-red-500">*</span></label>
+            <label className="label">Employment Type <span className="text-danger">*</span></label>
             <select
               required
               value={formData.employmentType}
@@ -513,7 +513,7 @@ export default function Staff() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Date Employed</label>
+            <label className="label">Date Employed</label>
             <input
               type="date"
               value={formData.dateEmployed}
@@ -522,7 +522,7 @@ export default function Staff() {
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Department/Area</label>
+            <label className="label">Department/Area</label>
             <input
               type="text"
               placeholder="e.g., Primary Department"
@@ -535,18 +535,18 @@ export default function Staff() {
 
         {isAcademic && (
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">
-              Subjects Qualified to Teach {!isHeadmaster && <span className="text-red-500">*</span>}
+            <label className="label">
+              Subjects Qualified to Teach {!isHeadmaster && <span className="text-danger">*</span>}
             </label>
-            <div className="border border-gray-200 rounded-lg p-3 max-h-36 overflow-y-auto bg-gray-50/50">
+            <div className="border border-line rounded-lg p-3 max-h-36 overflow-y-auto bg-brand-soft">
               {subjects.length === 0 ? (
-                <p className="text-xs text-gray-500 text-center py-3">
+                <p className="text-xs text-ink-muted text-center py-3">
                   No subjects available.
                 </p>
               ) : (
                 <div className="grid grid-cols-2 gap-2.5">
                   {subjects.map((subject) => (
-                    <label key={subject.name} className="flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer">
+                    <label key={subject.name} className="flex items-center gap-2 text-xs font-medium text-ink-soft cursor-pointer">
                       <input
                         type="checkbox"
                         checked={selectedSubjects.includes(subject.name)}
@@ -557,7 +557,7 @@ export default function Staff() {
                             setSelectedSubjects(selectedSubjects.filter(s => s !== subject.name));
                           }
                         }}
-                        className="w-4 h-4 text-gray-900 rounded border-gray-300 focus:ring-gray-900 accent-gray-900"
+                        className="w-4 h-4 rounded accent-brand"
                       />
                       {subject.name}
                     </label>
@@ -570,7 +570,7 @@ export default function Staff() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Highest Qualification</label>
+            <label className="label">Highest Qualification</label>
             <select
               value={formData.highestQualification}
               onChange={(e) => setFormData({ ...formData, highestQualification: e.target.value })}
@@ -587,7 +587,7 @@ export default function Staff() {
             </select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Previous Experience</label>
+            <label className="label">Previous Experience</label>
             <input
               type="text"
               placeholder="e.g., 5 years experience"
@@ -599,9 +599,9 @@ export default function Staff() {
         </div>
 
         {isAcademic && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-line">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">Account Email <span className="text-red-500">*</span></label>
+              <label className="label">Account Email <span className="text-danger">*</span></label>
               <input
                 type="email"
                 required
@@ -612,7 +612,7 @@ export default function Staff() {
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-gray-600 uppercase tracking-wider">System Password <span className="text-red-500">*</span></label>
+              <label className="label">System Password <span className="text-danger">*</span></label>
               <input
                 type="password"
                 required
@@ -625,18 +625,18 @@ export default function Staff() {
           </div>
         )}
 
-        <div className="flex gap-3 pt-4 border-t border-gray-100">
+        <div className="flex gap-3 pt-4 border-t border-line">
           <button
             type="button"
             onClick={() => setFormStep(1)}
-            className="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-50 transition-colors"
+            className="btn btn-secondary flex-1"
           >
             ← Back
           </button>
           <button
             type="submit"
             disabled={formLoading}
-            className="flex-1 px-4 py-2.5 bg-gray-900 text-white text-xs font-semibold rounded-lg hover:bg-gray-800 transition-colors shadow-sm disabled:opacity-50"
+            className="btn btn-primary flex-1"
           >
             {formLoading ? "Creating Staff..." : "Save Staff Member"}
           </button>
@@ -647,21 +647,21 @@ export default function Staff() {
 
   return (
     <AdminLayout>
-      <div className="font-['Montserrat',sans-serif] text-gray-800">
+      <div className="text-ink">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+              <h1 className="text-2xl font-bold text-ink tracking-tight">
                 Staff Directory
               </h1>
-              <p className="text-xs text-gray-500 mt-1 font-medium">
+              <p className="text-xs text-ink-muted mt-1 font-medium">
                 Manage academic and non-academic staff credentials & roles
               </p>
             </div>
             <button
               onClick={() => setShowModal(true)}
-              className="inline-flex items-center justify-center px-4 py-2.5 bg-gray-900 text-white text-xs font-semibold rounded-lg hover:bg-gray-800 transition-colors shadow-sm gap-2"
+              className="btn btn-primary"
             >
               <span className="text-base leading-none">+</span>
               <span>Add Staff Member</span>
@@ -671,88 +671,88 @@ export default function Staff() {
 
         {/* Table Container */}
         {staff.length === 0 ? (
-          <div className="bg-white rounded-xl border border-gray-200/80 p-12 text-center shadow-sm">
-            <h3 className="text-sm font-semibold text-gray-800">No Staff Members Found</h3>
-            <p className="text-xs text-gray-400 mt-1">
+          <div className="card p-12 text-center">
+            <h3 className="text-sm font-semibold text-ink">No Staff Members Found</h3>
+            <p className="text-xs text-ink-faint mt-1">
               Click the button above to register a new staff member.
             </p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-gray-200/80 overflow-hidden shadow-sm">
+          <div className="card overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50/80 border-b border-gray-200/80">
+                <thead className="bg-brand-soft border-b border-line">
                   <tr>
-                    <th className="px-5 py-3.5 font-bold text-gray-500 uppercase tracking-wider">
+                    <th className="px-5 py-3.5 font-bold text-ink-muted uppercase tracking-wider">
                       Staff ID
                     </th>
-                    <th className="px-5 py-3.5 font-bold text-gray-500 uppercase tracking-wider">
+                    <th className="px-5 py-3.5 font-bold text-ink-muted uppercase tracking-wider">
                       Full Name
                     </th>
-                    <th className="px-5 py-3.5 font-bold text-gray-500 uppercase tracking-wider">
+                    <th className="px-5 py-3.5 font-bold text-ink-muted uppercase tracking-wider">
                       Position
                     </th>
-                    <th className="px-5 py-3.5 font-bold text-gray-500 uppercase tracking-wider">
+                    <th className="px-5 py-3.5 font-bold text-ink-muted uppercase tracking-wider">
                       Assigned Subjects
                     </th>
-                    <th className="px-5 py-3.5 font-bold text-gray-500 uppercase tracking-wider">
+                    <th className="px-5 py-3.5 font-bold text-ink-muted uppercase tracking-wider">
                       Contact Info
                     </th>
-                    <th className="px-5 py-3.5 font-bold text-gray-500 uppercase tracking-wider">
+                    <th className="px-5 py-3.5 font-bold text-ink-muted uppercase tracking-wider">
                       Login
                     </th>
-                    <th className="px-5 py-3.5 font-bold text-gray-500 uppercase tracking-wider">
+                    <th className="px-5 py-3.5 font-bold text-ink-muted uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-5 py-3.5 font-bold text-gray-500 uppercase tracking-wider text-right">
+                    <th className="px-5 py-3.5 font-bold text-ink-muted uppercase tracking-wider text-right">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-line">
                   {staff.map((member) => (
-                    <tr key={member.id} className="hover:bg-gray-50/60 transition-colors">
-                      <td className="px-5 py-4 font-mono font-bold text-gray-900">
-                        {member.staffId || <span className="text-gray-300">—</span>}
+                    <tr key={member.id} className="hover:bg-brand-soft transition-colors">
+                      <td className="px-5 py-4 font-mono font-bold text-ink">
+                        {member.staffId || <span className="text-ink-faint">—</span>}
                       </td>
                       <td className="px-5 py-4">
                         <div>
-                          <p className="font-semibold text-gray-900">
+                          <p className="font-semibold text-ink">
                             {getFullName(member)}
                           </p>
                           {member.department && (
-                            <p className="text-[11px] text-gray-400 font-normal">{member.department}</p>
+                            <p className="text-[11px] text-ink-faint font-normal">{member.department}</p>
                           )}
                         </div>
                       </td>
-                      <td className="px-5 py-4 font-medium text-gray-700">
+                      <td className="px-5 py-4 font-medium text-ink-soft">
                         {member.position}
                       </td>
                       <td className="px-5 py-4">
                         {member.subjects && member.subjects.length > 0 ? (
                           <div className="flex flex-wrap gap-1">
                             {member.subjects.slice(0, 2).map((subject, index) => (
-                              <span key={index} className="inline-flex px-2 py-0.5 bg-gray-100 text-gray-700 font-medium text-[11px] rounded">
+                              <span key={index} className="inline-flex px-2 py-0.5 bg-brand-soft text-ink-soft font-medium text-[11px] rounded">
                                 {subject}
                               </span>
                             ))}
                             {member.subjects.length > 2 && (
-                              <span className="text-[11px] text-gray-400 self-center">+{member.subjects.length - 2} more</span>
+                              <span className="text-[11px] text-ink-faint self-center">+{member.subjects.length - 2} more</span>
                             )}
                           </div>
                         ) : (
-                          <span className="text-gray-400">—</span>
+                          <span className="text-ink-faint">—</span>
                         )}
                       </td>
-                      <td className="px-5 py-4 text-gray-600 space-y-0.5">
+                      <td className="px-5 py-4 text-ink-soft space-y-0.5">
                         <p>{member.email || "—"}</p>
-                        <p className="text-[11px] text-gray-400">{member.phone || ""}</p>
+                        <p className="text-[11px] text-ink-faint">{member.phone || ""}</p>
                       </td>
                       <td className="px-5 py-4">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold ${
                           member.hasLogin
-                            ? "bg-blue-50 text-blue-700 border border-blue-100"
-                            : "bg-gray-50 text-gray-400 border border-gray-100"
+                            ? "bg-brand-soft text-ink border border-line"
+                            : "bg-surface text-ink-faint border border-line"
                         }`}>
                           {member.hasLogin ? "Enabled" : "Disabled"}
                         </span>
@@ -760,10 +760,10 @@ export default function Staff() {
                       <td className="px-5 py-4">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium ${
                           member.status === "active"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
-                            : "bg-rose-50 text-rose-700 border border-rose-100"
+                            ? "bg-success-soft text-success-ink border border-success-line"
+                            : "bg-danger-soft text-danger-ink border border-danger-line"
                         }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${member.status === "active" ? "bg-emerald-500" : "bg-rose-500"}`}></span>
+                          <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${member.status === "active" ? "bg-success" : "bg-danger"}`}></span>
                           {member.status === "active" ? "Active" : "Inactive"}
                         </span>
                       </td>
@@ -772,8 +772,8 @@ export default function Staff() {
                           onClick={() => toggleStatus(member)}
                           className={`text-xs font-semibold px-3 py-1.5 rounded-md transition-colors ${
                             member.status === "active"
-                              ? "text-rose-600 hover:bg-rose-50"
-                              : "text-emerald-600 hover:bg-emerald-50"
+                              ? "text-danger hover:bg-danger-soft"
+                              : "text-success hover:bg-success-soft"
                           }`}
                         >
                           {member.status === "active" ? "Deactivate" : "Activate"}
@@ -789,21 +789,21 @@ export default function Staff() {
 
         {/* Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto border border-gray-100">
+          <div className="fixed inset-0 bg-brand backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
               
               <div className="flex items-center justify-between mb-5">
                 <div>
-                  <h3 className="text-base font-bold text-gray-900">
+                  <h3 className="text-base font-bold text-ink">
                     Add New Staff Member
                   </h3>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-xs text-ink-muted mt-0.5">
                     Step {formStep} of 2 — {formStep === 1 ? "Personal Details" : "Employment & System Role"}
                   </p>
                 </div>
                 <button
                   onClick={() => { resetForm(); setShowModal(false); }}
-                  className="text-gray-400 hover:text-gray-600 transition-colors text-xl leading-none p-1 rounded-lg hover:bg-gray-100"
+                  className="text-ink-faint hover:text-ink-soft transition-colors text-xl leading-none p-1 rounded-lg hover:bg-brand-soft"
                 >
                   ✕
                 </button>
@@ -811,12 +811,12 @@ export default function Staff() {
 
               {/* Progress Bar */}
               <div className="flex items-center gap-2 mb-6">
-                <div className={`h-1 flex-1 rounded-full transition-all ${formStep >= 1 ? 'bg-gray-900' : 'bg-gray-200'}`} />
-                <div className={`h-1 flex-1 rounded-full transition-all ${formStep >= 2 ? 'bg-gray-900' : 'bg-gray-200'}`} />
+                <div className={`h-1 flex-1 rounded-full transition-all ${formStep >= 1 ? 'bg-brand' : 'bg-line'}`} />
+                <div className={`h-1 flex-1 rounded-full transition-all ${formStep >= 2 ? 'bg-brand' : 'bg-line'}`} />
               </div>
 
               {formError && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs p-3 rounded-lg mb-5">
+                <div className="alert-error mb-5">
                   {formError}
                 </div>
               )}

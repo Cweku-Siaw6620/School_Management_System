@@ -510,15 +510,15 @@ export default function ClassDetail() {
     return (
       <HeadmasterLayout>
         <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-slate-200/60 rounded w-48"></div>
+          <div className="h-8 bg-line rounded w-48"></div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
-              <div className="h-44 bg-slate-100 rounded-xl border border-slate-200/80"></div>
-              <div className="h-60 bg-slate-100 rounded-xl border border-slate-200/80"></div>
+              <div className="h-44 bg-brand-soft rounded-xl border border-line"></div>
+              <div className="h-60 bg-brand-soft rounded-xl border border-line"></div>
             </div>
             <div className="space-y-6">
-              <div className="h-48 bg-slate-100 rounded-xl border border-slate-200/80"></div>
-              <div className="h-60 bg-slate-100 rounded-xl border border-slate-200/80"></div>
+              <div className="h-48 bg-brand-soft rounded-xl border border-line"></div>
+              <div className="h-60 bg-brand-soft rounded-xl border border-line"></div>
             </div>
           </div>
         </div>
@@ -529,11 +529,11 @@ export default function ClassDetail() {
   if (!classData) {
     return (
       <HeadmasterLayout>
-        <div className="bg-white rounded-xl border border-slate-200/80 p-12 text-center shadow-xs">
-          <h2 className="font-serif text-lg font-bold text-slate-800">Class Record Not Found</h2>
+        <div className="card p-12 text-center">
+          <h2 className="text-lg font-bold text-ink">Class Record Not Found</h2>
           <button
             onClick={() => navigate("/headmaster/classes")}
-            className="mt-4 px-4 py-2 bg-sky-900 text-white text-xs font-medium rounded-md hover:bg-sky-950 transition-colors"
+            className="btn btn-primary mt-4"
           >
             ← Return to Class Roster
           </button>
@@ -549,19 +549,19 @@ export default function ClassDetail() {
       <div className="space-y-6">
 
         {/* Top Header & Breadcrumb */}
-        <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/headmaster/classes")}
-              className="px-3 py-1.5 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-md transition-colors"
+              className="btn btn-secondary px-3 py-1.5"
             >
               ← Back
             </button>
             <div>
-              <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-2xl font-bold text-ink tracking-tight">
                 {classData.name}
               </h1>
-              <p className="text-xs text-slate-500 font-medium mt-0.5">
+              <p className="text-xs text-ink-muted font-medium mt-0.5">
                 {classData.level} &bull; {selectedTerm?.name || "No active term"} &bull; {students.length} students
               </p>
             </div>
@@ -569,18 +569,18 @@ export default function ClassDetail() {
           <div className="flex items-center gap-3">
             <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${
               classData.status === "active"
-                ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                : "bg-amber-50 text-amber-800 border-amber-200"
+                ? "bg-success-soft text-success-ink border-success-line"
+                : "bg-danger-soft text-danger-ink border-danger-line"
             }`}>
-              <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${classData.status === "active" ? "bg-emerald-600" : "bg-amber-600"}`}></span>
+              <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${classData.status === "active" ? "bg-success" : "bg-danger"}`}></span>
               {classData.status === "active" ? "Active Class" : "Inactive"}
             </span>
             {hasAssignments ? (
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border bg-sky-50 text-sky-700 border-sky-200">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border bg-brand-soft text-ink-soft border-line">
                  Assigned
               </span>
             ) : (
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border bg-amber-50 text-amber-700 border-amber-200">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border bg-surface text-ink-muted border-line-strong">
                  No Assignments
               </span>
             )}
@@ -589,17 +589,17 @@ export default function ClassDetail() {
 
         {/* Copy Previous Term Banner */}
         {previousTerm && !hasAssignments && selectedTerm && (
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
+          <div className="notice rounded-xl flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <span className="text-2xl">📋</span>
               <div>
-                <p className="text-sm font-medium text-amber-800">No assignments for {selectedTerm.name}</p>
-                <p className="text-xs text-amber-600">Copy from {previousTerm.name} to avoid re-assigning all teachers.</p>
+                <p className="text-sm font-medium text-ink">No assignments for {selectedTerm.name}</p>
+                <p className="text-xs text-ink-muted">Copy from {previousTerm.name} to avoid re-assigning all teachers.</p>
               </div>
             </div>
             <button
               onClick={() => setShowCopyConfirm(true)}
-              className="px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white text-xs font-medium rounded-md transition-colors"
+              className="btn btn-primary"
             >
               Copy from Previous Term
             </button>
@@ -608,12 +608,12 @@ export default function ClassDetail() {
 
         {/* Feedback Messages */}
         {successMessage && (
-          <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-4 py-3 rounded-md">
+          <div className="bg-success-soft border border-success-line text-success-ink text-xs px-4 py-3 rounded-lg">
             {successMessage}
           </div>
         )}
         {formError && (
-          <div className="bg-rose-50 border border-rose-200 text-rose-800 text-xs px-4 py-3 rounded-md">
+          <div className="alert-error">
             {formError}
           </div>
         )}
@@ -625,37 +625,37 @@ export default function ClassDetail() {
           <div className="lg:col-span-2 space-y-6">
             
             {/* Overview / Staff Assignment */}
-            <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 className="font-serif text-base font-bold text-slate-900">
+            <div className="card p-6">
+              <div className="flex items-center justify-between pb-3 border-b border-line">
+                <h3 className="text-base font-bold text-ink">
                   Class Overview — {selectedTerm?.name || "No Term"}
                 </h3>
                 {!hasAssignments && previousTerm && (
                   <button
                     onClick={() => setShowCopyConfirm(true)}
-                    className="text-xs text-amber-700 font-semibold hover:underline"
+                    className="text-xs text-ink font-semibold hover:underline"
                   >
                     📋 Copy from Previous Term
                   </button>
                 )}
               </div>
-              <div className="divide-y divide-slate-100 text-sm">
+              <div className="divide-y divide-line text-sm">
                 <div className="py-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Form Teacher</span>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-ink-muted">Form Teacher</span>
                   <div className="flex items-center gap-3">
-                    <span className={`font-medium ${classAssignment ? 'text-slate-800' : 'text-amber-600'}`}>
+                    <span className={`font-medium ${classAssignment ? 'text-ink' : 'text-ink-muted'}`}>
                       {getClassTeacher()}
                     </span>
                     <button
                       onClick={() => setShowTeacherModal(true)}
-                      className="text-xs text-sky-800 font-semibold hover:underline"
+                      className="text-xs text-ink font-semibold hover:underline"
                     >
                       {classAssignment ? "Reassign" : "Assign"}
                     </button>
                     {classAssignment && (
                       <button
                         onClick={handleRemoveTeacher}
-                        className="text-xs text-rose-700 font-semibold hover:underline"
+                        className="text-xs text-danger-ink font-semibold hover:underline"
                       >
                         Remove
                       </button>
@@ -663,18 +663,18 @@ export default function ClassDetail() {
                   </div>
                 </div>
                 <div className="py-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Academic Level</span>
-                  <span className="font-medium text-slate-800">{classData.level}</span>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-ink-muted">Academic Level</span>
+                  <span className="font-medium text-ink">{classData.level}</span>
                 </div>
                 <div className="py-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Enrollment</span>
-                  <span className="font-medium text-slate-800">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-ink-muted">Enrollment</span>
+                  <span className="font-medium text-ink">
                     {students.length} Students
                   </span>
                 </div>
                 <div className="py-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Assignment Status</span>
-                  <span className={`text-xs font-medium ${hasAssignments ? 'text-emerald-600' : 'text-amber-600'}`}>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-ink-muted">Assignment Status</span>
+                  <span className={`text-xs font-medium ${hasAssignments ? 'text-success-ink' : 'text-ink-muted'}`}>
                     {hasAssignments ? ' Assigned for this term' : ' No teachers assigned yet'}
                   </span>
                 </div>
@@ -682,18 +682,18 @@ export default function ClassDetail() {
             </div>
 
             {/* Subject Roster */}
-            <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 className="font-serif text-base font-bold text-slate-900">
+            <div className="card p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-line">
+                <h3 className="text-base font-bold text-ink">
                   Assigned Subjects ({subjects.length})
                 </h3>
                 <div className="flex gap-3">
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-ink-faint">
                     {Object.keys(subjectAssignments).length} assigned
                   </span>
                   <button
                     onClick={() => navigate("/headmaster/subjects")}
-                    className="text-xs font-semibold text-sky-800 hover:underline"
+                    className="text-xs font-semibold text-ink hover:underline"
                   >
                     Manage Curriculum →
                   </button>
@@ -701,20 +701,20 @@ export default function ClassDetail() {
               </div>
 
               {subjects.length === 0 ? (
-                <p className="text-xs text-slate-400 py-4 text-center">No subjects currently associated with this class.</p>
+                <p className="text-xs text-ink-faint py-4 text-center">No subjects currently associated with this class.</p>
               ) : (
-                <div className="divide-y divide-slate-100">
+                <div className="divide-y divide-line">
                   {subjects.map((sub) => {
                     const isAssigned = !!subjectAssignments[sub.id];
                     return (
                       <div key={sub.id} className="py-3 flex items-center justify-between">
                         <div>
-                          <p className="font-serif text-sm font-semibold text-slate-900">{sub.name}</p>
-                          <p className="text-xs text-slate-500 mt-0.5">
-                            Taught by: <strong className={`${isAssigned ? 'text-slate-700' : 'text-amber-600'} font-normal`}>
+                          <p className="text-sm font-semibold text-ink">{sub.name}</p>
+                          <p className="text-xs text-ink-muted mt-0.5">
+                            Taught by: <strong className={`${isAssigned ? 'text-ink-soft' : 'text-ink-muted'} font-normal`}>
                               {getSubjectTeacher(sub.id)}
                             </strong>
-                            {!isAssigned && <span className="text-amber-500 ml-1">(Not assigned)</span>}
+                            {!isAssigned && <span className="text-ink-faint ml-1">(Not assigned)</span>}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
@@ -723,14 +723,14 @@ export default function ClassDetail() {
                               setSelectedSubjectId(sub.id);
                               setShowSubjectTeacherModal(true);
                             }}
-                            className="text-xs text-sky-800 font-semibold hover:underline"
+                            className="text-xs text-ink font-semibold hover:underline"
                           >
                             {isAssigned ? "Reassign" : "Assign"}
                           </button>
                           {isAssigned && (
                             <button
                               onClick={() => handleRemoveSubjectTeacher(sub.id)}
-                              className="text-xs text-rose-700 font-semibold hover:underline"
+                              className="text-xs text-danger-ink font-semibold hover:underline"
                             >
                               Remove
                             </button>
@@ -749,15 +749,15 @@ export default function ClassDetail() {
           <div className="space-y-6">
             
             {/* Daily Attendance Card */}
-            <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                <h3 className="font-serif text-base font-bold text-slate-900">
+            <div className="card p-6 space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-line">
+                <h3 className="text-base font-bold text-ink">
                   Daily Attendance
                 </h3>
                 <div className="text-right">
-                  <span className="text-xs text-slate-400 font-mono block">{todayDate}</span>
+                  <span className="text-xs text-ink-faint font-mono block">{todayDate}</span>
                   {attendanceSummary.termName && attendanceSummary.termName !== "Error" && (
-                    <span className="text-[10px] text-slate-400 font-medium block">
+                    <span className="text-[10px] text-ink-faint font-medium block">
                       {attendanceSummary.termName}
                     </span>
                   )}
@@ -766,53 +766,53 @@ export default function ClassDetail() {
 
               {/* Info Banner — Shows term status without blocking */}
               {!attendanceSummary.isWithinTerm && attendanceSummary.termName !== "Error" && attendanceSummary.termName !== "No active term" && (
-                <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg">
-                  <p className="text-xs text-amber-700 text-center">
+                <div className="notice p-2">
+                  <p className="text-xs text-ink-soft text-center">
                     📅 Today is outside the active term ({attendanceSummary.termName})
                   </p>
-                  <p className="text-[10px] text-amber-600 text-center">
+                  <p className="text-[10px] text-ink-muted text-center">
                     Attendance may not be available for this date
                   </p>
                 </div>
               )}
 
               {attendanceSummary.termName === "No active term" && (
-                <div className="p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                  <p className="text-xs text-slate-500 text-center">
+                <div className="notice p-2">
+                  <p className="text-xs text-ink-muted text-center">
                      No active term. Please activate a term first.
                   </p>
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-2">
-                <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-2.5 text-center">
-                  <p className="font-serif text-xl font-bold text-emerald-900">{attendanceSummary.present}</p>
-                  <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">Present</p>
+                <div className="bg-success-soft border border-success-line rounded-lg p-2.5 text-center">
+                  <p className="text-xl font-bold text-success-ink">{attendanceSummary.present}</p>
+                  <p className="text-xs font-semibold text-success-ink uppercase tracking-wider">Present</p>
                 </div>
-                <div className="bg-rose-50 border border-rose-100 rounded-lg p-2.5 text-center">
-                  <p className="font-serif text-xl font-bold text-rose-900">{attendanceSummary.absent}</p>
-                  <p className="text-xs font-semibold text-rose-700 uppercase tracking-wider">Absent</p>
+                <div className="bg-danger-soft border border-danger-line rounded-lg p-2.5 text-center">
+                  <p className="text-xl font-bold text-danger-ink">{attendanceSummary.absent}</p>
+                  <p className="text-xs font-semibold text-danger-ink uppercase tracking-wider">Absent</p>
                 </div>
-                <div className="bg-amber-50 border border-amber-100 rounded-lg p-2.5 text-center">
-                  <p className="font-serif text-xl font-bold text-amber-900">{attendanceSummary.late}</p>
-                  <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Late</p>
+                <div className="bg-brand-soft border border-line rounded-lg p-2.5 text-center">
+                  <p className="text-xl font-bold text-ink">{attendanceSummary.late}</p>
+                  <p className="text-xs font-semibold text-ink-soft uppercase tracking-wider">Late</p>
                 </div>
-                <div className="bg-sky-50 border border-sky-100 rounded-lg p-2.5 text-center">
-                  <p className="font-serif text-xl font-bold text-sky-900">{attendanceSummary.excused}</p>
-                  <p className="text-xs font-semibold text-sky-700 uppercase tracking-wider">Excused</p>
+                <div className="bg-surface border border-line-strong rounded-lg p-2.5 text-center">
+                  <p className="text-xl font-bold text-ink">{attendanceSummary.excused}</p>
+                  <p className="text-xs font-semibold text-ink-soft uppercase tracking-wider">Excused</p>
                 </div>
               </div>
 
-              <div className="pt-2 text-center border-t border-slate-100">
-                <p className="text-xs text-slate-500 mb-3">
+              <div className="pt-2 text-center border-t border-line">
+                <p className="text-xs text-ink-muted mb-3">
                   {attendanceSummary.total} of {students.length} students logged today
                   {!attendanceSummary.isWithinTerm && attendanceSummary.termName !== "No active term" && (
-                    <span className="text-amber-500 block text-[10px]">(Outside active term)</span>
+                    <span className="text-ink-faint block text-[10px]">(Outside active term)</span>
                   )}
                 </p>
                 <button
                   onClick={() => navigate("/headmaster/attendance")}
-                  className="w-full py-2 px-3 border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-medium rounded-md transition-colors"
+                  className="btn btn-secondary w-full"
                 >
                   View Attendance Register
                 </button>
@@ -820,14 +820,14 @@ export default function ClassDetail() {
             </div>
 
             {/* Enrolled Students Roster */}
-            <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 className="font-serif text-base font-bold text-slate-900">
+            <div className="card p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-line">
+                <h3 className="text-base font-bold text-ink">
                   Students ({students.length})
                 </h3>
                 <button
                   onClick={() => setShowStudentModal(true)}
-                  className="text-xs font-semibold text-sky-800 hover:underline disabled:opacity-50"
+                  className="text-xs font-semibold text-ink hover:underline disabled:opacity-50"
                   disabled={availableStudents.length === 0}
                 >
                   + Add
@@ -835,17 +835,17 @@ export default function ClassDetail() {
               </div>
 
               {students.length === 0 ? (
-                <p className="text-xs text-slate-400 py-4 text-center">No students currently enrolled.</p>
+                <p className="text-xs text-ink-faint py-4 text-center">No students currently enrolled.</p>
               ) : (
-                <div className="divide-y divide-slate-100 max-h-64 overflow-y-auto">
+                <div className="divide-y divide-line max-h-64 overflow-y-auto">
                   {students.map((student) => (
                     <div key={student.id} className="py-2.5 flex items-center justify-between">
-                      <span className="text-xs font-semibold text-slate-800 font-serif">
+                      <span className="text-xs font-semibold text-ink">
                         {student.firstName} {student.lastName}
                       </span>
                       <button
                         onClick={() => handleRemoveStudent(student.id, `${student.firstName} ${student.lastName}`)}
-                        className="text-xs text-rose-700 hover:underline"
+                        className="text-xs text-danger-ink hover:underline"
                       >
                         Remove
                       </button>
@@ -860,37 +860,37 @@ export default function ClassDetail() {
 
         {/* Modal: Class Teacher Assignment */}
         {showTeacherModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 border border-slate-200/80">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+          <div className="fixed inset-0 bg-brand backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-md p-6">
+              <div className="flex items-center justify-between pb-4 border-b border-line mb-4">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-slate-900">Assign Class Teacher</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">{selectedTerm?.name} • {classData.name}</p>
+                  <h3 className="text-lg font-bold text-ink">Assign Class Teacher</h3>
+                  <p className="text-xs text-ink-muted mt-0.5">{selectedTerm?.name} • {classData.name}</p>
                 </div>
                 <button
                   onClick={() => { setShowTeacherModal(false); setFormError(""); }}
-                  className="text-slate-400 hover:text-slate-600"
+                  className="text-ink-faint hover:text-ink-soft"
                 >
                   ✕
                 </button>
               </div>
 
               {formError && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-800 text-xs px-3.5 py-2.5 rounded-md mb-4">
+                <div className="alert-error mb-4">
                   {formError}
                 </div>
               )}
 
               <form onSubmit={handleAssignTeacher} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Select Teacher
                   </label>
                   <select
                     required
                     value={selectedTeacherId}
                     onChange={(e) => setSelectedTeacherId(e.target.value)}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-sky-800"
+                    className="input"
                   >
                     <option value="">Select an active staff member...</option>
                     {staff.map(t => (
@@ -901,24 +901,24 @@ export default function ClassDetail() {
                   </select>
                 </div>
 
-                <div className="bg-amber-50 border border-amber-200 rounded-md p-2.5">
-                  <p className="text-xs text-amber-700">
+                <div className="notice">
+                  <p className="text-xs text-ink-soft">
                      Assignment is for <strong>{selectedTerm?.name}</strong>. It will NOT affect previous terms.
                   </p>
                 </div>
 
-                <div className="flex gap-3 pt-3 border-t border-slate-100">
+                <div className="flex gap-3 pt-3 border-t border-line">
                   <button
                     type="button"
                     onClick={() => { setShowTeacherModal(false); setFormError(""); }}
-                    className="flex-1 border border-slate-300 text-slate-700 py-2 rounded-md text-xs font-medium hover:bg-slate-50"
+                    className="btn btn-secondary flex-1"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={actionLoading}
-                    className="flex-1 bg-sky-900 text-white py-2 rounded-md text-xs font-medium hover:bg-sky-950 disabled:opacity-50"
+                    className="btn btn-primary flex-1"
                   >
                     {actionLoading ? "Saving..." : "Assign for This Term"}
                   </button>
@@ -930,61 +930,61 @@ export default function ClassDetail() {
 
         {/* Modal: Enroll Unassigned Students */}
         {showStudentModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 border border-slate-200/80 max-h-[85vh] flex flex-col">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4 shrink-0">
-                <h3 className="font-serif text-lg font-bold text-slate-900">Enroll Unassigned Students</h3>
+          <div className="fixed inset-0 bg-brand backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-md p-6 max-h-[85vh] flex flex-col">
+              <div className="flex items-center justify-between pb-4 border-b border-line mb-4 shrink-0">
+                <h3 className="text-lg font-bold text-ink">Enroll Unassigned Students</h3>
                 <button
                   onClick={() => { setShowStudentModal(false); setFormError(""); }}
-                  className="text-slate-400 hover:text-slate-600"
+                  className="text-ink-faint hover:text-ink-soft"
                 >
                   ✕
                 </button>
               </div>
 
               {formError && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-800 text-xs px-3.5 py-2.5 rounded-md mb-4 shrink-0">
+                <div className="alert-error mb-4 shrink-0">
                   {formError}
                 </div>
               )}
 
               {availableStudents.length === 0 ? (
-                <p className="text-xs text-slate-500 py-6 text-center">No unassigned students available.</p>
+                <p className="text-xs text-ink-muted py-6 text-center">No unassigned students available.</p>
               ) : (
                 <form onSubmit={handleAddStudents} className="space-y-4 flex-1 flex flex-col min-h-0">
-                  <p className="text-xs text-slate-500 shrink-0">
+                  <p className="text-xs text-ink-muted shrink-0">
                     Select students to assign to <strong>{classData.name}</strong>:
                   </p>
                   
-                  <div className="space-y-1 overflow-y-auto border border-slate-200 rounded-md p-2 flex-1">
+                  <div className="space-y-1 overflow-y-auto border border-line rounded-md p-2 flex-1">
                     {availableStudents.map((st) => (
                       <label
                         key={st.id}
-                        className="flex items-center gap-3 px-3 py-2 hover:bg-slate-50 rounded-md cursor-pointer transition-colors text-xs font-medium text-slate-800"
+                        className="flex items-center gap-3 px-3 py-2 hover:bg-brand-soft rounded-md cursor-pointer transition-colors text-xs font-medium text-ink"
                       >
                         <input
                           type="checkbox"
                           checked={selectedStudentIds.includes(st.id)}
                           onChange={() => handleToggleStudent(st.id)}
-                          className="w-4 h-4 text-sky-900 rounded border-slate-300 focus:ring-sky-800"
+                          className="w-4 h-4 rounded accent-brand"
                         />
                         {st.firstName} {st.lastName}
                       </label>
                     ))}
                   </div>
 
-                  <div className="flex gap-3 pt-3 border-t border-slate-100 shrink-0">
+                  <div className="flex gap-3 pt-3 border-t border-line shrink-0">
                     <button
                       type="button"
                       onClick={() => { setShowStudentModal(false); setFormError(""); }}
-                      className="flex-1 border border-slate-300 text-slate-700 py-2 rounded-md text-xs font-medium hover:bg-slate-50"
+                      className="btn btn-secondary flex-1"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={actionLoading || selectedStudentIds.length === 0}
-                      className="flex-1 bg-sky-900 text-white py-2 rounded-md text-xs font-medium hover:bg-sky-950 disabled:opacity-50"
+                      className="btn btn-primary flex-1"
                     >
                       {actionLoading ? "Enrolling..." : `Enroll ${selectedStudentIds.length} Selected`}
                     </button>
@@ -997,32 +997,32 @@ export default function ClassDetail() {
 
         {/* Modal: Subject Teacher Assignment */}
         {showSubjectTeacherModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 border border-slate-200/80">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+          <div className="fixed inset-0 bg-brand backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-md p-6">
+              <div className="flex items-center justify-between pb-4 border-b border-line mb-4">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-slate-900">Assign Subject Teacher</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <h3 className="text-lg font-bold text-ink">Assign Subject Teacher</h3>
+                  <p className="text-xs text-ink-muted mt-0.5">
                     {subjects.find(s => s.id === selectedSubjectId)?.name} • {selectedTerm?.name}
                   </p>
                 </div>
                 <button
                   onClick={() => { setShowSubjectTeacherModal(false); setFormError(""); }}
-                  className="text-slate-400 hover:text-slate-600"
+                  className="text-ink-faint hover:text-ink-soft"
                 >
                   ✕
                 </button>
               </div>
 
               {formError && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-800 text-xs px-3.5 py-2.5 rounded-md mb-4">
+                <div className="alert-error mb-4">
                   {formError}
                 </div>
               )}
 
               <form onSubmit={handleAssignSubjectTeacher} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Teacher for {subjects.find(s => s.id === selectedSubjectId)?.name}
                   </label>
                   
@@ -1039,7 +1039,7 @@ export default function ClassDetail() {
                           required
                           value={selectedTeacherId}
                           onChange={(e) => setSelectedTeacherId(e.target.value)}
-                          className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-sky-800"
+                          className="input"
                           disabled={qualifiedTeachers.length === 0}
                         >
                           <option value="">Select a teacher...</option>
@@ -1051,7 +1051,7 @@ export default function ClassDetail() {
                         </select>
                         
                         {qualifiedTeachers.length === 0 && (
-                          <p className="text-xs text-amber-600 mt-2">
+                          <p className="text-xs text-ink-muted mt-2">
                              No teachers are qualified to teach this subject.
                             Go to Staff Management to assign subjects to teachers.
                           </p>
@@ -1061,24 +1061,24 @@ export default function ClassDetail() {
                   })()}
                 </div>
 
-                <div className="bg-amber-50 border border-amber-200 rounded-md p-2.5">
-                  <p className="text-xs text-amber-700">
+                <div className="notice">
+                  <p className="text-xs text-ink-soft">
                      Assignment is for <strong>{selectedTerm?.name}</strong>. It will NOT affect previous terms.
                   </p>
                 </div>
 
-                <div className="flex gap-3 pt-3 border-t border-slate-100">
+                <div className="flex gap-3 pt-3 border-t border-line">
                   <button
                     type="button"
                     onClick={() => { setShowSubjectTeacherModal(false); setFormError(""); }}
-                    className="flex-1 border border-slate-300 text-slate-700 py-2 rounded-md text-xs font-medium hover:bg-slate-50"
+                    className="btn btn-secondary flex-1"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={actionLoading}
-                    className="flex-1 bg-sky-900 text-white py-2 rounded-md text-xs font-medium hover:bg-sky-950 disabled:opacity-50"
+                    className="btn btn-primary flex-1"
                   >
                     {actionLoading ? "Saving..." : "Assign for This Term"}
                   </button>
@@ -1090,40 +1090,40 @@ export default function ClassDetail() {
 
         {/* Modal: Copy Previous Term Confirmation */}
         {showCopyConfirm && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 border border-slate-200/80">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
-                <h3 className="font-serif text-lg font-bold text-slate-900">Copy from Previous Term</h3>
+          <div className="fixed inset-0 bg-brand backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-md p-6">
+              <div className="flex items-center justify-between pb-4 border-b border-line mb-4">
+                <h3 className="text-lg font-bold text-ink">Copy from Previous Term</h3>
                 <button
                   onClick={() => setShowCopyConfirm(false)}
-                  className="text-slate-400 hover:text-slate-600"
+                  className="text-ink-faint hover:text-ink-soft"
                 >
                   ✕
                 </button>
               </div>
 
               <div className="space-y-4">
-                <div className="bg-amber-50 border border-amber-200 rounded-md p-3">
-                  <p className="text-sm text-amber-800 font-medium">Copy all teacher assignments from:</p>
-                  <p className="text-xs text-amber-700 mt-1">
+                <div className="notice">
+                  <p className="text-sm text-ink-soft font-medium">Copy all teacher assignments from:</p>
+                  <p className="text-xs text-ink-soft mt-1">
                     <strong>{previousTerm?.name}</strong> → <strong>{selectedTerm?.name}</strong>
                   </p>
                 </div>
 
-                <div className="text-xs text-slate-500 space-y-1">
+                <div className="text-xs text-ink-muted space-y-1">
                   <p>This will copy:</p>
                   <ul className="list-disc list-inside ml-2 space-y-0.5">
                     <li>Class Teacher assignment</li>
                     <li>Subject Teacher assignments for all subjects</li>
                   </ul>
-                  <p className="mt-2 text-amber-600"> Previous term assignments will remain unchanged.</p>
+                  <p className="mt-2 text-ink-muted"> Previous term assignments will remain unchanged.</p>
                 </div>
 
-                <div className="flex gap-3 pt-3 border-t border-slate-100">
+                <div className="flex gap-3 pt-3 border-t border-line">
                   <button
                     type="button"
                     onClick={() => setShowCopyConfirm(false)}
-                    className="flex-1 border border-slate-300 text-slate-700 py-2 rounded-md text-xs font-medium hover:bg-slate-50"
+                    className="btn btn-secondary flex-1"
                   >
                     Cancel
                   </button>
@@ -1131,7 +1131,7 @@ export default function ClassDetail() {
                     type="button"
                     onClick={handleCopyPreviousTerm}
                     disabled={actionLoading}
-                    className="flex-1 bg-amber-700 hover:bg-amber-800 text-white py-2 rounded-md text-xs font-medium transition-colors disabled:opacity-50"
+                    className="btn btn-primary flex-1"
                   >
                     {actionLoading ? "Copying..." : "Copy Assignments"}
                   </button>

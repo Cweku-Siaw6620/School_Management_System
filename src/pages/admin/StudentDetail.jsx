@@ -102,22 +102,22 @@ export default function StudentDetail() {
   };
 
   const statusColors = {
-    active: "bg-emerald-50 text-emerald-900 border-emerald-300",
-    inactive: "bg-rose-50 text-rose-900 border-rose-300",
-    transferred: "bg-sky-50 text-sky-900 border-sky-300",
-    graduated: "bg-amber-50 text-amber-900 border-amber-300",
+    active: "bg-success-soft text-success-ink border-success-line",
+    inactive: "bg-danger-soft text-danger-ink border-danger-line",
+    transferred: "bg-brand-soft text-ink-soft border-line",
+    graduated: "bg-surface text-ink border-line-strong",
   };
 
   const StatusBadge = ({ status }) => (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-sm text-[11px] font-serif font-semibold border ${statusColors[status] || statusColors.active}`}>
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${statusColors[status] || statusColors.active}`}>
       <span className="w-1.5 h-1.5 rounded-full bg-current mr-1.5 opacity-70"></span>
       {status ? status.toUpperCase() : "ACTIVE"}
     </span>
   );
 
   const FieldBox = ({ label, value, editValue, onEditChange, field, editMode, type = "text", fullWidth = false }) => (
-    <div className={`flex flex-col gap-1.5 p-3 rounded-sm bg-stone-50/50 border border-stone-200/60 ${fullWidth ? "col-span-full" : ""}`}>
-      <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">
+    <div className={`flex flex-col gap-1.5 p-3 rounded-lg bg-brand-soft border border-line ${fullWidth ? "col-span-full" : ""}`}>
+      <span className="eyebrow">
         {label}
       </span>
       {editMode ? (
@@ -125,7 +125,7 @@ export default function StudentDetail() {
           <select
             value={editValue || ""}
             onChange={(e) => onEditChange(field, e.target.value)}
-            className="w-full bg-white border border-stone-300 rounded-sm px-2.5 py-1.5 text-xs font-serif text-slate-900 focus:outline-none focus:border-slate-800"
+            className="input py-1.5 px-2.5"
           >
             <option value="">Select Option</option>
             {field === "gender" ? (
@@ -150,19 +150,19 @@ export default function StudentDetail() {
             type="date"
             value={editValue || ""}
             onChange={(e) => onEditChange(field, e.target.value)}
-            className="w-full bg-white border border-stone-300 rounded-sm px-2.5 py-1.5 text-xs font-serif text-slate-900 focus:outline-none focus:border-slate-800"
+            className="input py-1.5 px-2.5"
           />
         ) : (
           <input
             type={type}
             value={editValue || ""}
             onChange={(e) => onEditChange(field, e.target.value)}
-            className="w-full bg-white border border-stone-300 rounded-sm px-2.5 py-1.5 text-xs font-serif text-slate-900 focus:outline-none focus:border-slate-800"
+            className="input py-1.5 px-2.5"
             placeholder={label}
           />
         )
       ) : (
-        <span className="text-xs font-serif font-semibold text-slate-900 truncate">
+        <span className="text-xs font-semibold text-ink truncate">
           {value || "—"}
         </span>
       )}
@@ -173,10 +173,10 @@ export default function StudentDetail() {
     return (
       <AdminLayout>
         <div className="animate-pulse space-y-6 max-w-7xl mx-auto">
-          <div className="h-20 bg-stone-100 border border-stone-200 rounded-sm"></div>
-          <div className="bg-white rounded-sm border border-stone-200 p-6 space-y-4">
+          <div className="h-20 bg-brand-soft border border-line rounded-xl"></div>
+          <div className="card p-6 space-y-4">
             {[1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="h-10 bg-stone-100 rounded-sm w-full"></div>
+              <div key={i} className="h-10 bg-brand-soft rounded-lg w-full"></div>
             ))}
           </div>
         </div>
@@ -187,14 +187,14 @@ export default function StudentDetail() {
   if (error) {
     return (
       <AdminLayout>
-        <div className="bg-white rounded-sm border border-stone-300 p-12 text-center shadow-2xs max-w-2xl mx-auto my-12">
-          <div className="w-12 h-12 rounded-sm bg-amber-50 border border-amber-200 text-amber-900 flex items-center justify-center mx-auto mb-4 font-serif text-xl font-bold">
+        <div className="card p-12 text-center max-w-2xl mx-auto my-12">
+          <div className="w-12 h-12 rounded-lg bg-danger-soft border border-danger-line text-danger-ink flex items-center justify-center mx-auto mb-4 text-xl font-bold">
             !
           </div>
-          <h3 className="font-serif text-base font-bold text-slate-900">{error}</h3>
+          <h3 className="text-base font-bold text-ink">{error}</h3>
           <button
             onClick={() => navigate("/admin/students")}
-            className="mt-5 px-5 py-2 bg-slate-900 text-amber-300 text-xs font-serif font-semibold rounded-sm hover:bg-slate-800 transition-colors"
+            className="btn btn-primary mt-5"
           >
             ← Return to Student Register
           </button>
@@ -210,26 +210,26 @@ export default function StudentDetail() {
       <div className="space-y-6 max-w-7xl mx-auto">
 
         {/* Header Banner */}
-        <div className="bg-white border border-stone-300/80 rounded-sm p-6 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
-          <div className="absolute top-0 left-0 bottom-0 w-1 bg-slate-900"></div>
+        <div className="card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
+          <div className="absolute top-0 left-0 bottom-0 w-1 bg-brand"></div>
           
           <div className="flex items-center gap-4 pl-2">
             <button
               onClick={() => navigate("/admin/students")}
-              className="p-2 border border-stone-200 rounded-sm hover:border-slate-800 hover:bg-slate-900 hover:text-white transition-all text-xs font-serif"
+              className="btn btn-secondary px-3 py-2"
             >
               ← Back
             </button>
             <div>
-              <span className="text-[10px] font-semibold tracking-widest text-stone-500 uppercase">
+              <span className="eyebrow">
                 Student Folio
               </span>
-              <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight mt-0.5">
+              <h1 className="text-2xl font-bold text-ink tracking-tight mt-0.5">
                 {getFullName(student)}
               </h1>
               <div className="flex items-center gap-3 mt-1.5">
-                <span className="text-xs font-serif text-stone-500">
-                  Index Number: <span className="font-mono text-slate-900 font-bold">{student.indexNumber || "—"}</span>
+                <span className="text-xs text-ink-muted">
+                  Index Number: <span className="font-mono text-ink font-bold">{student.indexNumber || "—"}</span>
                 </span>
                 <StatusBadge status={student.status} />
               </div>
@@ -240,7 +240,7 @@ export default function StudentDetail() {
             {!editing ? (
               <button
                 onClick={() => setEditing(true)}
-                className="px-4 py-2 bg-slate-900 text-amber-300 text-xs font-serif font-semibold rounded-sm hover:bg-slate-800 transition-colors shadow-2xs"
+                className="btn btn-primary"
               >
                 Edit Folio
               </button>
@@ -251,7 +251,7 @@ export default function StudentDetail() {
                   setEditForm({ ...student });
                   setError("");
                 }}
-                className="px-4 py-2 border border-stone-300 text-stone-700 text-xs font-serif font-semibold rounded-sm hover:bg-stone-100 transition-colors"
+                className="btn btn-secondary"
               >
                 Cancel Edits
               </button>
@@ -261,12 +261,12 @@ export default function StudentDetail() {
 
         {/* Feedback Messages */}
         {successMessage && (
-          <div className="bg-emerald-50 border border-emerald-300 text-emerald-950 font-serif text-xs px-4 py-3 rounded-sm flex items-center gap-2">
+          <div className="bg-success-soft border border-success-line text-success-ink text-xs px-4 py-3 rounded-lg flex items-center gap-2">
             <span className="font-bold">✓</span> {successMessage}
           </div>
         )}
         {error && (
-          <div className="bg-rose-50 border border-rose-300 text-rose-950 font-serif text-xs px-4 py-3 rounded-sm flex items-center gap-2">
+          <div className="alert-error flex items-center gap-2">
             <span className="font-bold">⚠</span> {error}
           </div>
         )}
@@ -278,9 +278,9 @@ export default function StudentDetail() {
             <div className="lg:col-span-2 space-y-6">
 
               {/* Personal Particulars */}
-              <div className="bg-white border border-stone-300/80 rounded-sm shadow-2xs overflow-hidden">
-                <div className="px-6 py-3.5 border-b border-stone-200 bg-stone-50/60">
-                  <h3 className="font-serif text-xs font-bold text-slate-900 uppercase tracking-widest">
+              <div className="card overflow-hidden">
+                <div className="px-6 py-3.5 border-b border-line bg-brand-soft">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-widest">
                     Personal Particulars
                   </h3>
                 </div>
@@ -331,9 +331,9 @@ export default function StudentDetail() {
               </div>
 
               {/* Academic Placement */}
-              <div className="bg-white border border-stone-300/80 rounded-sm shadow-2xs overflow-hidden">
-                <div className="px-6 py-3.5 border-b border-stone-200 bg-stone-50/60">
-                  <h3 className="font-serif text-xs font-bold text-slate-900 uppercase tracking-widest">
+              <div className="card overflow-hidden">
+                <div className="px-6 py-3.5 border-b border-line bg-brand-soft">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-widest">
                     Academic Placement
                   </h3>
                 </div>
@@ -368,9 +368,9 @@ export default function StudentDetail() {
               </div>
 
               {/* Guardian Particulars */}
-              <div className="bg-white border border-stone-300/80 rounded-sm shadow-2xs overflow-hidden">
-                <div className="px-6 py-3.5 border-b border-stone-200 bg-stone-50/60">
-                  <h3 className="font-serif text-xs font-bold text-slate-900 uppercase tracking-widest">
+              <div className="card overflow-hidden">
+                <div className="px-6 py-3.5 border-b border-line bg-brand-soft">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-widest">
                     Guardian Particulars
                   </h3>
                 </div>
@@ -420,33 +420,33 @@ export default function StudentDetail() {
             <div className="space-y-6">
 
               {/* Record Metadata */}
-              <div className="bg-white border border-stone-300/80 rounded-sm shadow-2xs overflow-hidden">
-                <div className="px-6 py-3.5 border-b border-stone-200 bg-stone-50/60">
-                  <h3 className="font-serif text-xs font-bold text-slate-900 uppercase tracking-widest">
+              <div className="card overflow-hidden">
+                <div className="px-6 py-3.5 border-b border-line bg-brand-soft">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-widest">
                     Record Meta
                   </h3>
                 </div>
                 <div className="p-6 space-y-4">
-                  <div className="flex items-center justify-between py-1 border-b border-stone-100">
-                    <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">Status</span>
+                  <div className="flex items-center justify-between py-1 border-b border-line">
+                    <span className="eyebrow">Status</span>
                     <StatusBadge status={student.status} />
                   </div>
-                  <div className="flex items-center justify-between py-1 border-b border-stone-100">
-                    <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">Parent Access</span>
-                    <span className={`text-xs font-serif font-bold ${student.parentAccountCreated ? 'text-emerald-800' : 'text-stone-400'}`}>
+                  <div className="flex items-center justify-between py-1 border-b border-line">
+                    <span className="eyebrow">Parent Access</span>
+                    <span className={`text-xs font-bold ${student.parentAccountCreated ? 'text-success-ink' : 'text-ink-faint'}`}>
                       {student.parentAccountCreated ? '✓ Active' : 'Not Created'}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between py-1 border-b border-stone-100">
-                    <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">Entry Date</span>
-                    <span className="text-xs font-serif text-slate-900">{student.createdAt?.toDate ? formatDate(student.createdAt.toDate()) : "—"}</span>
+                  <div className="flex items-center justify-between py-1 border-b border-line">
+                    <span className="eyebrow">Entry Date</span>
+                    <span className="text-xs text-ink">{student.createdAt?.toDate ? formatDate(student.createdAt.toDate()) : "—"}</span>
                   </div>
 
                   {editing && (
                     <button
                       type="submit"
                       disabled={saving}
-                      className="w-full mt-2 py-2.5 bg-slate-900 hover:bg-slate-800 text-amber-300 font-serif text-xs font-semibold rounded-sm transition-colors disabled:opacity-50"
+                      className="btn btn-primary w-full mt-2"
                     >
                       {saving ? "Updating..." : "Save Folio Changes"}
                     </button>
@@ -455,9 +455,9 @@ export default function StudentDetail() {
               </div>
 
               {/* Emergency Contact */}
-              <div className="bg-white border border-stone-300/80 rounded-sm shadow-2xs overflow-hidden">
-                <div className="px-6 py-3.5 border-b border-stone-200 bg-stone-50/60">
-                  <h3 className="font-serif text-xs font-bold text-slate-900 uppercase tracking-widest">
+              <div className="card overflow-hidden">
+                <div className="px-6 py-3.5 border-b border-line bg-brand-soft">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-widest">
                     Emergency Contact
                   </h3>
                 </div>
@@ -492,9 +492,9 @@ export default function StudentDetail() {
               </div>
 
               {/* Medical Dossier */}
-              <div className="bg-white border border-stone-300/80 rounded-sm shadow-2xs overflow-hidden">
-                <div className="px-6 py-3.5 border-b border-stone-200 bg-stone-50/60">
-                  <h3 className="font-serif text-xs font-bold text-slate-900 uppercase tracking-widest">
+              <div className="card overflow-hidden">
+                <div className="px-6 py-3.5 border-b border-line bg-brand-soft">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-widest">
                     Medical & Health
                   </h3>
                 </div>
@@ -524,9 +524,9 @@ export default function StudentDetail() {
         </form>
 
         {/* Quick Actions */}
-        <div className="bg-white border border-stone-300/80 rounded-sm p-6 shadow-2xs">
-          <div className="flex items-center justify-between mb-4 pb-2 border-b border-stone-200">
-            <h3 className="font-serif text-xs font-bold text-slate-900 uppercase tracking-widest">
+        <div className="card p-6">
+          <div className="flex items-center justify-between mb-4 pb-2 border-b border-line">
+            <h3 className="text-xs font-bold text-ink uppercase tracking-widest">
               Administrative Folio Commands
             </h3>
           </div>
@@ -546,10 +546,10 @@ export default function StudentDetail() {
                     .catch(() => setError("Failed to alter student status."));
                 }
               }}
-              className={`px-4 py-2 text-xs font-serif font-semibold rounded-sm transition-colors border ${
+              className={`btn border ${
                 student.status === "active"
-                  ? "border-amber-300 text-amber-900 bg-amber-50 hover:bg-amber-100"
-                  : "border-emerald-300 text-emerald-900 bg-emerald-50 hover:bg-emerald-100"
+                  ? "border-danger-line text-danger-ink bg-danger-soft hover:bg-danger-line"
+                  : "border-success-line text-success-ink bg-success-soft hover:bg-success-line"
               }`}
             >
               {student.status === "active" ? "Deactivate Student Folio" : "Activate Student Folio"}
@@ -562,7 +562,7 @@ export default function StudentDetail() {
                   setTimeout(() => setSuccessMessage(""), 3500);
                 }
               }}
-              className="px-4 py-2 border border-stone-300 text-slate-900 text-xs font-serif font-semibold rounded-sm hover:bg-stone-100 transition-colors disabled:opacity-50"
+              className="btn btn-secondary"
               disabled={student.parentAccountCreated}
             >
               {student.parentAccountCreated ? "Parent Credentials Issued" : "Issue Parent Credentials"}
@@ -574,7 +574,7 @@ export default function StudentDetail() {
                   setError("Direct record deletion disabled. Please set status to 'Inactive'.");
                 }
               }}
-              className="px-4 py-2 border border-rose-200 text-rose-900 bg-rose-50 text-xs font-serif font-semibold rounded-sm hover:bg-rose-100 transition-colors"
+              className="btn border border-danger-line text-danger-ink bg-danger-soft hover:bg-danger-line"
             >
               Archive Folio Record
             </button>

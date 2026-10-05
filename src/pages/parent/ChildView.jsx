@@ -21,24 +21,24 @@ const getGrade = (score) => {
 
 const getGradeColor = (grade) => {
   const colors = {
-    "A1": "text-emerald-700 bg-emerald-50 border-emerald-100",
-    "B2": "text-emerald-700 bg-emerald-50 border-emerald-100",
-    "B3": "text-sky-700 bg-sky-50 border-sky-100",
-    "C4": "text-blue-700 bg-blue-50 border-blue-100",
-    "C5": "text-indigo-700 bg-indigo-50 border-indigo-100",
-    "C6": "text-amber-700 bg-amber-50 border-amber-100",
-    "D7": "text-orange-700 bg-orange-50 border-orange-100",
-    "E8": "text-rose-700 bg-rose-50 border-rose-100",
-    "F9": "text-rose-700 bg-rose-50 border-rose-100"
+    "A1": "text-success-ink bg-success-soft border-success-line",
+    "B2": "text-success-ink bg-success-soft border-success-line",
+    "B3": "text-ink-soft bg-brand-soft border-line",
+    "C4": "text-ink-soft bg-brand-soft border-line",
+    "C5": "text-ink-soft bg-brand-soft border-line",
+    "C6": "text-ink-soft bg-brand-soft border-line-strong",
+    "D7": "text-ink-soft bg-brand-soft border-line-strong",
+    "E8": "text-danger-ink bg-danger-soft border-danger-line",
+    "F9": "text-danger-ink bg-danger-soft border-danger-line"
   };
-  return colors[grade] || "text-gray-700 bg-gray-50 border-gray-200";
+  return colors[grade] || "text-ink-soft bg-brand-soft border-line";
 };
 
 const STATUS_BADGES = {
-  present: "bg-emerald-50 text-emerald-700 border-emerald-100",
-  absent: "bg-rose-50 text-rose-700 border-rose-100",
-  late: "bg-amber-50 text-amber-700 border-amber-100",
-  excused: "bg-gray-100 text-gray-600 border-gray-200",
+  present: "bg-success-soft text-success-ink border-success-line",
+  absent: "bg-danger-soft text-danger-ink border-danger-line",
+  late: "bg-brand-soft text-ink-soft border-line-strong",
+  excused: "bg-surface text-ink-muted border-line-strong",
 };
 
 export default function ChildView() {
@@ -177,19 +177,19 @@ export default function ChildView() {
   const performance = getPerformance();
 
   const statusColors = {
-    active: "bg-emerald-50 text-emerald-700 border-emerald-100",
-    inactive: "bg-rose-50 text-rose-700 border-rose-100",
-    transferred: "bg-sky-50 text-sky-700 border-sky-100",
-    graduated: "bg-amber-50 text-amber-700 border-amber-100",
+    active: "bg-success-soft text-success-ink border-success-line",
+    inactive: "bg-danger-soft text-danger-ink border-danger-line",
+    transferred: "bg-brand-soft text-ink-soft border-line",
+    graduated: "bg-brand-soft text-ink-soft border-line-strong",
   };
 
   if (loading) {
     return (
       <ParentLayout>
-        <div className="font-['Montserrat',sans-serif] animate-pulse space-y-6 max-w-6xl mx-auto p-2">
-          <div className="h-28 bg-gray-100 border border-gray-200/80 rounded-xl"></div>
-          <div className="h-12 bg-gray-100 border border-gray-200/80 rounded-xl"></div>
-          <div className="h-96 bg-gray-100 border border-gray-200/80 rounded-xl"></div>
+        <div className="animate-pulse space-y-6 max-w-6xl mx-auto p-2">
+          <div className="h-28 bg-brand-soft border border-line rounded-xl"></div>
+          <div className="h-12 bg-brand-soft border border-line rounded-xl"></div>
+          <div className="h-96 bg-brand-soft border border-line rounded-xl"></div>
         </div>
       </ParentLayout>
     );
@@ -198,13 +198,13 @@ export default function ChildView() {
   if (error || !student) {
     return (
       <ParentLayout>
-        <div className="font-['Montserrat',sans-serif] bg-white border border-gray-200/80 rounded-xl p-12 text-center shadow-sm max-w-lg mx-auto my-12">
-          <h3 className="text-sm font-semibold text-gray-900">
+        <div className="card p-12 text-center max-w-lg mx-auto my-12">
+          <h3 className="text-sm font-semibold text-ink">
             {error || "Student Record Not Found"}
           </h3>
           <button
             onClick={() => navigate("/parent/children")}
-            className="mt-4 px-4 py-2 bg-gray-900 text-white text-xs font-semibold rounded-lg hover:bg-gray-800 transition-colors"
+            className="btn btn-primary mt-4"
           >
             Return to Children Overview
           </button>
@@ -223,22 +223,22 @@ export default function ChildView() {
 
   return (
     <ParentLayout>
-      <div className="font-['Montserrat',sans-serif] space-y-6 max-w-6xl mx-auto text-gray-800">
+      <div className="space-y-6 max-w-6xl mx-auto text-ink">
 
         {/* Back Navigation */}
         <button
           onClick={() => navigate("/parent/children")}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-muted hover:text-ink transition-colors"
         >
           ← Back to My Children
         </button>
 
         {/* Child Header Card */}
-        <div className="bg-white border border-gray-200/80 rounded-xl p-6 shadow-sm">
+        <div className="card p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+                <h1 className="text-2xl font-bold text-ink tracking-tight">
                   {getFullName(student)}
                 </h1>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${
@@ -247,20 +247,20 @@ export default function ChildView() {
                   {student.status ? student.status.toUpperCase() : "ACTIVE"}
                 </span>
               </div>
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-1 mt-2 text-xs font-medium text-gray-500">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-1 mt-2 text-xs font-medium text-ink-muted">
                 <span>
-                  Index: <span className="font-mono font-bold text-gray-800">{student.indexNumber || "—"}</span>
+                  Index: <span className="font-mono font-bold text-ink">{student.indexNumber || "—"}</span>
                 </span>
                 <span>
-                  Class: <span className="font-semibold text-gray-800">{classData?.name || "Unassigned"}</span>
+                  Class: <span className="font-semibold text-ink">{classData?.name || "Unassigned"}</span>
                 </span>
                 {classData?.level && (
                   <span>
-                    Level: <span className="font-semibold text-gray-800">{classData.level}</span>
+                    Level: <span className="font-semibold text-ink">{classData.level}</span>
                   </span>
                 )}
                 {currentTerm && (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-gray-100 text-gray-800 text-[10px] font-semibold border border-gray-200">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-brand-soft text-ink text-[10px] font-semibold border border-line">
                     {currentTerm.name}
                   </span>
                 )}
@@ -270,16 +270,16 @@ export default function ChildView() {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="bg-white border border-gray-200/80 rounded-xl shadow-sm overflow-hidden">
-          <div className="flex overflow-x-auto border-b border-gray-100 bg-gray-50/50">
+        <div className="card overflow-hidden">
+          <div className="flex overflow-x-auto border-b border-line bg-brand-soft">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-5 py-3 text-xs font-semibold whitespace-nowrap transition-colors border-b-2 ${
                   activeTab === tab.id
-                    ? "border-gray-900 text-gray-900 bg-white"
-                    : "border-transparent text-gray-500 hover:text-gray-800"
+                    ? "border-brand text-ink bg-surface"
+                    : "border-transparent text-ink-muted hover:text-ink"
                 }`}
               >
                 {tab.label}
@@ -293,41 +293,41 @@ export default function ChildView() {
             {activeTab === "overview" && (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-gray-50 border border-gray-200/80 rounded-xl p-4">
-                    <p className="text-2xl font-bold text-gray-900">{scores.length}</p>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-1">Subjects</p>
+                  <div className="bg-brand-soft border border-line rounded-xl p-4">
+                    <p className="text-2xl font-bold text-ink">{scores.length}</p>
+                    <p className="text-xs font-semibold text-ink-faint uppercase tracking-wider mt-1">Subjects</p>
                   </div>
-                  <div className="bg-gray-50 border border-gray-200/80 rounded-xl p-4">
-                    <p className="text-2xl font-bold text-gray-900">
+                  <div className="bg-brand-soft border border-line rounded-xl p-4">
+                    <p className="text-2xl font-bold text-ink">
                       {performance.average > 0 ? `${performance.average}%` : "—"}
                     </p>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-1">Average Score</p>
+                    <p className="text-xs font-semibold text-ink-faint uppercase tracking-wider mt-1">Average Score</p>
                   </div>
-                  <div className="bg-gray-50 border border-gray-200/80 rounded-xl p-4">
-                    <p className="text-2xl font-bold text-gray-900">{attendanceSummary.percentage}%</p>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-1">Attendance Rate</p>
+                  <div className="bg-brand-soft border border-line rounded-xl p-4">
+                    <p className="text-2xl font-bold text-ink">{attendanceSummary.percentage}%</p>
+                    <p className="text-xs font-semibold text-ink-faint uppercase tracking-wider mt-1">Attendance Rate</p>
                   </div>
-                  <div className="bg-gray-50 border border-gray-200/80 rounded-xl p-4">
-                    <p className="text-2xl font-bold text-gray-900">{performance.grade}</p>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-1">Overall Grade</p>
+                  <div className="bg-brand-soft border border-line rounded-xl p-4">
+                    <p className="text-2xl font-bold text-ink">{performance.grade}</p>
+                    <p className="text-xs font-semibold text-ink-faint uppercase tracking-wider mt-1">Overall Grade</p>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-wider mb-3">
                     Recent Subject Performance
                   </h3>
                   {scores.length === 0 ? (
-                    <p className="text-xs text-gray-400 text-center py-6 bg-gray-50 rounded-xl border border-gray-100">
+                    <p className="text-xs text-ink-faint text-center py-6 bg-brand-soft rounded-xl border border-line">
                       No scores available for the active term.
                     </p>
                   ) : (
                     <div className="space-y-2">
                       {scores.slice(0, 5).map((score, i) => (
-                        <div key={i} className="flex items-center justify-between p-3 bg-gray-50/70 rounded-xl border border-gray-100">
-                          <span className="text-xs font-semibold text-gray-800">{score.subjectName}</span>
+                        <div key={i} className="flex items-center justify-between p-3 bg-brand-soft rounded-xl border border-line">
+                          <span className="text-xs font-semibold text-ink">{score.subjectName}</span>
                           <div className="flex items-center gap-3">
-                            <span className="text-xs font-medium text-gray-500">{score.total}/100</span>
+                            <span className="text-xs font-medium text-ink-muted">{score.total}/100</span>
                             <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border ${getGradeColor(score.grade)}`}>
                               {score.grade || "—"}
                             </span>
@@ -339,25 +339,25 @@ export default function ChildView() {
                 </div>
 
                 <div>
-                  <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-wider mb-3">
                     Attendance Breakout
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <div className="bg-emerald-50/60 border border-emerald-100 rounded-xl p-3 text-center">
-                      <p className="text-lg font-bold text-emerald-800">{attendanceSummary.present}</p>
-                      <p className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wider mt-0.5">Present</p>
+                    <div className="bg-success-soft border border-success-line rounded-xl p-3 text-center">
+                      <p className="text-lg font-bold text-success-ink">{attendanceSummary.present}</p>
+                      <p className="text-[10px] font-semibold text-success-ink uppercase tracking-wider mt-0.5">Present</p>
                     </div>
-                    <div className="bg-rose-50/60 border border-rose-100 rounded-xl p-3 text-center">
-                      <p className="text-lg font-bold text-rose-800">{attendanceSummary.absent}</p>
-                      <p className="text-[10px] font-semibold text-rose-600 uppercase tracking-wider mt-0.5">Absent</p>
+                    <div className="bg-danger-soft border border-danger-line rounded-xl p-3 text-center">
+                      <p className="text-lg font-bold text-danger-ink">{attendanceSummary.absent}</p>
+                      <p className="text-[10px] font-semibold text-danger uppercase tracking-wider mt-0.5">Absent</p>
                     </div>
-                    <div className="bg-amber-50/60 border border-amber-100 rounded-xl p-3 text-center">
-                      <p className="text-lg font-bold text-amber-800">{attendanceSummary.late}</p>
-                      <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-wider mt-0.5">Late</p>
+                    <div className="bg-brand-soft border border-line-strong rounded-xl p-3 text-center">
+                      <p className="text-lg font-bold text-ink-soft">{attendanceSummary.late}</p>
+                      <p className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider mt-0.5">Late</p>
                     </div>
-                    <div className="bg-gray-50 border border-gray-200/80 rounded-xl p-3 text-center">
-                      <p className="text-lg font-bold text-gray-800">{attendanceSummary.excused}</p>
-                      <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mt-0.5">Excused</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3 text-center">
+                      <p className="text-lg font-bold text-ink">{attendanceSummary.excused}</p>
+                      <p className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider mt-0.5">Excused</p>
                     </div>
                   </div>
                 </div>
@@ -368,53 +368,53 @@ export default function ChildView() {
             {activeTab === "attendance" && (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                  <div className="bg-gray-50 rounded-xl p-3 text-center border border-gray-200/80">
-                    <p className="text-lg font-bold text-gray-900">{attendanceSummary.total}</p>
-                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Total Days</p>
+                  <div className="bg-brand-soft rounded-xl p-3 text-center border border-line">
+                    <p className="text-lg font-bold text-ink">{attendanceSummary.total}</p>
+                    <p className="text-[10px] font-semibold text-ink-faint uppercase tracking-wider">Total Days</p>
                   </div>
-                  <div className="bg-emerald-50/60 rounded-xl p-3 text-center border border-emerald-100">
-                    <p className="text-lg font-bold text-emerald-800">{attendanceSummary.present}</p>
-                    <p className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wider">Present</p>
+                  <div className="bg-success-soft rounded-xl p-3 text-center border border-success-line">
+                    <p className="text-lg font-bold text-success-ink">{attendanceSummary.present}</p>
+                    <p className="text-[10px] font-semibold text-success-ink uppercase tracking-wider">Present</p>
                   </div>
-                  <div className="bg-rose-50/60 rounded-xl p-3 text-center border border-rose-100">
-                    <p className="text-lg font-bold text-rose-800">{attendanceSummary.absent}</p>
-                    <p className="text-[10px] font-semibold text-rose-600 uppercase tracking-wider">Absent</p>
+                  <div className="bg-danger-soft rounded-xl p-3 text-center border border-danger-line">
+                    <p className="text-lg font-bold text-danger-ink">{attendanceSummary.absent}</p>
+                    <p className="text-[10px] font-semibold text-danger uppercase tracking-wider">Absent</p>
                   </div>
-                  <div className="bg-amber-50/60 rounded-xl p-3 text-center border border-amber-100">
-                    <p className="text-lg font-bold text-amber-800">{attendanceSummary.late}</p>
-                    <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-wider">Late</p>
+                  <div className="bg-brand-soft rounded-xl p-3 text-center border border-line-strong">
+                    <p className="text-lg font-bold text-ink-soft">{attendanceSummary.late}</p>
+                    <p className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider">Late</p>
                   </div>
-                  <div className="bg-sky-50/60 rounded-xl p-3 text-center border border-sky-100">
-                    <p className="text-lg font-bold text-sky-800">{attendanceSummary.percentage}%</p>
-                    <p className="text-[10px] font-semibold text-sky-600 uppercase tracking-wider">Attendance Rate</p>
+                  <div className="bg-surface rounded-xl p-3 text-center border border-line-strong">
+                    <p className="text-lg font-bold text-ink">{attendanceSummary.percentage}%</p>
+                    <p className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider">Attendance Rate</p>
                   </div>
                 </div>
 
                 {attendanceRecords.length === 0 ? (
-                  <div className="text-center py-8 text-xs text-gray-400 bg-gray-50 rounded-xl border border-gray-100">
+                  <div className="text-center py-8 text-xs text-ink-faint bg-brand-soft rounded-xl border border-line">
                     No attendance records logged for this term.
                   </div>
                 ) : (
-                  <div className="border border-gray-200/80 rounded-xl overflow-hidden">
+                  <div className="border border-line rounded-xl overflow-hidden">
                     <div className="max-h-96 overflow-y-auto">
                       <table className="w-full text-left text-xs">
-                        <thead className="bg-gray-50 sticky top-0 border-b border-gray-200/80">
+                        <thead className="bg-brand-soft sticky top-0 border-b border-line">
                           <tr>
-                            <th className="py-2.5 px-4 font-bold text-gray-500 uppercase tracking-wider text-[10px]">Date</th>
-                            <th className="py-2.5 px-4 font-bold text-gray-500 uppercase tracking-wider text-[10px]">Status</th>
-                            <th className="py-2.5 px-4 font-bold text-gray-500 uppercase tracking-wider text-[10px]">Remarks</th>
+                            <th className="py-2.5 px-4 font-bold text-ink-muted uppercase tracking-wider text-[10px]">Date</th>
+                            <th className="py-2.5 px-4 font-bold text-ink-muted uppercase tracking-wider text-[10px]">Status</th>
+                            <th className="py-2.5 px-4 font-bold text-ink-muted uppercase tracking-wider text-[10px]">Remarks</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-line">
                           {attendanceRecords.map((record, i) => (
-                            <tr key={i} className="hover:bg-gray-50/50">
-                              <td className="py-2.5 px-4 font-medium text-gray-800">{record.date}</td>
+                            <tr key={i} className="hover:bg-brand-soft">
+                              <td className="py-2.5 px-4 font-medium text-ink">{record.date}</td>
                               <td className="py-2.5 px-4">
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border capitalize ${STATUS_BADGES[record.status] || STATUS_BADGES.excused}`}>
                                   {record.status}
                                 </span>
                               </td>
-                              <td className="py-2.5 px-4 text-gray-500">{record.remarks || "—"}</td>
+                              <td className="py-2.5 px-4 text-ink-muted">{record.remarks || "—"}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -429,28 +429,28 @@ export default function ChildView() {
             {activeTab === "scores" && (
               <div className="space-y-4">
                 {scores.length === 0 ? (
-                  <div className="text-center py-8 text-xs text-gray-400 bg-gray-50 rounded-xl border border-gray-100">
+                  <div className="text-center py-8 text-xs text-ink-faint bg-brand-soft rounded-xl border border-line">
                     No score records found for the current academic period.
                   </div>
                 ) : (
-                  <div className="border border-gray-200/80 rounded-xl overflow-hidden">
+                  <div className="border border-line rounded-xl overflow-hidden">
                     <table className="w-full text-left text-xs">
-                      <thead className="bg-gray-50 border-b border-gray-200/80">
+                      <thead className="bg-brand-soft border-b border-line">
                         <tr>
-                          <th className="py-3 px-4 font-bold text-gray-500 uppercase tracking-wider text-[10px]">Subject</th>
-                          <th className="py-3 px-4 text-center font-bold text-gray-500 uppercase tracking-wider text-[10px]">Class Score (50)</th>
-                          <th className="py-3 px-4 text-center font-bold text-gray-500 uppercase tracking-wider text-[10px]">Exam Score (50)</th>
-                          <th className="py-3 px-4 text-center font-bold text-gray-500 uppercase tracking-wider text-[10px]">Total Score (100)</th>
-                          <th className="py-3 px-4 text-center font-bold text-gray-500 uppercase tracking-wider text-[10px]">Grade</th>
+                          <th className="py-3 px-4 font-bold text-ink-muted uppercase tracking-wider text-[10px]">Subject</th>
+                          <th className="py-3 px-4 text-center font-bold text-ink-muted uppercase tracking-wider text-[10px]">Class Score (50)</th>
+                          <th className="py-3 px-4 text-center font-bold text-ink-muted uppercase tracking-wider text-[10px]">Exam Score (50)</th>
+                          <th className="py-3 px-4 text-center font-bold text-ink-muted uppercase tracking-wider text-[10px]">Total Score (100)</th>
+                          <th className="py-3 px-4 text-center font-bold text-ink-muted uppercase tracking-wider text-[10px]">Grade</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-100">
+                      <tbody className="divide-y divide-line">
                         {scores.map((score, i) => (
-                          <tr key={i} className="hover:bg-gray-50/50">
-                            <td className="py-2.5 px-4 font-semibold text-gray-900">{score.subjectName}</td>
-                            <td className="py-2.5 px-4 text-center text-gray-600">{score.classScore}</td>
-                            <td className="py-2.5 px-4 text-center text-gray-600">{score.examScore}</td>
-                            <td className="py-2.5 px-4 text-center font-bold text-gray-900">{score.total}</td>
+                          <tr key={i} className="hover:bg-brand-soft">
+                            <td className="py-2.5 px-4 font-semibold text-ink">{score.subjectName}</td>
+                            <td className="py-2.5 px-4 text-center text-ink-soft">{score.classScore}</td>
+                            <td className="py-2.5 px-4 text-center text-ink-soft">{score.examScore}</td>
+                            <td className="py-2.5 px-4 text-center font-bold text-ink">{score.total}</td>
                             <td className="py-2.5 px-4 text-center">
                               <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border ${getGradeColor(score.grade)}`}>
                                 {score.grade || "—"}
@@ -468,36 +468,36 @@ export default function ChildView() {
             {/* REPORT CARD TAB */}
             {activeTab === "report" && (
               <div className="space-y-4">
-                <div className="bg-gray-50 border border-gray-200/80 rounded-xl p-4">
+                <div className="bg-brand-soft border border-line rounded-xl p-4">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                     <div>
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Student</span>
-                      <span className="font-semibold text-gray-900 mt-0.5 block">{getFullName(student)}</span>
+                      <span className="text-[10px] font-bold text-ink-faint uppercase tracking-wider block">Student</span>
+                      <span className="font-semibold text-ink mt-0.5 block">{getFullName(student)}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Class</span>
-                      <span className="font-semibold text-gray-900 mt-0.5 block">{classData?.name || "—"}</span>
+                      <span className="text-[10px] font-bold text-ink-faint uppercase tracking-wider block">Class</span>
+                      <span className="font-semibold text-ink mt-0.5 block">{classData?.name || "—"}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Term</span>
-                      <span className="font-semibold text-gray-900 mt-0.5 block">{currentTerm?.name || "—"}</span>
+                      <span className="text-[10px] font-bold text-ink-faint uppercase tracking-wider block">Term</span>
+                      <span className="font-semibold text-ink mt-0.5 block">{currentTerm?.name || "—"}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Index Number</span>
-                      <span className="font-mono font-bold text-gray-900 mt-0.5 block">{student.indexNumber || "—"}</span>
+                      <span className="text-[10px] font-bold text-ink-faint uppercase tracking-wider block">Index Number</span>
+                      <span className="font-mono font-bold text-ink mt-0.5 block">{student.indexNumber || "—"}</span>
                     </div>
                   </div>
                 </div>
 
                 {scores.length === 0 ? (
-                  <div className="text-center py-8 text-xs text-gray-400 bg-gray-50 rounded-xl border border-gray-100">
+                  <div className="text-center py-8 text-xs text-ink-faint bg-brand-soft rounded-xl border border-line">
                     Terminal report card will publish once scores are finalized.
                   </div>
                 ) : (
                   <>
-                    <div className="border border-gray-200/80 rounded-xl overflow-hidden">
+                    <div className="border border-line rounded-xl overflow-hidden">
                       <table className="w-full text-left text-xs">
-                        <thead className="bg-gray-900 text-white">
+                        <thead className="bg-brand text-white">
                           <tr>
                             <th className="py-3 px-4 font-bold uppercase tracking-wider text-[10px]">Subject</th>
                             <th className="py-3 px-4 text-center font-bold uppercase tracking-wider text-[10px]">Class</th>
@@ -507,19 +507,19 @@ export default function ChildView() {
                             <th className="py-3 px-4 text-center font-bold uppercase tracking-wider text-[10px]">Remark</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-line">
                           {scores.map((score, i) => (
-                            <tr key={i} className="hover:bg-gray-50/50">
-                              <td className="py-2.5 px-4 font-semibold text-gray-900">{score.subjectName}</td>
-                              <td className="py-2.5 px-4 text-center text-gray-600">{score.classScore}</td>
-                              <td className="py-2.5 px-4 text-center text-gray-600">{score.examScore}</td>
-                              <td className="py-2.5 px-4 text-center font-bold text-gray-900">{score.total}</td>
+                            <tr key={i} className="hover:bg-brand-soft">
+                              <td className="py-2.5 px-4 font-semibold text-ink">{score.subjectName}</td>
+                              <td className="py-2.5 px-4 text-center text-ink-soft">{score.classScore}</td>
+                              <td className="py-2.5 px-4 text-center text-ink-soft">{score.examScore}</td>
+                              <td className="py-2.5 px-4 text-center font-bold text-ink">{score.total}</td>
                               <td className="py-2.5 px-4 text-center">
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border ${getGradeColor(score.grade)}`}>
                                   {score.grade}
                                 </span>
                               </td>
-                              <td className="py-2.5 px-4 text-center text-gray-500 font-medium">
+                              <td className="py-2.5 px-4 text-center text-ink-muted font-medium">
                                 {score.total >= 80 ? "Excellent" :
                                  score.total >= 70 ? "Very Good" :
                                  score.total >= 60 ? "Good" :
@@ -532,10 +532,10 @@ export default function ChildView() {
                       </table>
                     </div>
 
-                    <div className="bg-gray-50 border border-gray-200/80 rounded-xl p-4 flex items-center justify-between">
-                      <span className="text-xs font-bold text-gray-900 uppercase tracking-wider">Overall Academic Average</span>
+                    <div className="bg-brand-soft border border-line rounded-xl p-4 flex items-center justify-between">
+                      <span className="text-xs font-bold text-ink uppercase tracking-wider">Overall Academic Average</span>
                       <div className="flex items-center gap-3">
-                        <span className="text-xl font-bold text-gray-900">{performance.average}%</span>
+                        <span className="text-xl font-bold text-ink">{performance.average}%</span>
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-bold border ${getGradeColor(performance.grade)}`}>
                           {performance.grade}
                         </span>
@@ -550,115 +550,115 @@ export default function ChildView() {
             {activeTab === "profile" && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3 pb-2 border-b border-gray-100">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-wider mb-3 pb-2 border-b border-line">
                     Personal Information
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Full Name</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{getFullName(student)}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Full Name</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{getFullName(student)}</p>
                     </div>
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gender</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1 capitalize">{student.gender || "—"}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Gender</p>
+                      <p className="text-xs font-semibold text-ink mt-1 capitalize">{student.gender || "—"}</p>
                     </div>
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Date of Birth</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{formatDate(student.dateOfBirth)}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Date of Birth</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{formatDate(student.dateOfBirth)}</p>
                     </div>
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Index Number</p>
-                      <p className="text-xs font-mono font-bold text-gray-900 mt-1">{student.indexNumber || "—"}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Index Number</p>
+                      <p className="text-xs font-mono font-bold text-ink mt-1">{student.indexNumber || "—"}</p>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3 pb-2 border-b border-gray-100">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-wider mb-3 pb-2 border-b border-line">
                     Academic Information
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Admission Date</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{formatDate(student.admissionDate)}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Admission Date</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{formatDate(student.admissionDate)}</p>
                     </div>
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Academic Year</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{student.academicYear || "—"}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Academic Year</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{student.academicYear || "—"}</p>
                     </div>
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Class Assigned</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{classData?.name || "Unassigned"}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Class Assigned</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{classData?.name || "Unassigned"}</p>
                     </div>
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Level</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{classData?.level || "—"}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Level</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{classData?.level || "—"}</p>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3 pb-2 border-b border-gray-100">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-wider mb-3 pb-2 border-b border-line">
                     Guardian Details
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Guardian Name</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{student.guardianName || "—"}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Guardian Name</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{student.guardianName || "—"}</p>
                     </div>
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Telephone</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{student.guardianPhone || "—"}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Telephone</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{student.guardianPhone || "—"}</p>
                     </div>
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Relationship</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{student.guardianRelationship || "—"}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Relationship</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{student.guardianRelationship || "—"}</p>
                     </div>
                     {student.guardianEmail && (
-                      <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Email Address</p>
-                        <p className="text-xs font-semibold text-gray-900 mt-1">{student.guardianEmail}</p>
+                      <div className="bg-brand-soft border border-line rounded-xl p-3">
+                        <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Email Address</p>
+                        <p className="text-xs font-semibold text-ink mt-1">{student.guardianEmail}</p>
                       </div>
                     )}
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3 pb-2 border-b border-gray-100">
+                  <h3 className="text-xs font-bold text-ink uppercase tracking-wider mb-3 pb-2 border-b border-line">
                     Emergency Contact
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Contact Name</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{student.emergencyContactName || "—"}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Contact Name</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{student.emergencyContactName || "—"}</p>
                     </div>
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Telephone</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{student.emergencyContactPhone || "—"}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Telephone</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{student.emergencyContactPhone || "—"}</p>
                     </div>
-                    <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Relationship</p>
-                      <p className="text-xs font-semibold text-gray-900 mt-1">{student.emergencyContactRelationship || "—"}</p>
+                    <div className="bg-brand-soft border border-line rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Relationship</p>
+                      <p className="text-xs font-semibold text-ink mt-1">{student.emergencyContactRelationship || "—"}</p>
                     </div>
                   </div>
                 </div>
 
                 {(student.allergies || student.medicalNotes) && (
                   <div>
-                    <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3 pb-2 border-b border-gray-100">
+                    <h3 className="text-xs font-bold text-ink uppercase tracking-wider mb-3 pb-2 border-b border-line">
                       Medical Information
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {student.allergies && (
-                        <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Allergies</p>
-                          <p className="text-xs font-semibold text-gray-900 mt-1">{student.allergies}</p>
+                        <div className="bg-brand-soft border border-line rounded-xl p-3">
+                          <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Allergies</p>
+                          <p className="text-xs font-semibold text-ink mt-1">{student.allergies}</p>
                         </div>
                       )}
                       {student.medicalNotes && (
-                        <div className="bg-gray-50/70 border border-gray-100 rounded-xl p-3">
-                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Notes</p>
-                          <p className="text-xs font-semibold text-gray-900 mt-1">{student.medicalNotes}</p>
+                        <div className="bg-brand-soft border border-line rounded-xl p-3">
+                          <p className="text-[10px] font-bold text-ink-faint uppercase tracking-wider">Notes</p>
+                          <p className="text-xs font-semibold text-ink mt-1">{student.medicalNotes}</p>
                         </div>
                       )}
                     </div>

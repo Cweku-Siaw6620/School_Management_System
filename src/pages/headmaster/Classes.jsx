@@ -229,11 +229,11 @@ export default function Classes() {
   if (loading) {
     return (
       <HeadmasterLayout>
-        <div className="animate-pulse space-y-6 max-w-7xl mx-auto font-['Montserrat',sans-serif]">
-          <div className="h-20 bg-slate-100 rounded-xl border border-slate-200/80"></div>
+        <div className="animate-pulse space-y-6 max-w-7xl mx-auto">
+          <div className="h-20 bg-brand-soft rounded-xl border border-line"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="h-32 bg-slate-100 rounded-xl border border-slate-200/80"></div>
+              <div key={i} className="h-32 bg-brand-soft rounded-xl border border-line"></div>
             ))}
           </div>
         </div>
@@ -246,31 +246,31 @@ export default function Classes() {
 
   return (
     <HeadmasterLayout>
-      <div className="space-y-6 max-w-7xl mx-auto font-['Montserrat',sans-serif]">
+      <div className="space-y-6 max-w-7xl mx-auto">
 
         {/* Page Header */}
-        <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="font-bold text-2xl text-slate-900 tracking-tight">
+            <h1 className="font-bold text-2xl text-ink tracking-tight">
               Class Roster
             </h1>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="text-sm text-ink-muted mt-1">
               Complete class list from Nursery to JHS 3 with real-time enrollment counts.
             </p>
           </div>
           <button
             onClick={() => setShowModal(true)}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-900 text-white text-sm font-medium rounded-md hover:bg-sky-950 transition-colors shadow-xs"
+            className="btn btn-primary"
           >
             <span className="text-base font-bold leading-none">+</span> Add Custom Class
           </button>
         </div>
 
         {/* Search & Filter Bar */}
-        <div className="bg-white border border-slate-200/80 rounded-xl p-4 shadow-xs flex flex-col sm:flex-row gap-4 justify-between items-center">
+        <div className="card p-4 flex flex-col sm:flex-row gap-4 justify-between items-center">
           <div className="relative w-full sm:w-80">
             <svg
-              className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+              className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -282,16 +282,16 @@ export default function Classes() {
               placeholder="Search by class name or teacher..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-md text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent bg-slate-50/50"
+              className="input pl-9"
             />
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap">Filter Level:</span>
+            <span className="eyebrow whitespace-nowrap">Filter Level:</span>
             <select
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
-              className="w-full sm:w-auto border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent bg-white"
+              className="input sm:w-auto"
             >
               <option value="All">All Categories</option>
               {LEVEL_GROUPS.map((group) => (
@@ -313,7 +313,7 @@ export default function Classes() {
 
             return (
               <div key={group.label}>
-                <h2 className="text-lg font-semibold text-slate-800 border-b border-slate-200 pb-2 mb-4">
+                <h2 className="text-lg font-semibold text-ink border-b border-line pb-2 mb-4">
                   {group.label}
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -322,18 +322,18 @@ export default function Classes() {
                     return levelClasses.map((cls) => (
                       <div
                         key={cls.id}
-                        className="bg-white border border-slate-200/80 rounded-xl p-5 shadow-xs hover:shadow-md hover:border-slate-300 transition-all group"
+                        className="card p-5 hover:shadow-md hover:border-line-strong transition-all group"
                       >
                         <Link to={`/headmaster/classes/${cls.id}`} className="block">
                           <div className="flex items-start justify-between">
                             <div>
-                              <h3 className="font-semibold text-slate-900 text-sm">
+                              <h3 className="font-semibold text-ink text-sm">
                                 {cls.name}
                               </h3>
-                              <p className="text-xs text-slate-500 mt-0.5">{cls.level}</p>
+                              <p className="text-xs text-ink-muted mt-0.5">{cls.level}</p>
                             </div>
                             {cls.isDefault && (
-                              <span className="text-[10px] font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
+                              <span className="text-[10px] font-medium text-ink-faint bg-brand-soft px-2 py-0.5 rounded">
                                 Default
                               </span>
                             )}
@@ -341,43 +341,43 @@ export default function Classes() {
 
                           <div className="mt-3 flex items-center gap-4">
                             <div className="flex items-center gap-2">
-                              <svg className="w-4 h-4 text-sky-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                               </svg>
-                              <span className="text-xl font-bold text-slate-800">
+                              <span className="text-xl font-bold text-ink">
                                 {getStudentCount(cls.id)}
                               </span>
-                              <span className="text-xs text-slate-400">students</span>
+                              <span className="text-xs text-ink-faint">students</span>
                             </div>
                           </div>
 
-                          <div className="mt-2 text-xs text-slate-500">
+                          <div className="mt-2 text-xs text-ink-muted">
                             Teacher: {getTeacherName(cls.teacherId)}
                           </div>
                         </Link>
 
-                        <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <div className="mt-3 pt-3 border-t border-line flex items-center justify-between">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${
                             cls.status === "active"
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                              : "bg-amber-50 text-amber-700 border-amber-200"
+                              ? "bg-success-soft text-success-ink border-success-line"
+                              : "bg-danger-soft text-danger-ink border-danger-line"
                           }`}>
-                            <span className={`w-1.5 h-1.5 rounded-full mr-1 ${cls.status === "active" ? "bg-emerald-500" : "bg-amber-500"}`}></span>
+                            <span className={`w-1.5 h-1.5 rounded-full mr-1 ${cls.status === "active" ? "bg-success" : "bg-danger"}`}></span>
                             {cls.status === "active" ? "Active" : "Inactive"}
                           </span>
                           <div className="flex items-center gap-2">
                             {!cls.isDefault && (
                               <button
                                 onClick={() => handleDeleteClass(cls)}
-                                className="text-[10px] text-red-500 hover:text-red-700 transition-colors"
+                                className="text-[10px] text-danger hover:text-danger-ink transition-colors"
                               >
                                 Delete
                               </button>
                             )}
                             <Link
                               to={`/headmaster/classes/${cls.id}`}
-                              className="text-xs text-slate-400 hover:text-sky-700 transition-colors"
+                              className="text-xs text-ink-faint hover:text-ink transition-colors"
                             >
                               View &rarr;
                             </Link>
@@ -395,30 +395,30 @@ export default function Classes() {
         {/* Inactive Classes Section */}
         {inactiveClasses.length > 0 && (
           <div className="mt-8">
-            <h2 className="text-lg font-semibold text-slate-400 border-b border-slate-200 pb-2 mb-4">
+            <h2 className="text-lg font-semibold text-ink-faint border-b border-line pb-2 mb-4">
               Inactive Classes
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {inactiveClasses.map((cls) => (
                 <div
                   key={cls.id}
-                  className="bg-slate-50 border border-slate-200/60 rounded-xl p-5 opacity-60"
+                  className="bg-brand-soft border border-line rounded-xl p-5 opacity-60"
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="font-semibold text-slate-700 text-sm">
+                      <h3 className="font-semibold text-ink-soft text-sm">
                         {cls.name}
                       </h3>
-                      <p className="text-xs text-slate-400 mt-0.5">{cls.level}</p>
+                      <p className="text-xs text-ink-faint mt-0.5">{cls.level}</p>
                     </div>
                     <button
                       onClick={() => toggleStatus(cls)}
-                      className="text-[10px] font-medium text-emerald-600 hover:text-emerald-800"
+                      className="text-[10px] font-medium text-success hover:text-success-ink"
                     >
                       Activate
                     </button>
                   </div>
-                  <div className="mt-3 text-xs text-slate-400">
+                  <div className="mt-3 text-xs text-ink-faint">
                     <span className="line-through">{getStudentCount(cls.id)} students</span>
                   </div>
                 </div>
@@ -429,32 +429,32 @@ export default function Classes() {
 
         {/* Add Class Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 border border-slate-200/80">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+          <div className="fixed inset-0 bg-brand backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-md p-6">
+              <div className="flex items-center justify-between pb-4 border-b border-line mb-5">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">
+                  <h3 className="text-lg font-bold text-ink">
                     Add Custom Class
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Create a new class section.</p>
+                  <p className="text-xs text-ink-muted mt-0.5">Create a new class section.</p>
                 </div>
                 <button
                   onClick={() => { setShowModal(false); setFormError(""); }}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="p-1 rounded text-ink-faint hover:text-ink-soft hover:bg-brand-soft transition-colors"
                 >
                   ✕
                 </button>
               </div>
 
               {formError && (
-                <div className="bg-red-50 border border-red-200 text-red-700 text-xs px-3.5 py-2.5 rounded-md mb-4">
+                <div className="alert-error mb-4">
                   {formError}
                 </div>
               )}
 
               <form onSubmit={handleAddClass} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Class Name *
                   </label>
                   <input
@@ -463,19 +463,19 @@ export default function Classes() {
                     placeholder="e.g., Primary 2C"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                    className="input"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Level *
                   </label>
                   <select
                     required
                     value={formData.level}
                     onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent bg-white"
+                    className="input"
                   >
                     <option value="">Select Level</option>
                     <option value="Nursery 1">Nursery 1</option>
@@ -494,24 +494,24 @@ export default function Classes() {
                   </select>
                 </div>
 
-                <div className="bg-amber-50 border border-amber-200 rounded-md p-2.5">
-                  <p className="text-xs text-amber-800">
+                <div className="notice">
+                  <p className="text-xs text-ink-soft">
                     Note: Custom classes can be deleted. Default classes (Nursery to JHS 3) cannot be deleted.
                   </p>
                 </div>
 
-                <div className="flex gap-3 pt-4 border-t border-slate-100">
+                <div className="flex gap-3 pt-4 border-t border-line">
                   <button
                     type="button"
                     onClick={() => { setShowModal(false); setFormError(""); }}
-                    className="flex-1 border border-slate-300 text-slate-700 py-2 rounded-md text-xs font-medium hover:bg-slate-50 transition-colors"
+                    className="btn btn-secondary flex-1"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={formLoading}
-                    className="flex-1 bg-sky-900 hover:bg-sky-950 text-white py-2 rounded-md text-xs font-medium transition-colors disabled:opacity-50"
+                    className="btn btn-primary flex-1"
                   >
                     {formLoading ? "Creating..." : "Create Class"}
                   </button>

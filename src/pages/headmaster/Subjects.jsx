@@ -345,17 +345,17 @@ export default function Subjects() {
         <div className="animate-pulse space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="h-8 bg-slate-200/60 rounded w-48"></div>
-              <div className="h-4 bg-slate-200/60 rounded w-64 mt-2"></div>
+              <div className="h-8 bg-line rounded w-48"></div>
+              <div className="h-4 bg-line rounded w-64 mt-2"></div>
             </div>
           </div>
-          <div className="bg-white border border-slate-200/80 rounded-xl p-6">
-            <div className="h-10 bg-slate-200/60 rounded w-64 mb-6"></div>
+          <div className="card p-6">
+            <div className="h-10 bg-line rounded w-64 mb-6"></div>
             <div className="space-y-4">
               {[1, 2, 3, 4, 5].map(i => (
                 <div key={i} className="flex items-center justify-between">
-                  <div className="h-4 bg-slate-200/60 rounded w-1/3"></div>
-                  <div className="h-8 bg-slate-200/60 rounded w-20"></div>
+                  <div className="h-4 bg-line rounded w-1/3"></div>
+                  <div className="h-8 bg-line rounded w-20"></div>
                 </div>
               ))}
             </div>
@@ -370,13 +370,13 @@ export default function Subjects() {
       <div className="space-y-6">
 
         {/* Page Header */}
-        <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs">
+        <div className="card p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-2xl font-bold text-ink tracking-tight">
                 Subject Management
               </h1>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-ink-muted mt-1">
                 Create subject sets and assign them to classes
               </p>
             </div>
@@ -384,20 +384,20 @@ export default function Subjects() {
               <button
                 onClick={() => setShowAssignSetModal(true)}
                 disabled={!selectedClassId || subjectSets.length === 0}
-                className="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-medium rounded-md transition-colors shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn btn-secondary"
               >
                 Assign Set
               </button>
               <button
                 onClick={() => setShowAddSubjectModal(true)}
                 disabled={!selectedClassId}
-                className="px-4 py-2.5 bg-sky-900 hover:bg-sky-950 text-white text-sm font-medium rounded-md transition-colors shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn btn-primary"
               >
                 + Add Subject
               </button>
               <button
                 onClick={() => setShowSetModal(true)}
-                className="px-4 py-2.5 border border-slate-300 text-slate-700 hover:bg-slate-50 text-sm font-medium rounded-md transition-colors shadow-xs"
+                className="btn btn-secondary"
               >
                 + New Set
               </button>
@@ -407,45 +407,45 @@ export default function Subjects() {
 
         {/* Success/Error Messages */}
         {successMessage && (
-          <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm px-4 py-3 rounded-md">
+          <div className="bg-success-soft border border-success-line text-success-ink text-sm px-4 py-3 rounded-lg">
             {successMessage}
           </div>
         )}
         {formError && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-md">
+          <div className="alert-error">
             {formError}
           </div>
         )}
 
         {/* Subject Sets Overview */}
-        <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs">
+        <div className="card p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-serif text-base font-semibold text-slate-800">
+            <h3 className="text-base font-semibold text-ink">
               Subject Sets
             </h3>
-            <span className="text-xs text-slate-500">
+            <span className="text-xs text-ink-muted">
               {subjectSets.length} set{subjectSets.length !== 1 ? "s" : ""}
             </span>
           </div>
           
           {subjectSets.length === 0 ? (
-            <p className="text-sm text-slate-500 text-center py-4">
+            <p className="text-sm text-ink-muted text-center py-4">
               No subject sets created yet. Click "New Set" to get started.
             </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {subjectSets.map(set => (
-                <div key={set.id} className="border border-slate-200 rounded-lg p-4 hover:border-slate-300 transition-colors">
+                <div key={set.id} className="border border-line rounded-lg p-4 hover:border-line-strong transition-colors">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <h4 className="font-semibold text-slate-900 text-sm">{set.name}</h4>
+                      <h4 className="font-semibold text-ink text-sm">{set.name}</h4>
                       {set.level && set.level !== "custom" && (
-                        <span className="inline-block mt-1 px-2 py-0.5 bg-slate-100 text-slate-600 text-xs rounded">
+                        <span className="inline-block mt-1 px-2 py-0.5 bg-brand-soft text-ink-soft text-xs rounded">
                           {set.level.toUpperCase()}
                         </span>
                       )}
                       {set.isDefault && (
-                        <span className="inline-block mt-1 ml-1 px-2 py-0.5 bg-amber-50 text-amber-700 text-xs rounded border border-amber-200">
+                        <span className="inline-block mt-1 ml-1 px-2 py-0.5 bg-surface text-ink-soft text-xs rounded border border-line-strong">
                           Default
                         </span>
                       )}
@@ -453,7 +453,7 @@ export default function Subjects() {
                     {!set.isDefault && (
                       <button
                         onClick={() => handleDeleteSet(set.id, set.name)}
-                        className="text-xs text-red-600 hover:text-red-800 hover:bg-red-50 px-2 py-1 rounded transition-colors"
+                        className="text-xs text-danger hover:text-danger-ink hover:bg-danger-soft px-2 py-1 rounded transition-colors"
                       >
                         Delete
                       </button>
@@ -461,12 +461,12 @@ export default function Subjects() {
                   </div>
                   <div className="flex flex-wrap gap-1 mt-2">
                     {set.subjects.slice(0, 5).map((subject, index) => (
-                      <span key={index} className="px-2 py-0.5 bg-slate-50 text-slate-600 text-xs rounded border border-slate-100">
+                      <span key={index} className="px-2 py-0.5 bg-brand-soft text-ink-soft text-xs rounded border border-line">
                         {subject}
                       </span>
                     ))}
                     {set.subjects.length > 5 && (
-                      <span className="px-2 py-0.5 text-slate-400 text-xs">
+                      <span className="px-2 py-0.5 text-ink-faint text-xs">
                         +{set.subjects.length - 5} more
                       </span>
                     )}
@@ -478,16 +478,16 @@ export default function Subjects() {
         </div>
 
         {/* Class Selector & Assigned Subjects */}
-        <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs">
+        <div className="card p-6">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
             <div className="flex-1">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+              <label className="label block mb-1">
                 Select Class
               </label>
               <select
                 value={selectedClassId}
                 onChange={(e) => setSelectedClassId(e.target.value)}
-                className="w-full max-w-sm border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent bg-white"
+                className="input max-w-sm"
               >
                 {classes.length === 0 ? (
                   <option value="">No active classes found</option>
@@ -501,10 +501,10 @@ export default function Subjects() {
               </select>
             </div>
             {selectedClass && (
-              <div className="text-sm text-slate-500">
-                <span className="font-medium text-slate-700">{selectedClass.name}</span>
+              <div className="text-sm text-ink-muted">
+                <span className="font-medium text-ink-soft">{selectedClass.name}</span>
                 {selectedClass.teacherId && (
-                  <span className="ml-2 text-xs text-slate-400">
+                  <span className="ml-2 text-xs text-ink-faint">
                     Teacher: {selectedClass.teacherId} {/* We'll resolve this later */}
                   </span>
                 )}
@@ -514,35 +514,35 @@ export default function Subjects() {
 
           {/* Assigned Subjects */}
           {!selectedClassId ? (
-            <div className="text-center py-8 text-slate-500">
+            <div className="text-center py-8 text-ink-muted">
               <p className="text-sm">Select a class to view its subjects</p>
             </div>
           ) : subjectsLoading ? (
             <div className="space-y-3">
               {[1, 2, 3, 4].map(i => (
                 <div key={i} className="animate-pulse flex items-center justify-between">
-                  <div className="h-4 bg-slate-200/60 rounded w-1/3"></div>
-                  <div className="h-6 bg-slate-200/60 rounded w-16"></div>
+                  <div className="h-4 bg-line rounded w-1/3"></div>
+                  <div className="h-6 bg-line rounded w-16"></div>
                 </div>
               ))}
             </div>
           ) : assignedSubjects.length === 0 ? (
-            <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-lg">
-              <div className="text-4xl mb-3 text-slate-300"></div>
-              <h3 className="font-serif text-base font-semibold text-slate-700">No subjects assigned</h3>
-              <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+            <div className="text-center py-12 border-2 border-dashed border-line-strong rounded-lg">
+              <div className="text-4xl mb-3 text-ink-faint"></div>
+              <h3 className="text-base font-semibold text-ink-soft">No subjects assigned</h3>
+              <p className="text-xs text-ink-muted mt-1 max-w-sm mx-auto">
                 Assign a subject set or add individual subjects to {selectedClass ? selectedClass.name : "this class"}
               </p>
               <div className="flex gap-3 justify-center mt-4">
                 <button
                   onClick={() => setShowAssignSetModal(true)}
-                  className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-medium rounded-md transition-colors"
+                  className="btn btn-secondary"
                 >
                   Assign Subject Set
                 </button>
                 <button
                   onClick={() => setShowAddSubjectModal(true)}
-                  className="px-4 py-2 bg-sky-900 hover:bg-sky-950 text-white text-xs font-medium rounded-md transition-colors"
+                  className="btn btn-primary"
                 >
                   Add Individual Subject
                 </button>
@@ -551,10 +551,10 @@ export default function Subjects() {
           ) : (
             <div>
               <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-slate-700">
+                <span className="text-sm font-medium text-ink-soft">
                   {assignedSubjects.length} subject{assignedSubjects.length !== 1 ? "s" : ""} assigned
                 </span>
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-ink-faint">
                   Click "Add Subject" to add more
                 </span>
               </div>
@@ -562,22 +562,22 @@ export default function Subjects() {
                 {assignedSubjects.map((subject) => (
                   <div
                     key={subject.id}
-                    className="flex items-center justify-between px-4 py-3 bg-slate-50 rounded-lg border border-slate-100 hover:border-slate-200 transition-colors"
+                    className="flex items-center justify-between px-4 py-3 bg-brand-soft rounded-lg border border-line hover:border-line-strong transition-colors"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="text-slate-400 text-sm">📖</span>
-                      <span className="font-medium text-slate-900 text-sm">
+                      <span className="text-ink-faint text-sm">📖</span>
+                      <span className="font-medium text-ink text-sm">
                         {subject.name}
                       </span>
                       {subject.teacherId && (
-                        <span className="text-xs text-slate-400 ml-1">
+                        <span className="text-xs text-ink-faint ml-1">
                           (assigned)
                         </span>
                       )}
                     </div>
                     <button
                       onClick={() => handleRemoveSubject(subject.id, subject.name)}
-                      className="text-xs text-red-600 hover:text-red-800 hover:bg-red-50 px-2 py-1 rounded transition-colors"
+                      className="text-xs text-danger hover:text-danger-ink hover:bg-danger-soft px-2 py-1 rounded transition-colors"
                     >
                       Remove
                     </button>
@@ -590,34 +590,34 @@ export default function Subjects() {
 
         {/* Modal: Create Subject Set */}
         {showSetModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 border border-slate-200/80 max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+          <div className="fixed inset-0 bg-ink/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between pb-4 border-b border-line mb-5">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-slate-900">
+                  <h3 className="text-lg font-bold text-ink">
                     Create Subject Set
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-ink-muted mt-0.5">
                     Group subjects together to quickly assign to classes
                   </p>
                 </div>
                 <button
                   onClick={() => { setShowSetModal(false); setFormError(""); }}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="p-1 rounded text-ink-faint hover:text-ink-soft hover:bg-brand-soft transition-colors"
                 >
                   ✕
                 </button>
               </div>
 
               {formError && (
-                <div className="bg-red-50 border border-red-200 text-red-700 text-xs px-3.5 py-2.5 rounded-md mb-4">
+                <div className="bg-danger-soft border border-danger-line text-danger-ink text-xs px-3.5 py-2.5 rounded-md mb-4">
                   {formError}
                 </div>
               )}
 
               <form onSubmit={handleCreateSet} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Set Name *
                   </label>
                   <input
@@ -626,18 +626,18 @@ export default function Subjects() {
                     placeholder="e.g., Primary Set, JHS Set"
                     value={formData.setName}
                     onChange={(e) => setFormData({ ...formData, setName: e.target.value })}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                    className="input"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Level (optional)
                   </label>
                   <select
                     value={formData.level}
                     onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent bg-white"
+                    className="input"
                   >
                     <option value="custom">Custom</option>
                     <option value="kg">KG</option>
@@ -647,7 +647,7 @@ export default function Subjects() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Subjects (one per line) *
                   </label>
                   <textarea
@@ -656,25 +656,25 @@ export default function Subjects() {
                     placeholder="English Language&#10;Mathematics&#10;Science&#10;Social Studies"
                     value={formData.subjects}
                     onChange={(e) => setFormData({ ...formData, subjects: e.target.value })}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent font-mono"
+                    className="input font-mono"
                   />
-                  <p className="text-xs text-slate-400 mt-1.5">
+                  <p className="text-xs text-ink-faint mt-1.5">
                     Enter one subject per line
                   </p>
                 </div>
 
-                <div className="flex gap-3 pt-4 border-t border-slate-100">
+                <div className="flex gap-3 pt-4 border-t border-line">
                   <button
                     type="button"
                     onClick={() => { setShowSetModal(false); setFormError(""); }}
-                    className="flex-1 border border-slate-300 text-slate-700 py-2 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors"
+                    className="btn btn-secondary flex-1"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={formLoading}
-                    className="flex-1 bg-sky-900 hover:bg-sky-950 text-white py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
+                    className="btn btn-primary flex-1"
                   >
                     {formLoading ? "Creating..." : "Create Set"}
                   </button>
@@ -686,41 +686,41 @@ export default function Subjects() {
 
         {/* Modal: Assign Set to Class */}
         {showAssignSetModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 border border-slate-200/80">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+          <div className="fixed inset-0 bg-ink/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-md p-6">
+              <div className="flex items-center justify-between pb-4 border-b border-line mb-5">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-slate-900">
+                  <h3 className="text-lg font-bold text-ink">
                     Assign Subject Set
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-ink-muted mt-0.5">
                     Bulk add subjects to {selectedClass ? selectedClass.name : "this class"}
                   </p>
                 </div>
                 <button
                   onClick={() => { setShowAssignSetModal(false); setFormError(""); }}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="p-1 rounded text-ink-faint hover:text-ink-soft hover:bg-brand-soft transition-colors"
                 >
                   ✕
                 </button>
               </div>
 
               {formError && (
-                <div className="bg-red-50 border border-red-200 text-red-700 text-xs px-3.5 py-2.5 rounded-md mb-4">
+                <div className="bg-danger-soft border border-danger-line text-danger-ink text-xs px-3.5 py-2.5 rounded-md mb-4">
                   {formError}
                 </div>
               )}
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Select Subject Set *
                   </label>
                   <select
                     required
                     value={selectedSetId}
                     onChange={(e) => setSelectedSetId(e.target.value)}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent bg-white"
+                    className="input"
                   >
                     <option value="">Select a set</option>
                     {subjectSets.map(set => (
@@ -732,11 +732,11 @@ export default function Subjects() {
                 </div>
 
                 {selectedSetId && (
-                  <div className="bg-slate-50 rounded-md p-3 border border-slate-200">
-                    <p className="text-xs font-medium text-slate-600 mb-2">Subjects in this set:</p>
+                  <div className="notice">
+                    <p className="text-xs font-medium text-ink-soft mb-2">Subjects in this set:</p>
                     <div className="flex flex-wrap gap-1">
                       {subjectSets.find(s => s.id === selectedSetId)?.subjects.map((subject, i) => (
-                        <span key={i} className="px-2 py-0.5 bg-white text-slate-700 text-xs rounded border border-slate-200">
+                        <span key={i} className="px-2 py-0.5 bg-surface text-ink-soft text-xs rounded border border-line">
                           {subject}
                         </span>
                       ))}
@@ -744,11 +744,11 @@ export default function Subjects() {
                   </div>
                 )}
 
-                <div className="flex gap-3 pt-4 border-t border-slate-100">
+                <div className="flex gap-3 pt-4 border-t border-line">
                   <button
                     type="button"
                     onClick={() => { setShowAssignSetModal(false); setFormError(""); }}
-                    className="flex-1 border border-slate-300 text-slate-700 py-2 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors"
+                    className="btn btn-secondary flex-1"
                   >
                     Cancel
                   </button>
@@ -756,7 +756,7 @@ export default function Subjects() {
                     type="button"
                     onClick={handleAssignSetToClass}
                     disabled={formLoading || !selectedSetId}
-                    className="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
+                    className="btn btn-primary flex-1"
                   >
                     {formLoading ? "Assigning..." : "Assign Set"}
                   </button>
@@ -768,34 +768,34 @@ export default function Subjects() {
 
         {/* Modal: Add Individual Subject */}
         {showAddSubjectModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 border border-slate-200/80">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+          <div className="fixed inset-0 bg-ink/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-md p-6">
+              <div className="flex items-center justify-between pb-4 border-b border-line mb-5">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-slate-900">
+                  <h3 className="text-lg font-bold text-ink">
                     Add Subject to {selectedClass ? selectedClass.name : "Class"}
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-ink-muted mt-0.5">
                     Add a single subject to this class
                   </p>
                 </div>
                 <button
                   onClick={() => { setShowAddSubjectModal(false); setFormError(""); }}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="p-1 rounded text-ink-faint hover:text-ink-soft hover:bg-brand-soft transition-colors"
                 >
                   ✕
                 </button>
               </div>
 
               {formError && (
-                <div className="bg-red-50 border border-red-200 text-red-700 text-xs px-3.5 py-2.5 rounded-md mb-4">
+                <div className="bg-danger-soft border border-danger-line text-danger-ink text-xs px-3.5 py-2.5 rounded-md mb-4">
                   {formError}
                 </div>
               )}
 
               <form onSubmit={handleAddIndividualSubject} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Subject Name *
                   </label>
                   <input
@@ -804,22 +804,22 @@ export default function Subjects() {
                     placeholder="e.g., French"
                     value={newSubjectName}
                     onChange={(e) => setNewSubjectName(e.target.value)}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                    className="input"
                   />
                 </div>
 
-                <div className="flex gap-3 pt-4 border-t border-slate-100">
+                <div className="flex gap-3 pt-4 border-t border-line">
                   <button
                     type="button"
                     onClick={() => { setShowAddSubjectModal(false); setFormError(""); }}
-                    className="flex-1 border border-slate-300 text-slate-700 py-2 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors"
+                    className="btn btn-secondary flex-1"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={formLoading}
-                    className="flex-1 bg-sky-900 hover:bg-sky-950 text-white py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
+                    className="btn btn-primary flex-1"
                   >
                     {formLoading ? "Adding..." : "Add Subject"}
                   </button>

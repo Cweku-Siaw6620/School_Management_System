@@ -25,10 +25,10 @@ const CLASS_ORDER = {
 const VALID_LEVELS = Object.keys(CLASS_ORDER);
 
 const statusColors = {
-  active: "bg-emerald-50 text-emerald-800 border-emerald-200",
-  inactive: "bg-rose-50 text-rose-800 border-rose-200",
-  transferred: "bg-sky-50 text-sky-800 border-sky-200",
-  graduated: "bg-amber-50 text-amber-800 border-amber-200",
+  active: "bg-success-soft text-success-ink border-success-line",
+  inactive: "bg-danger-soft text-danger-ink border-danger-line",
+  transferred: "bg-brand-soft text-ink-soft border-line",
+  graduated: "bg-surface text-ink border-line-strong",
 };
 
 // Extracted outer sub-components to prevent focus loss & input re-mounting
@@ -41,11 +41,11 @@ const StatusBadge = ({ status }) => (
 
 const FormField = ({ label, required = false, children, note = "" }) => (
   <div className="flex flex-col gap-1">
-    <label className="text-xs font-semibold uppercase tracking-wider text-slate-600">
-      {label} {required && <span className="text-rose-600">*</span>}
+    <label className="label">
+      {label} {required && <span className="text-danger">*</span>}
     </label>
     {children}
-    {note && <p className="text-[11px] text-slate-400 italic mt-0.5">{note}</p>}
+    {note && <p className="text-[11px] text-ink-faint mt-0.5">{note}</p>}
   </div>
 );
 
@@ -386,11 +386,11 @@ export default function Students() {
   if (loading) {
     return (
       <AdminLayout>
-        <div className="animate-pulse space-y-6 max-w-7xl mx-auto font-['Montserrat',sans-serif]">
-          <div className="h-20 bg-slate-100 border border-slate-200 rounded-xl"></div>
-          <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+        <div className="animate-pulse space-y-6 max-w-7xl mx-auto">
+          <div className="h-20 bg-brand-soft border border-line rounded-xl"></div>
+          <div className="card p-6 space-y-4">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="h-10 bg-slate-100 rounded-md w-full"></div>
+              <div key={i} className="h-10 bg-brand-soft rounded-md w-full"></div>
             ))}
           </div>
         </div>
@@ -400,32 +400,32 @@ export default function Students() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6 max-w-7xl mx-auto font-['Montserrat',sans-serif]">
+      <div className="space-y-6 max-w-7xl mx-auto">
 
         {/* Header Section */}
-        <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="font-bold text-2xl text-slate-900 tracking-tight">
+            <h1 className="font-bold text-2xl text-ink tracking-tight">
               Student Register
             </h1>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="text-sm text-ink-muted mt-1">
               Manage complete student records, index numbers, and class assignments.
             </p>
           </div>
 
           <button
             onClick={() => setShowModal(true)}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-900 text-white text-sm font-medium rounded-md hover:bg-sky-950 transition-colors shadow-xs shrink-0"
+            className="btn btn-primary shrink-0"
           >
             <span className="text-base font-bold leading-none">+</span> Enroll New Student
           </button>
         </div>
 
         {/* Search & Filter Toolbar */}
-        <div className="bg-white border border-slate-200/80 rounded-xl p-4 shadow-xs flex flex-col sm:flex-row gap-4 justify-between items-center">
+        <div className="card p-4 flex flex-col sm:flex-row gap-4 justify-between items-center">
           <div className="relative w-full sm:w-96">
             <svg
-              className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+              className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -437,16 +437,16 @@ export default function Students() {
               placeholder="Search index no., student name, or class..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-md text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent bg-slate-50/50"
+              className="input pl-9"
             />
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap">Class:</span>
+            <span className="text-xs font-semibold text-ink-muted uppercase tracking-wider whitespace-nowrap">Class:</span>
             <select
               value={selectedClassFilter}
               onChange={(e) => setSelectedClassFilter(e.target.value)}
-              className="w-full sm:w-auto border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent bg-white"
+              className="input sm:w-auto"
             >
               <option value="All">All Classes</option>
               <option value="Unassigned">Unassigned</option>
@@ -461,72 +461,72 @@ export default function Students() {
 
         {/* Student Data Table */}
         {filteredStudents.length === 0 ? (
-          <div className="bg-white border border-slate-200/80 rounded-xl p-12 text-center shadow-xs">
-            <h3 className="text-sm font-bold text-slate-900">No Matching Student Records</h3>
-            <p className="text-xs text-slate-500 mt-1">
+          <div className="card p-12 text-center">
+            <h3 className="text-sm font-bold text-ink">No Matching Student Records</h3>
+            <p className="text-xs text-ink-muted mt-1">
               Try adjusting your search criteria or enroll a new student.
             </p>
           </div>
         ) : (
-          <div className="bg-white border border-slate-200/80 rounded-xl shadow-xs overflow-hidden">
+          <div className="card overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50/70 border-b border-slate-200">
-                    <th className="py-3 px-4 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                  <tr className="bg-brand-soft border-b border-line">
+                    <th className="py-3 px-4 text-[11px] font-bold text-ink-soft uppercase tracking-wider">
                       Index No.
                     </th>
-                    <th className="py-3 px-4 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                    <th className="py-3 px-4 text-[11px] font-bold text-ink-soft uppercase tracking-wider">
                       Student Name
                     </th>
-                    <th className="py-3 px-4 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                    <th className="py-3 px-4 text-[11px] font-bold text-ink-soft uppercase tracking-wider">
                       Gender
                     </th>
-                    <th className="py-3 px-4 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                    <th className="py-3 px-4 text-[11px] font-bold text-ink-soft uppercase tracking-wider">
                       DOB
                     </th>
-                    <th className="py-3 px-4 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                    <th className="py-3 px-4 text-[11px] font-bold text-ink-soft uppercase tracking-wider">
                       Guardian Record
                     </th>
-                    <th className="py-3 px-4 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                    <th className="py-3 px-4 text-[11px] font-bold text-ink-soft uppercase tracking-wider">
                       Class Placement
                     </th>
-                    <th className="py-3 px-4 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                    <th className="py-3 px-4 text-[11px] font-bold text-ink-soft uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="py-3 px-4 text-[11px] font-bold text-slate-600 uppercase tracking-wider text-right">
+                    <th className="py-3 px-4 text-[11px] font-bold text-ink-soft uppercase tracking-wider text-right">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-line">
                   {filteredStudents.map((student) => (
-                    <tr key={student.id} className="hover:bg-slate-50/50 transition-colors">
+                    <tr key={student.id} className="hover:bg-brand-soft transition-colors">
                       <td className="py-3 px-4">
-                        <span className="font-mono text-xs font-bold text-slate-800">
-                          {student.indexNumber || <span className="text-slate-400 font-normal">—</span>}
+                        <span className="font-mono text-xs font-bold text-ink">
+                          {student.indexNumber || <span className="text-ink-faint font-normal">—</span>}
                         </span>
                       </td>
                       <td className="py-3 px-4">
                         <Link 
                           to={`/admin/students/${student.id}`}
-                          className="text-xs font-semibold text-slate-900 hover:text-sky-700 hover:underline transition-colors"
+                          className="text-xs font-semibold text-ink hover:underline"
                         >
                           {getFullName(student)}
                         </Link>
                       </td>
-                      <td className="py-3 px-4 text-xs text-slate-600 capitalize">
+                      <td className="py-3 px-4 text-xs text-ink-soft capitalize">
                         {student.gender || "—"}
                       </td>
-                      <td className="py-3 px-4 text-xs text-slate-600">
+                      <td className="py-3 px-4 text-xs text-ink-soft">
                         {student.dateOfBirth || "—"}
                       </td>
                       <td className="py-3 px-4">
                         <div>
-                          <p className="text-xs font-medium text-slate-900">
+                          <p className="text-xs font-medium text-ink">
                             {student.guardianName || "—"}
                           </p>
-                          <p className="text-[10px] text-slate-500">
+                          <p className="text-[10px] text-ink-muted">
                             {student.guardianPhone || ""}
                             {student.guardianRelationship && student.guardianPhone && " · "}
                             {student.guardianRelationship || ""}
@@ -534,7 +534,7 @@ export default function Students() {
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-brand-soft text-ink-soft border border-line">
                           {getClassName(student.classId)}
                         </span>
                       </td>
@@ -546,8 +546,8 @@ export default function Students() {
                           onClick={() => toggleStatus(student)}
                           className={`text-xs font-medium px-2.5 py-1 rounded border transition-colors ${
                             student.status === "active"
-                              ? "border-amber-300 text-amber-800 bg-amber-50 hover:bg-amber-100"
-                              : "border-emerald-300 text-emerald-800 bg-emerald-50 hover:bg-emerald-100"
+                              ? "border-danger-line text-danger-ink bg-danger-soft hover:bg-danger-line"
+                              : "border-success-line text-success-ink bg-success-soft hover:bg-success-line"
                           }`}
                         >
                           {student.status === "active" ? "Deactivate" : "Activate"}
@@ -563,15 +563,15 @@ export default function Students() {
 
         {/* Modal: Enroll Student */}
         {showModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white border border-slate-200/80 rounded-xl shadow-xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-brand backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
               
-              <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+              <div className="flex items-center justify-between pb-3 mb-4 border-b border-line">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 uppercase tracking-wider">
+                  <h3 className="text-base font-bold text-ink uppercase tracking-wider">
                     Enroll New Student
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-ink-muted mt-0.5">
                     Stage {formStep} of 3 — {
                       formStep === 1 ? "Personal Particulars" :
                       formStep === 2 ? "Academic Placement" :
@@ -581,7 +581,7 @@ export default function Students() {
                 </div>
                 <button
                   onClick={() => { resetForm(); setShowModal(false); }}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="p-1 rounded text-ink-faint hover:text-ink-soft hover:bg-brand-soft transition-colors"
                 >
                   ✕
                 </button>
@@ -589,13 +589,13 @@ export default function Students() {
 
               {/* Progress Bar */}
               <div className="grid grid-cols-3 gap-1 mb-6">
-                <div className={`h-1.5 rounded-full transition-colors ${formStep >= 1 ? 'bg-sky-900' : 'bg-slate-200'}`} />
-                <div className={`h-1.5 rounded-full transition-colors ${formStep >= 2 ? 'bg-sky-900' : 'bg-slate-200'}`} />
-                <div className={`h-1.5 rounded-full transition-colors ${formStep >= 3 ? 'bg-sky-900' : 'bg-slate-200'}`} />
+                <div className={`h-1.5 rounded-full transition-colors ${formStep >= 1 ? 'bg-brand' : 'bg-line'}`} />
+                <div className={`h-1.5 rounded-full transition-colors ${formStep >= 2 ? 'bg-brand' : 'bg-line'}`} />
+                <div className={`h-1.5 rounded-full transition-colors ${formStep >= 3 ? 'bg-brand' : 'bg-line'}`} />
               </div>
 
               {formError && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs px-3.5 py-2.5 rounded-md mb-4">
+                <div className="alert-error mb-4">
                   {formError}
                 </div>
               )}
@@ -611,7 +611,7 @@ export default function Students() {
                           placeholder="First Name"
                           value={formData.firstName}
                           onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                          className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                          className="input"
                         />
                       </FormField>
                       <FormField label="Middle Name">
@@ -620,7 +620,7 @@ export default function Students() {
                           placeholder="Middle Name"
                           value={formData.middleName}
                           onChange={(e) => setFormData({ ...formData, middleName: e.target.value })}
-                          className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                          className="input"
                         />
                       </FormField>
                       <FormField label="Last Name" required>
@@ -630,7 +630,7 @@ export default function Students() {
                           placeholder="Last Name"
                           value={formData.lastName}
                           onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                          className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                          className="input"
                         />
                       </FormField>
                     </div>
@@ -641,7 +641,7 @@ export default function Students() {
                           required
                           value={formData.gender}
                           onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                          className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                          className="input"
                         >
                           <option value="">Select Gender</option>
                           <option value="male">Male</option>
@@ -655,16 +655,16 @@ export default function Students() {
                           required
                           value={formData.dateOfBirth}
                           onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
-                          className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                          className="input"
                         />
                       </FormField>
                     </div>
 
-                    <div className="flex justify-end pt-4 border-t border-slate-100">
+                    <div className="flex justify-end pt-4 border-t border-line">
                       <button
                         type="button"
                         onClick={() => setFormStep(2)}
-                        className="px-5 py-2 bg-sky-900 text-white text-xs font-semibold rounded-md hover:bg-sky-950 transition-colors"
+                        className="btn btn-primary"
                       >
                         Proceed to Academic Info &rarr;
                       </button>
@@ -681,7 +681,7 @@ export default function Students() {
                           required
                           value={formData.admissionDate}
                           onChange={(e) => setFormData({ ...formData, admissionDate: e.target.value })}
-                          className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                          className="input"
                         />
                       </FormField>
 
@@ -690,7 +690,7 @@ export default function Students() {
                           required
                           value={formData.academicYear}
                           onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
-                          className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                          className="input"
                         >
                           <option value="">Select Academic Year</option>
                           {getAcademicYearOptions().map((year) => (
@@ -704,7 +704,7 @@ export default function Students() {
                       <select
                         value={formData.classId || ""}
                         onChange={(e) => setFormData({ ...formData, classId: e.target.value || null })}
-                        className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                        className="input"
                       >
                         <option value="">Unassigned</option>
                         {sortedClasses.map((cls) => (
@@ -715,18 +715,18 @@ export default function Students() {
                       </select>
                     </FormField>
 
-                    <div className="flex gap-3 pt-4 border-t border-slate-100">
+                    <div className="flex gap-3 pt-4 border-t border-line">
                       <button
                         type="button"
                         onClick={() => setFormStep(1)}
-                        className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-50 transition-colors"
+                        className="btn btn-secondary flex-1"
                       >
                         &larr; Back
                       </button>
                       <button
                         type="button"
                         onClick={() => setFormStep(3)}
-                        className="flex-1 px-4 py-2 bg-sky-900 text-white text-xs font-semibold rounded-md hover:bg-sky-950 transition-colors"
+                        className="btn btn-primary flex-1"
                       >
                         Proceed to Guardian Details &rarr;
                       </button>
@@ -736,13 +736,13 @@ export default function Students() {
 
                 {formStep === 3 && (
                   <div className="space-y-4">
-                    <div className="bg-amber-50 border border-amber-200 rounded-md p-3">
-                      <p className="text-xs text-amber-900">
+                    <div className="notice">
+                      <p className="text-xs text-ink">
                         <span className="font-bold">Parent Portal Credentials:</span>
                         <br />
-                        <span className="font-semibold">Login ID:</span> <code className="font-mono bg-amber-100 px-1 py-0.5 rounded">{formData.indexNumber || "Pending Generation"}</code>
+                        <span className="font-semibold">Login ID:</span> <code className="font-mono bg-surface border border-line px-1 py-0.5 rounded">{formData.indexNumber || "Pending Generation"}</code>
                         <br />
-                        <span className="font-semibold">Password:</span> Guardian's Phone Number <span className="text-amber-700">(no spaces or dashes)</span>
+                        <span className="font-semibold">Password:</span> Guardian's Phone Number <span className="text-ink-muted">(no spaces or dashes)</span>
                       </p>
                     </div>
 
@@ -754,7 +754,7 @@ export default function Students() {
                           placeholder="Full Name"
                           value={formData.guardianName}
                           onChange={(e) => setFormData({ ...formData, guardianName: e.target.value })}
-                          className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                          className="input"
                         />
                       </FormField>
                       <FormField label="Telephone Number" required note="Serves as Parent Portal Password (remove spaces and dashes)">
@@ -771,47 +771,47 @@ export default function Students() {
                               checkForSiblings(e.target.value);
                             }, 500);
                           }}
-                          className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                          className="input"
                         />
                       </FormField>
                     </div>
 
                     {/* Sibling Detection Banner */}
                     {checkingPhone && (
-                      <div className="bg-slate-50 border border-slate-200 rounded-md p-3 flex items-center gap-2">
-                        <svg className="w-4 h-4 animate-spin text-slate-500" fill="none" viewBox="0 0 24 24">
+                      <div className="notice flex items-center gap-2">
+                        <svg className="w-4 h-4 animate-spin text-ink-muted" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        <span className="text-xs text-slate-500">Checking for existing siblings...</span>
+                        <span className="text-xs text-ink-muted">Checking for existing siblings...</span>
                       </div>
                     )}
 
                     {!checkingPhone && existingSiblings.length > 0 && (
-                      <div className="bg-sky-50 border border-sky-200 rounded-md p-3">
+                      <div className="notice">
                         <div className="flex items-start gap-2">
                           <span className="text-lg">👨‍👩‍👧</span>
                           <div className="flex-1">
-                            <p className="text-xs font-semibold text-sky-900">
+                            <p className="text-xs font-semibold text-ink">
                               {existingSiblings.length} existing sibling{existingSiblings.length !== 1 ? "s" : ""} found
                             </p>
-                            <p className="text-[11px] text-sky-700 mt-1">
+                            <p className="text-[11px] text-ink-soft mt-1">
                               This guardian phone is already linked to:
                             </p>
                             <div className="mt-2 space-y-1">
                               {existingSiblings.map((sibling) => (
-                                <div key={sibling.id} className="flex items-center gap-2 text-[11px] text-sky-800">
-                                  <span className="font-mono bg-sky-100 px-1.5 py-0.5 rounded">
+                                <div key={sibling.id} className="flex items-center gap-2 text-[11px] text-ink">
+                                  <span className="font-mono bg-surface border border-line px-1.5 py-0.5 rounded">
                                     {sibling.indexNumber}
                                   </span>
                                   <span className="font-medium">
                                     {sibling.firstName} {sibling.lastName}
                                   </span>
-                                  <span className="text-sky-600">
+                                  <span className="text-ink-muted">
                                     ({getClassName(sibling.classId)})
                                   </span>
                                   {sibling.parentAccountCreated && (
-                                    <span className="text-[9px] text-emerald-600 font-semibold">
+                                    <span className="text-[9px] text-success-ink font-semibold">
                                       ✓ Parent Portal Active
                                     </span>
                                   )}
@@ -819,7 +819,7 @@ export default function Students() {
                               ))}
                             </div>
                             {existingSiblings.some(s => s.parentUid) && (
-                              <p className="text-[10px] text-emerald-700 mt-2 font-medium">
+                              <p className="text-[10px] text-success-ink mt-2 font-medium">
                                  This student will be automatically linked to the existing parent account.
                               </p>
                             )}
@@ -834,7 +834,7 @@ export default function Students() {
                           required
                           value={formData.guardianRelationship}
                           onChange={(e) => setFormData({ ...formData, guardianRelationship: e.target.value })}
-                          className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                          className="input"
                         >
                           <option value="">Select Relationship</option>
                           <option value="Father">Father</option>
@@ -853,13 +853,13 @@ export default function Students() {
                           placeholder="guardian@example.com"
                           value={formData.guardianEmail}
                           onChange={(e) => setFormData({ ...formData, guardianEmail: e.target.value })}
-                          className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                          className="input"
                         />
                       </FormField>
                     </div>
 
-                    <div className="border-t border-slate-100 pt-3">
-                      <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">
+                    <div className="border-t border-line pt-3">
+                      <h4 className="text-xs font-bold text-ink uppercase tracking-wider mb-3">
                         Emergency Contact Particulars
                       </h4>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -870,7 +870,7 @@ export default function Students() {
                             placeholder="Full Name"
                             value={formData.emergencyContactName}
                             onChange={(e) => setFormData({ ...formData, emergencyContactName: e.target.value })}
-                            className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                            className="input"
                           />
                         </FormField>
                         <FormField label="Telephone" required>
@@ -880,7 +880,7 @@ export default function Students() {
                             placeholder="Telephone Number"
                             value={formData.emergencyContactPhone}
                             onChange={(e) => setFormData({ ...formData, emergencyContactPhone: e.target.value })}
-                            className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                            className="input"
                           />
                         </FormField>
                         <FormField label="Relationship" required>
@@ -888,7 +888,7 @@ export default function Students() {
                             required
                             value={formData.emergencyContactRelationship}
                             onChange={(e) => setFormData({ ...formData, emergencyContactRelationship: e.target.value })}
-                            className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                            className="input"
                           >
                             <option value="">Select Relationship</option>
                             <option value="Father">Father</option>
@@ -903,8 +903,8 @@ export default function Students() {
                       </div>
                     </div>
 
-                    <div className="border-t border-slate-100 pt-3">
-                      <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">
+                    <div className="border-t border-line pt-3">
+                      <h4 className="text-xs font-bold text-ink uppercase tracking-wider mb-3">
                         Medical & Health Particulars
                       </h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -914,7 +914,7 @@ export default function Students() {
                             placeholder="e.g. Penicillin, Peanut allergy"
                             value={formData.allergies}
                             onChange={(e) => setFormData({ ...formData, allergies: e.target.value })}
-                            className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                            className="input"
                           />
                         </FormField>
                         <FormField label="Medical Remarks">
@@ -923,24 +923,24 @@ export default function Students() {
                             placeholder="Additional medical notes"
                             value={formData.medicalNotes}
                             onChange={(e) => setFormData({ ...formData, medicalNotes: e.target.value })}
-                            className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                            className="input"
                           />
                         </FormField>
                       </div>
                     </div>
 
-                    <div className="flex gap-3 pt-4 border-t border-slate-100">
+                    <div className="flex gap-3 pt-4 border-t border-line">
                       <button
                         type="button"
                         onClick={() => setFormStep(2)}
-                        className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 text-xs font-semibold rounded-md hover:bg-slate-50 transition-colors"
+                        className="btn btn-secondary flex-1"
                       >
                         &larr; Back
                       </button>
                       <button
                         type="submit"
                         disabled={formLoading}
-                        className="flex-1 px-4 py-2 bg-sky-900 text-white text-xs font-semibold rounded-md hover:bg-sky-950 transition-colors disabled:opacity-50"
+                        className="btn btn-primary flex-1"
                       >
                         {formLoading ? "Enrolling Student..." : "Save Student Record"}
                       </button>
@@ -954,19 +954,19 @@ export default function Students() {
 
         {/* Modal: School Initials Setup */}
         {showInitialsModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white border border-slate-200/80 rounded-xl shadow-xl w-full max-w-md p-6">
+          <div className="fixed inset-0 bg-brand backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-md p-6">
               <div className="text-center mb-6">
-                <h3 className="text-lg font-bold text-slate-900 tracking-tight">
+                <h3 className="text-lg font-bold text-ink tracking-tight">
                   Institutional Prefix Setup
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-ink-muted mt-1">
                   Specify institutional prefix to initialize automated index numbering.
                 </p>
               </div>
 
               {initialsError && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs px-3.5 py-2.5 rounded-md mb-4">
+                <div className="alert-error mb-4">
                   {initialsError}
                 </div>
               )}
@@ -984,13 +984,13 @@ export default function Students() {
                       setInitialsError("");
                     }}
                     maxLength={5}
-                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md px-3 py-2 text-sm font-mono tracking-wider font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-800 uppercase"
+                    className="input text-sm font-mono tracking-wider font-bold uppercase"
                   />
                 </FormField>
 
                 <button
                   onClick={saveSchoolInitials}
-                  className="w-full py-2.5 bg-sky-900 text-white text-xs font-semibold rounded-md hover:bg-sky-950 transition-colors"
+                  className="btn btn-primary w-full"
                 >
                   Commit Institutional Identifier
                 </button>

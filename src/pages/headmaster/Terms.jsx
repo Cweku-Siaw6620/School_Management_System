@@ -70,18 +70,18 @@ export default function Terms() {
       <HeadmasterLayout>
         <div className="animate-pulse space-y-6">
           <div className="flex items-center justify-between">
-            <div className="h-8 bg-slate-200/60 rounded w-36"></div>
-            <div className="h-9 bg-slate-200/60 rounded-md w-28"></div>
+            <div className="h-8 bg-line rounded w-36"></div>
+            <div className="h-9 bg-line rounded-md w-28"></div>
           </div>
-          <div className="bg-white rounded-xl border border-slate-200/80 p-6 space-y-4">
+          <div className="card p-6 space-y-4">
             {[1, 2, 3].map((i) => (
               <div key={i} className="flex items-center space-x-4">
-                <div className="h-4 bg-slate-100 rounded w-1/5"></div>
-                <div className="h-4 bg-slate-100 rounded w-1/6"></div>
-                <div className="h-4 bg-slate-100 rounded w-1/6"></div>
-                <div className="h-4 bg-slate-100 rounded w-1/6"></div>
-                <div className="h-6 bg-slate-100 rounded-full w-20"></div>
-                <div className="h-8 bg-slate-100 rounded-md w-28 ml-auto"></div>
+                <div className="h-4 bg-brand-soft rounded w-1/5"></div>
+                <div className="h-4 bg-brand-soft rounded w-1/6"></div>
+                <div className="h-4 bg-brand-soft rounded w-1/6"></div>
+                <div className="h-4 bg-brand-soft rounded w-1/6"></div>
+                <div className="h-6 bg-brand-soft rounded-full w-20"></div>
+                <div className="h-8 bg-brand-soft rounded-md w-28 ml-auto"></div>
               </div>
             ))}
           </div>
@@ -95,18 +95,18 @@ export default function Terms() {
       <div className="space-y-6">
         
         {/* Page Header */}
-        <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl font-bold text-ink tracking-tight">
               Academic Calendar & Terms
             </h1>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="text-sm text-ink-muted mt-1">
               Configure term schedules and set the active school term.
             </p>
           </div>
           <button
             onClick={() => setShowModal(true)}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-sky-900 text-white text-sm font-medium rounded-md hover:bg-sky-950 transition-colors shadow-xs"
+            className="btn btn-primary"
           >
             <span className="text-base font-bold leading-none">+</span> Add Academic Term
           </button>
@@ -114,68 +114,68 @@ export default function Terms() {
 
         {/* Terms Table / Empty State */}
         {terms.length === 0 ? (
-          <div className="bg-white rounded-xl border border-slate-200/80 p-12 text-center">
-            <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3 font-serif text-xl">
+          <div className="card p-12 text-center">
+            <div className="w-12 h-12 rounded-full bg-brand-soft text-ink-faint flex items-center justify-center mx-auto mb-3 text-xl">
               📅
             </div>
-            <h3 className="font-serif text-base font-semibold text-slate-800">No academic terms found</h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <h3 className="text-base font-semibold text-ink">No academic terms found</h3>
+            <p className="text-xs text-ink-muted mt-1">
               Start by scheduling your first academic term for the school year.
             </p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden shadow-xs">
+          <div className="card overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-slate-50 border-b border-slate-200/80">
+                <thead className="bg-brand-soft border-b border-line">
                   <tr>
-                    <th className="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <th className="px-6 py-3.5 text-left text-xs font-semibold text-ink-muted uppercase tracking-wider">
                       Term Name
                     </th>
-                    <th className="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <th className="px-6 py-3.5 text-left text-xs font-semibold text-ink-muted uppercase tracking-wider">
                       Academic Year
                     </th>
-                    <th className="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <th className="px-6 py-3.5 text-left text-xs font-semibold text-ink-muted uppercase tracking-wider">
                       Start Date
                     </th>
-                    <th className="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <th className="px-6 py-3.5 text-left text-xs font-semibold text-ink-muted uppercase tracking-wider">
                       End Date
                     </th>
-                    <th className="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <th className="px-6 py-3.5 text-left text-xs font-semibold text-ink-muted uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3.5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <th className="px-6 py-3.5 text-right text-xs font-semibold text-ink-muted uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-line">
                   {terms.map((term) => (
-                    <tr key={term.id} className="hover:bg-slate-50/50 transition-colors">
+                    <tr key={term.id} className="hover:bg-brand-soft transition-colors">
                       <td className="px-6 py-4">
                         <Link 
                           to={`/headmaster/terms/${term.id}`}
-                          className="font-semibold text-slate-900 font-serif hover:text-sky-800 hover:underline transition-colors"
+                          className="font-semibold text-ink hover:underline"
                         >
                           {term.name}
                         </Link>
                       </td>
-                      <td className="px-6 py-4 text-slate-600 font-medium">
+                      <td className="px-6 py-4 text-ink-soft font-medium">
                         {term.academicYear}
                       </td>
-                      <td className="px-6 py-4 text-slate-600">
-                        {term.startDate || <span className="text-slate-400">—</span>}
+                      <td className="px-6 py-4 text-ink-soft">
+                        {term.startDate || <span className="text-ink-faint">—</span>}
                       </td>
-                      <td className="px-6 py-4 text-slate-600">
-                        {term.endDate || <span className="text-slate-400">—</span>}
+                      <td className="px-6 py-4 text-ink-soft">
+                        {term.endDate || <span className="text-ink-faint">—</span>}
                       </td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
                           term.isCurrent
-                            ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                            : "bg-slate-100 text-slate-600 border-slate-200"
+                            ? "bg-success-soft text-success-ink border-success-line"
+                            : "bg-brand-soft text-ink-soft border-line"
                         }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${term.isCurrent ? "bg-emerald-600" : "bg-slate-400"}`}></span>
+                          <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${term.isCurrent ? "bg-success" : "bg-ink-faint"}`}></span>
                           {term.isCurrent ? "Active Term" : "Inactive"}
                         </span>
                       </td>
@@ -183,7 +183,7 @@ export default function Terms() {
                         {!term.isCurrent && (
                           <button
                             onClick={() => setAsCurrent(term.id)}
-                            className="text-xs font-medium px-3 py-1.5 rounded-md border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-colors"
+                            className="btn btn-secondary px-3 py-1.5"
                           >
                             Set as Current
                           </button>
@@ -199,32 +199,32 @@ export default function Terms() {
 
         {/* Add Term Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 border border-slate-200/80">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+          <div className="fixed inset-0 bg-brand backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-md p-6">
+              <div className="flex items-center justify-between pb-4 border-b border-line mb-5">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-slate-900">
+                  <h3 className="text-lg font-bold text-ink">
                     Add Academic Term
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Specify term dates and academic year.</p>
+                  <p className="text-xs text-ink-muted mt-0.5">Specify term dates and academic year.</p>
                 </div>
                 <button
                   onClick={() => { setShowModal(false); setFormError(""); }}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="p-1 rounded text-ink-faint hover:text-ink-soft hover:bg-brand-soft transition-colors"
                 >
                   ✕
                 </button>
               </div>
 
               {formError && (
-                <div className="bg-red-50 border border-red-200 text-red-700 text-xs px-3.5 py-2.5 rounded-md mb-4">
+                <div className="alert-error mb-4">
                   {formError}
                 </div>
               )}
 
               <form onSubmit={handleAddTerm} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Academic Year *
                   </label>
                   <input
@@ -233,19 +233,19 @@ export default function Terms() {
                     placeholder="e.g., 2025/2026"
                     value={formData.academicYear}
                     onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                    className="input"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Term *
                   </label>
                   <select
                     required
                     value={formData.term}
                     onChange={(e) => setFormData({ ...formData, term: e.target.value })}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent bg-white"
+                    className="input"
                   >
                     <option value="">Select Term</option>
                     <option value="1">Term 1</option>
@@ -255,7 +255,7 @@ export default function Terms() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     Start Date *
                   </label>
                   <input
@@ -263,12 +263,12 @@ export default function Terms() {
                     required
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                    className="input"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="label block mb-1">
                     End Date *
                   </label>
                   <input
@@ -276,22 +276,22 @@ export default function Terms() {
                     required
                     value={formData.endDate}
                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent"
+                    className="input"
                   />
                 </div>
 
-                <div className="flex gap-3 pt-4 border-t border-slate-100">
+                <div className="flex gap-3 pt-4 border-t border-line">
                   <button
                     type="button"
                     onClick={() => { setShowModal(false); setFormError(""); }}
-                    className="flex-1 border border-slate-300 text-slate-700 py-2 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors"
+                    className="btn btn-secondary flex-1"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={formLoading}
-                    className="flex-1 bg-sky-900 hover:bg-sky-950 text-white py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
+                    className="btn btn-primary flex-1"
                   >
                     {formLoading ? "Saving..." : "Create Term"}
                   </button>

@@ -376,26 +376,26 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans antialiased flex flex-col justify-center items-center p-4 text-slate-800">
+    <div className="min-h-screen bg-canvas font-sans antialiased flex flex-col justify-center items-center p-4 text-ink">
       
-      <div className="w-full max-w-md bg-white rounded-xl border border-slate-200/80 shadow-sm overflow-hidden">
+      <div className="card w-full max-w-md overflow-hidden">
         
-        <div className="bg-slate-50/50 border-b border-slate-100 p-8 text-center">
-          <div className="w-12 h-12 rounded-lg bg-sky-900 border border-sky-800 flex items-center justify-center text-amber-300 font-serif font-bold text-2xl shadow-xs mx-auto mb-3">
+        <div className="bg-brand-soft border-b border-line p-8 text-center">
+          <div className="w-12 h-12 rounded-lg bg-brand flex items-center justify-center text-2xl mx-auto mb-3">
             🏫
           </div>
-          <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-ink tracking-tight">
             School Portal
           </h1>
-          <p className="text-xs text-slate-500 mt-1 uppercase tracking-wider font-medium">
+          <p className="eyebrow mt-1">
             Sign in to access your account
           </p>
         </div>
 
         <div className="p-8">
           {error && (
-            <div className="mb-6 p-3.5 rounded-lg bg-rose-50 border border-rose-200/80 text-rose-700 text-xs font-medium flex items-center gap-2">
-              <svg className="w-4 h-4 shrink-0 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="alert-error mb-6 flex items-center gap-2">
+              <svg className="w-4 h-4 shrink-0 text-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span>{error}</span>
@@ -404,7 +404,7 @@ export default function Login() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+              <label className="label block mb-1.5">
                 Student ID / Staff ID
               </label>
               <input
@@ -412,16 +412,16 @@ export default function Login() {
                 required 
                 value={loginId}
                 onChange={(e) => setLoginId(e.target.value)}
-                className="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-800/20 focus:border-sky-800 bg-slate-50/30 transition-colors"
+                className="input"
                 placeholder="e.g., T001, ADMIN, or AJ00001"
               />
-              <p className="text-[10px] text-slate-400 mt-1.5">
+              <p className="text-[10px] text-ink-faint mt-1.5">
                 Staff: Staff ID | Admin: ADMIN | Parents: Any child's Index Number
               </p>
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+              <label className="label block mb-1.5">
                 Password
               </label>
               <input
@@ -429,10 +429,10 @@ export default function Login() {
                 required 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-800/20 focus:border-sky-800 bg-slate-50/30 transition-colors"
+                className="input"
                 placeholder="••••••••"
               />
-              <p className="text-[10px] text-slate-400 mt-1.5">
+              <p className="text-[10px] text-ink-faint mt-1.5">
                 Parents: Use your Guardian Phone Number (without spaces or dashes)
               </p>
             </div>
@@ -440,7 +440,7 @@ export default function Login() {
             <button
               type="submit" 
               disabled={loading}
-              className="w-full bg-sky-900 hover:bg-sky-950 text-white font-semibold text-xs py-3 px-4 rounded-lg transition-colors shadow-xs disabled:opacity-60 flex items-center justify-center gap-2 mt-4"
+              className="btn btn-primary w-full py-3 mt-4"
             >
               {loading ? (
                 <>
@@ -456,15 +456,15 @@ export default function Login() {
             </button>
 
             <div className="text-center pt-2">
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-ink-faint">
                 Parents: Your password is your Guardian Phone Number
               </span>
             </div>
           </form>
         </div>
 
-        <div className="bg-slate-50/50 border-t border-slate-100 p-4 text-center">
-          <p className="text-[10px] text-slate-400">
+        <div className="bg-brand-soft border-t border-line p-4 text-center">
+          <p className="text-[10px] text-ink-faint">
             Admin: Use "ADMIN" | Staff: Staff ID | Parents: Any child's Index + Phone Number
           </p>
         </div>

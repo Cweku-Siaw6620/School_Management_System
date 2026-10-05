@@ -11,17 +11,17 @@ import TeacherLayout from "../../components/TeacherLayout";
 // GES Grading Scale
 const getGradeColor = (grade) => {
   const colors = {
-    "A1": "text-emerald-700 bg-emerald-50 border-emerald-200",
-    "B2": "text-emerald-600 bg-emerald-50/80 border-emerald-200",
-    "B3": "text-sky-700 bg-sky-50 border-sky-200",
-    "C4": "text-blue-700 bg-blue-50 border-blue-200",
-    "C5": "text-indigo-700 bg-indigo-50 border-indigo-200",
-    "C6": "text-amber-700 bg-amber-50 border-amber-200",
-    "D7": "text-orange-700 bg-orange-50 border-orange-200",
-    "E8": "text-rose-600 bg-rose-50 border-rose-200",
-    "F9": "text-rose-700 bg-rose-100 border-rose-300"
+    "A1": "text-success-ink bg-success-soft border-success-line",
+    "B2": "text-success-ink bg-success-soft border-success-line",
+    "B3": "text-ink-soft bg-brand-soft border-line",
+    "C4": "text-ink-soft bg-brand-soft border-line",
+    "C5": "text-ink-soft bg-brand-soft border-line",
+    "C6": "text-ink-soft bg-brand-soft border-line-strong",
+    "D7": "text-ink-soft bg-brand-soft border-line-strong",
+    "E8": "text-danger bg-danger-soft border-danger-line",
+    "F9": "text-danger-ink bg-danger-soft border-danger-line"
   };
-  return colors[grade] || "text-slate-700 bg-slate-50 border-slate-200";
+  return colors[grade] || "text-ink-soft bg-brand-soft border-line";
 };
 
 const SCORE_STATUS = {
@@ -33,10 +33,10 @@ const SCORE_STATUS = {
 
 const getStatusBadge = (status) => {
   const statusMap = {
-    [SCORE_STATUS.DRAFT]: { label: 'Draft', color: 'bg-amber-50 text-amber-700 border-amber-200' },
-    [SCORE_STATUS.SUBMITTED_TO_CLASS_TEACHER]: { label: 'Final Submission', color: 'bg-green-50 text-green-700 border-green-200' },
-    [SCORE_STATUS.SUBMITTED_TO_HEADMASTER]: { label: 'Submitted to Headmaster', color: 'bg-purple-50 text-purple-700 border-purple-200' },
-    [SCORE_STATUS.APPROVED]: { label: 'Approved by Headmaster', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' }
+    [SCORE_STATUS.DRAFT]: { label: 'Draft', color: 'bg-surface text-ink-muted border-line-strong' },
+    [SCORE_STATUS.SUBMITTED_TO_CLASS_TEACHER]: { label: 'Final Submission', color: 'bg-brand-soft text-ink-soft border-line-strong' },
+    [SCORE_STATUS.SUBMITTED_TO_HEADMASTER]: { label: 'Submitted to Headmaster', color: 'bg-brand-soft text-ink border-line-strong' },
+    [SCORE_STATUS.APPROVED]: { label: 'Approved by Headmaster', color: 'bg-success-soft text-success-ink border-success-line' }
   };
   return statusMap[status] || statusMap[SCORE_STATUS.DRAFT];
 };
@@ -335,10 +335,10 @@ export default function MyClass() {
     return (
       <TeacherLayout>
         <div className="animate-pulse space-y-6 max-w-6xl mx-auto">
-          <div className="h-24 bg-slate-100 rounded-xl"></div>
+          <div className="h-24 bg-brand-soft rounded-xl"></div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 h-96 bg-slate-100 rounded-xl"></div>
-            <div className="h-96 bg-slate-100 rounded-xl"></div>
+            <div className="lg:col-span-2 h-96 bg-brand-soft rounded-xl"></div>
+            <div className="h-96 bg-brand-soft rounded-xl"></div>
           </div>
         </div>
       </TeacherLayout>
@@ -348,15 +348,15 @@ export default function MyClass() {
   if (formError && !classData) {
     return (
       <TeacherLayout>
-        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center max-w-md mx-auto my-12 shadow-xs">
-          <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 text-xl">
+        <div className="card p-12 text-center max-w-md mx-auto my-12">
+          <div className="w-12 h-12 rounded-full bg-brand-soft text-ink-muted flex items-center justify-center mx-auto mb-4 text-xl">
             
           </div>
-          <h3 className="font-semibold text-slate-900 text-base">Class Data Unavailable</h3>
-          <p className="text-xs text-slate-500 mt-1 leading-relaxed">{formError}</p>
+          <h3 className="font-semibold text-ink text-base">Class Data Unavailable</h3>
+          <p className="text-xs text-ink-muted mt-1 leading-relaxed">{formError}</p>
           <button
             onClick={() => navigate("/teacher/dashboard")}
-            className="mt-6 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-md transition-colors"
+            className="btn btn-primary mt-6"
           >
             Return to Dashboard
           </button>
@@ -367,51 +367,51 @@ export default function MyClass() {
 
   return (
     <TeacherLayout>
-      <div className="space-y-6 max-w-6xl mx-auto text-slate-800">
+      <div className="space-y-6 max-w-6xl mx-auto text-ink">
 
         {/* Page Header */}
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-2xl font-bold text-ink tracking-tight">
                 {classData?.name}
               </h1>
-              <span className="px-2.5 py-0.5 bg-amber-50 text-amber-700 text-xs font-medium rounded-full border border-amber-200">
+              <span className="px-2.5 py-0.5 bg-brand-soft text-ink-soft text-xs font-medium rounded-full border border-line">
                  Class Teacher
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-ink-muted mt-1">
               Level: {classData?.level} • Term: {term?.name}
             </p>
           </div>
 
           {/* Key Metrics */}
-          <div className="flex items-center gap-4 text-center border-t sm:border-t-0 sm:border-l border-slate-200 pt-3 sm:pt-0 sm:pl-6">
+          <div className="flex items-center gap-4 text-center border-t sm:border-t-0 sm:border-l border-line pt-3 sm:pt-0 sm:pl-6">
             <div>
-              <p className="text-xl font-bold text-slate-900">{students.length}</p>
-              <p className="text-[11px] text-slate-500 uppercase tracking-wider">Students</p>
+              <p className="text-xl font-bold text-ink">{students.length}</p>
+              <p className="text-[11px] text-ink-muted uppercase tracking-wider">Students</p>
             </div>
-            <div className="w-px h-8 bg-slate-200"></div>
+            <div className="w-px h-8 bg-line"></div>
             <div>
-              <p className="text-xl font-bold text-slate-900">{subjects.length}</p>
-              <p className="text-[11px] text-slate-500 uppercase tracking-wider">Subjects</p>
+              <p className="text-xl font-bold text-ink">{subjects.length}</p>
+              <p className="text-[11px] text-ink-muted uppercase tracking-wider">Subjects</p>
             </div>
-            <div className="w-px h-8 bg-slate-200"></div>
+            <div className="w-px h-8 bg-line"></div>
             <div>
-              <p className="text-xl font-bold text-emerald-600">{readySubjectsCount}</p>
-              <p className="text-[11px] text-slate-500 uppercase tracking-wider">Ready</p>
+              <p className="text-xl font-bold text-success-ink">{readySubjectsCount}</p>
+              <p className="text-[11px] text-ink-muted uppercase tracking-wider">Ready</p>
             </div>
           </div>
         </div>
 
         {/* Dynamic Alerts */}
         {successMessage && (
-          <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-lg flex items-center gap-2">
+          <div className="p-3.5 bg-success-soft border border-success-line text-success-ink text-xs rounded-lg flex items-center gap-2">
             <span></span> {successMessage}
           </div>
         )}
         {formError && classData && (
-          <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-lg flex items-center gap-2">
+          <div className="alert-error flex items-center gap-2">
             <span></span> {formError}
           </div>
         )}
@@ -421,17 +421,17 @@ export default function MyClass() {
 
           {/* Left Column: Student Roster */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-              <div className="px-5 py-4 border-b border-slate-200 bg-slate-50/50 flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-slate-900">
+            <div className="card overflow-hidden">
+              <div className="px-5 py-4 border-b border-line bg-brand-soft flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-ink">
                   Class Roster ({students.length})
                 </h2>
-                <span className="text-xs text-slate-400">Active Enrollment</span>
+                <span className="text-xs text-ink-faint">Active Enrollment</span>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
-                  <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider text-[11px] border-b border-slate-200">
+                  <thead className="bg-brand-soft text-ink-muted uppercase tracking-wider text-[11px] border-b border-line">
                     <tr>
                       <th className="px-4 py-3 text-left w-12">#</th>
                       <th className="px-4 py-3 text-left">Student Name</th>
@@ -439,18 +439,18 @@ export default function MyClass() {
                       <th className="px-4 py-3 text-right">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-line">
                     {students.map((student, idx) => (
-                      <tr key={student.id} className="hover:bg-slate-50/60 transition-colors">
-                        <td className="px-4 py-3 text-slate-400 font-mono">{idx + 1}</td>
-                        <td className="px-4 py-3 font-medium text-slate-900">
+                      <tr key={student.id} className="hover:bg-brand-soft transition-colors">
+                        <td className="px-4 py-3 text-ink-faint font-mono">{idx + 1}</td>
+                        <td className="px-4 py-3 font-medium text-ink">
                           {student.firstName} {student.lastName}
                         </td>
-                        <td className="px-4 py-3 text-center text-slate-500">
+                        <td className="px-4 py-3 text-center text-ink-muted">
                           {student.gender ? student.gender.charAt(0).toUpperCase() + student.gender.slice(1) : '—'}
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-success-soft text-success-ink border border-success-line">
                             {student.status || 'Active'}
                           </span>
                         </td>
@@ -466,14 +466,14 @@ export default function MyClass() {
           <div className="space-y-6">
 
             {/* Subject Readiness */}
-            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+            <div className="card p-5">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-semibold text-slate-900">Subject Overview</h2>
-                <span className="text-[11px] text-slate-400">Click to view scores</span>
+                <h2 className="text-sm font-semibold text-ink">Subject Overview</h2>
+                <span className="text-[11px] text-ink-faint">Click to view scores</span>
               </div>
 
               {subjects.length === 0 ? (
-                <p className="text-xs text-slate-400 text-center py-6">No subjects registered for this class.</p>
+                <p className="text-xs text-ink-faint text-center py-6">No subjects registered for this class.</p>
               ) : (
                 <div className="space-y-2.5">
                   {subjects.map((subject) => {
@@ -488,14 +488,14 @@ export default function MyClass() {
                         key={subject.id}
                         type="button"
                         onClick={() => setSelectedSubjectForScores(subject.id)}
-                        className="w-full text-left border border-slate-200 rounded-lg p-3 hover:border-slate-300 hover:bg-slate-50/50 transition-all group"
+                        className="w-full text-left border border-line rounded-lg p-3 hover:border-line-strong hover:bg-brand-soft transition-colors group"
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <h3 className="font-medium text-slate-900 text-xs group-hover:text-blue-600 transition-colors">
+                            <h3 className="font-medium text-ink text-xs group-hover:text-ink-soft transition-colors">
                               {subject.name}
                             </h3>
-                            <p className="text-[11px] text-slate-400 mt-0.5">
+                            <p className="text-[11px] text-ink-faint mt-0.5">
                               {scoreCount} of {students.length} entries recorded
                             </p>
                           </div>
@@ -505,11 +505,11 @@ export default function MyClass() {
                         </div>
 
                         {/* Progress Indicator */}
-                        <div className="mt-2.5 w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div className="mt-2.5 w-full bg-brand-soft rounded-full h-1.5 overflow-hidden">
                           <div
                             className={`h-1.5 rounded-full transition-all ${
-                              status?.allSubmitted ? 'bg-emerald-500' : 
-                              scoreCount > 0 ? 'bg-blue-500' : 'bg-slate-300'
+                              status?.allSubmitted ? 'bg-success' : 
+                              scoreCount > 0 ? 'bg-brand' : 'bg-line-strong'
                             }`}
                             style={{ width: `${percent}%` }}
                           />
@@ -522,24 +522,24 @@ export default function MyClass() {
             </div>
 
             {/* Final Submission Card */}
-            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
-              <h2 className="text-sm font-semibold text-slate-900 mb-1">
+            <div className="card p-5">
+              <h2 className="text-sm font-semibold text-ink mb-1">
                 Headmaster Approval
               </h2>
-              <p className="text-xs text-slate-500 mb-4">
+              <p className="text-xs text-ink-muted mb-4">
                 {readySubjectsCount} of {subjects.length} subjects ready to submit.
               </p>
 
               <button
                 onClick={handleSubmitToHeadmaster}
                 disabled={submitting || !isAllReady}
-                className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-md transition-colors disabled:opacity-50"
+                className="btn btn-primary w-full"
               >
                 {submitting ? "Submitting..." : "Submit All Scores to Headmaster"}
               </button>
 
               {!isAllReady && (
-                <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-md p-2.5 mt-3 text-center">
+                <p className="notice mt-3 text-center">
                    All subject teachers must complete submission before final dispatch.
                 </p>
               )}
@@ -550,21 +550,21 @@ export default function MyClass() {
 
         {/* Subject Score Breakdown Modal */}
         {selectedSubjectForScores && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-6 border border-slate-200 max-h-[85vh] flex flex-col">
+          <div className="fixed inset-0 bg-ink/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+            <div className="card shadow-xl w-full max-w-3xl p-6 max-h-[85vh] flex flex-col">
               
-              <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+              <div className="flex items-center justify-between pb-4 border-b border-line">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900">
+                  <h3 className="text-base font-bold text-ink">
                     {subjects.find(s => s.id === selectedSubjectForScores)?.name} — Score Breakdown
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-ink-muted mt-0.5">
                     {classData?.name} • {term?.name}
                   </p>
                 </div>
                 <button
                   onClick={() => setSelectedSubjectForScores(null)}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="w-7 h-7 flex items-center justify-center rounded-lg text-ink-faint hover:text-ink-soft hover:bg-brand-soft transition-colors"
                 >
                   ✕
                 </button>
@@ -572,7 +572,7 @@ export default function MyClass() {
 
               <div className="overflow-y-auto my-4 flex-1">
                 <table className="w-full text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-200 sticky top-0 text-slate-500 uppercase tracking-wider text-[11px]">
+                  <thead className="bg-brand-soft border-b border-line sticky top-0 text-ink-muted uppercase tracking-wider text-[11px]">
                     <tr>
                       <th className="px-4 py-2.5 text-left">#</th>
                       <th className="px-4 py-2.5 text-left">Student</th>
@@ -582,24 +582,24 @@ export default function MyClass() {
                       <th className="px-4 py-2.5 text-center">Grade</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-line">
                     {students.map((student, idx) => {
                       const score = getStudentScore(student.id, selectedSubjectForScores);
                       const gradeColor = score?.grade ? getGradeColor(score.grade) : '';
                       
                       return (
-                        <tr key={student.id} className="hover:bg-slate-50/60 transition-colors">
-                          <td className="px-4 py-2.5 text-slate-400 font-mono">{idx + 1}</td>
-                          <td className="px-4 py-2.5 font-medium text-slate-900">
+                        <tr key={student.id} className="hover:bg-brand-soft transition-colors">
+                          <td className="px-4 py-2.5 text-ink-faint font-mono">{idx + 1}</td>
+                          <td className="px-4 py-2.5 font-medium text-ink">
                             {student.firstName} {student.lastName}
                           </td>
-                          <td className="px-4 py-2.5 text-center text-slate-600">
+                          <td className="px-4 py-2.5 text-center text-ink-soft">
                             {score?.classScore ?? "—"}
                           </td>
-                          <td className="px-4 py-2.5 text-center text-slate-600">
+                          <td className="px-4 py-2.5 text-center text-ink-soft">
                             {score?.examScore ?? "—"}
                           </td>
-                          <td className="px-4 py-2.5 text-center font-bold text-slate-900">
+                          <td className="px-4 py-2.5 text-center font-bold text-ink">
                             {score?.total ?? "—"}
                           </td>
                           <td className="px-4 py-2.5 text-center">
@@ -608,7 +608,7 @@ export default function MyClass() {
                                 {score.grade}
                               </span>
                             ) : (
-                              <span className="text-slate-400">—</span>
+                              <span className="text-ink-faint">—</span>
                             )}
                           </td>
                         </tr>
@@ -618,10 +618,10 @@ export default function MyClass() {
                 </table>
               </div>
 
-              <div className="pt-3 border-t border-slate-200 flex justify-end">
+              <div className="pt-3 border-t border-line flex justify-end">
                 <button
                   onClick={() => setSelectedSubjectForScores(null)}
-                  className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-md transition-colors"
+                  className="btn btn-secondary px-4 py-1.5"
                 >
                   Close
                 </button>

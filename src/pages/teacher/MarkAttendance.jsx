@@ -9,23 +9,23 @@ import TeacherLayout from "../../components/TeacherLayout";
 const STATUS_CONFIG = {
   present: {
     label: "Present",
-    activeClass: "bg-emerald-600 text-white shadow-xs",
-    borderClass: "hover:border-emerald-300 hover:text-emerald-700"
+    activeClass: "bg-success text-white",
+    borderClass: "hover:border-success-line hover:text-success-ink"
   },
   absent: {
     label: "Absent",
-    activeClass: "bg-rose-600 text-white shadow-xs",
-    borderClass: "hover:border-rose-300 hover:text-rose-700"
+    activeClass: "bg-danger text-white",
+    borderClass: "hover:border-danger-line hover:text-danger-ink"
   },
   late: {
     label: "Late",
-    activeClass: "bg-amber-500 text-white shadow-xs",
-    borderClass: "hover:border-amber-300 hover:text-amber-700"
+    activeClass: "bg-ink-muted text-white",
+    borderClass: "hover:border-line-strong hover:text-ink-soft"
   },
   excused: {
     label: "Excused",
-    activeClass: "bg-slate-700 text-white shadow-xs",
-    borderClass: "hover:border-slate-400 hover:text-slate-800"
+    activeClass: "bg-ink-soft text-white",
+    borderClass: "hover:border-line-strong hover:text-ink"
   }
 };
 
@@ -211,8 +211,8 @@ export default function MarkAttendance() {
     return (
       <TeacherLayout>
         <div className="animate-pulse space-y-6 max-w-4xl mx-auto">
-          <div className="h-20 bg-slate-100 rounded-xl"></div>
-          <div className="h-96 bg-slate-100 rounded-xl"></div>
+          <div className="h-20 bg-brand-soft rounded-xl"></div>
+          <div className="h-96 bg-brand-soft rounded-xl"></div>
         </div>
       </TeacherLayout>
     );
@@ -222,16 +222,16 @@ export default function MarkAttendance() {
   if (termError) {
     return (
       <TeacherLayout>
-        <div className="bg-white border border-amber-200 rounded-2xl p-12 text-center max-w-lg mx-auto my-12 shadow-xs">
-          <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-4 text-xl">
+        <div className="card p-12 text-center max-w-lg mx-auto my-12">
+          <div className="w-12 h-12 rounded-full bg-brand-soft text-ink-muted flex items-center justify-center mx-auto mb-4 text-xl">
             
           </div>
-          <h3 className="font-semibold text-slate-800 text-base">Cannot Mark Attendance</h3>
-          <p className="text-xs text-slate-500 mt-1 leading-relaxed">{termError}</p>
+          <h3 className="font-semibold text-ink text-base">Cannot Mark Attendance</h3>
+          <p className="text-xs text-ink-muted mt-1 leading-relaxed">{termError}</p>
           {!activeTerm && (
             <button
               onClick={() => window.location.href = "/headmaster/terms"}
-              className="mt-4 px-4 py-2 bg-sky-900 hover:bg-sky-950 text-white text-xs font-medium rounded-md transition-colors"
+              className="btn btn-primary mt-4"
             >
               Go to Terms
             </button>
@@ -244,12 +244,12 @@ export default function MarkAttendance() {
   if (!assignedClass) {
     return (
       <TeacherLayout>
-        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center max-w-lg mx-auto my-12 shadow-xs">
-          <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mx-auto mb-4 text-xl">
+        <div className="card p-12 text-center max-w-lg mx-auto my-12">
+          <div className="w-12 h-12 rounded-full bg-brand-soft text-ink-muted flex items-center justify-center mx-auto mb-4 text-xl">
             📋
           </div>
-          <h3 className="font-semibold text-slate-800 text-base">No Assigned Class</h3>
-          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+          <h3 className="font-semibold text-ink text-base">No Assigned Class</h3>
+          <p className="text-xs text-ink-muted mt-1 leading-relaxed">
             You haven't been assigned as a class teacher yet. Please reach out to your administrator to set up your assigned class.
           </p>
         </div>
@@ -259,23 +259,23 @@ export default function MarkAttendance() {
 
   return (
     <TeacherLayout>
-      <div className="space-y-6 max-w-4xl mx-auto text-slate-800">
+      <div className="space-y-6 max-w-4xl mx-auto text-ink">
 
         {/* Header Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-line">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-xl font-bold text-ink tracking-tight">
                 Daily Attendance
               </h1>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium border border-slate-200">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-brand-soft text-ink-soft font-medium border border-line">
                 {assignedClass.name}
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-ink-muted mt-1">
               {formattedDate}
               {activeTerm && (
-                <span className="ml-2 text-emerald-600 font-medium">
+                <span className="ml-2 text-success-ink font-medium">
                   • {activeTerm.name}
                 </span>
               )}
@@ -285,14 +285,14 @@ export default function MarkAttendance() {
           <div className="flex items-center gap-2">
             <button
               onClick={handleMarkAllPresent}
-              className="text-xs px-3 py-1.5 rounded-md border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 font-medium transition-colors"
+              className="btn btn-secondary px-3 py-1.5"
             >
               Mark All Present
             </button>
             <button
               onClick={handleSubmit}
               disabled={saving}
-              className="text-xs px-4 py-1.5 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-medium transition-colors disabled:opacity-50"
+              className="btn btn-primary px-4 py-1.5"
             >
               {saving ? "Saving..." : alreadyMarked ? "Update Record" : "Save Attendance"}
             </button>
@@ -301,76 +301,76 @@ export default function MarkAttendance() {
 
         {/* Notifications */}
         {saved && (
-          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-lg flex items-center gap-2">
+          <div className="p-3 bg-success-soft border border-success-line text-success-ink text-xs rounded-lg flex items-center gap-2">
             <span></span> Attendance record saved for {date}.
           </div>
         )}
         {alreadyMarked && !saved && (
-          <div className="p-3 bg-slate-50 border border-slate-200 text-slate-600 text-xs rounded-lg flex items-center gap-2">
+          <div className="notice flex items-center gap-2">
             <span></span> Attendance for today was previously logged. Edits will overwrite the previous submission.
           </div>
         )}
 
         {/* Stat Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-white border border-slate-200 rounded-xl p-3.5 text-center shadow-xs">
-            <p className="text-2xl font-bold text-slate-900">{summary.present}</p>
-            <p className="text-[11px] font-medium text-emerald-600 uppercase tracking-wider mt-0.5">Present</p>
+          <div className="card p-3.5 text-center">
+            <p className="text-2xl font-bold text-ink">{summary.present}</p>
+            <p className="text-[11px] font-medium text-success-ink uppercase tracking-wider mt-0.5">Present</p>
           </div>
-          <div className="bg-white border border-slate-200 rounded-xl p-3.5 text-center shadow-xs">
-            <p className="text-2xl font-bold text-slate-900">{summary.absent}</p>
-            <p className="text-[11px] font-medium text-rose-600 uppercase tracking-wider mt-0.5">Absent</p>
+          <div className="card p-3.5 text-center">
+            <p className="text-2xl font-bold text-ink">{summary.absent}</p>
+            <p className="text-[11px] font-medium text-danger uppercase tracking-wider mt-0.5">Absent</p>
           </div>
-          <div className="bg-white border border-slate-200 rounded-xl p-3.5 text-center shadow-xs">
-            <p className="text-2xl font-bold text-slate-900">{summary.late}</p>
-            <p className="text-[11px] font-medium text-amber-600 uppercase tracking-wider mt-0.5">Late</p>
+          <div className="card p-3.5 text-center">
+            <p className="text-2xl font-bold text-ink">{summary.late}</p>
+            <p className="text-[11px] font-medium text-ink-muted uppercase tracking-wider mt-0.5">Late</p>
           </div>
-          <div className="bg-white border border-slate-200 rounded-xl p-3.5 text-center shadow-xs">
-            <p className="text-2xl font-bold text-slate-900">{summary.excused}</p>
-            <p className="text-[11px] font-medium text-slate-500 uppercase tracking-wider mt-0.5">Excused</p>
+          <div className="card p-3.5 text-center">
+            <p className="text-2xl font-bold text-ink">{summary.excused}</p>
+            <p className="text-[11px] font-medium text-ink-muted uppercase tracking-wider mt-0.5">Excused</p>
           </div>
         </div>
 
         {/* Student Roster Section */}
-        <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
+        <div className="card overflow-hidden">
           
           {/* Search Toolbar */}
-          <div className="p-3 border-b border-slate-200 bg-slate-50/50 flex items-center justify-between gap-4">
+          <div className="p-3 border-b border-line bg-brand-soft flex items-center justify-between gap-4">
             <input
               type="text"
               placeholder="Filter students by name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full sm:w-64 border border-slate-300 rounded-md px-3 py-1.5 text-xs bg-white text-slate-800 placeholder-slate-400 focus:outline-none focus:border-slate-500"
+              className="input sm:w-64 px-3 py-1.5 text-xs"
             />
-            <span className="text-xs text-slate-400 whitespace-nowrap">
+            <span className="text-xs text-ink-faint whitespace-nowrap">
               {filteredStudents.length} of {students.length} students
             </span>
           </div>
 
           {filteredStudents.length === 0 ? (
-            <div className="p-8 text-center text-xs text-slate-400">
+            <div className="p-8 text-center text-xs text-ink-faint">
               No matching students found.
             </div>
           ) : (
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-line">
               {filteredStudents.map((student, idx) => {
                 const currentStatus = records[student.id] || "present";
                 return (
                   <div
                     key={student.id}
-                    className="p-3.5 sm:px-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/60 transition-colors"
+                    className="p-3.5 sm:px-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-brand-soft transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-slate-400 font-mono w-5">
+                      <span className="text-xs text-ink-faint font-mono w-5">
                         {idx + 1}.
                       </span>
                       <div>
-                        <p className="text-sm font-medium text-slate-900">
+                        <p className="text-sm font-medium text-ink">
                           {student.firstName} {student.lastName}
                         </p>
                         {remarks[student.id] && (
-                          <p className="text-[11px] text-slate-400 italic mt-0.5">
+                          <p className="text-[11px] text-ink-faint italic mt-0.5">
                             Note: "{remarks[student.id]}"
                           </p>
                         )}
@@ -389,7 +389,7 @@ export default function MarkAttendance() {
                             className={`px-3 py-1 text-xs font-medium rounded-md border transition-all ${
                               isSelected
                                 ? config.activeClass + " border-transparent"
-                                : "border-slate-200 text-slate-500 bg-white " + config.borderClass
+                                : "border-line text-ink-muted bg-surface " + config.borderClass
                             }`}
                           >
                             {config.label}
@@ -404,14 +404,14 @@ export default function MarkAttendance() {
           )}
 
           {/* Footer Action Bar */}
-          <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-            <span className="text-xs text-slate-400">
+          <div className="p-4 bg-brand-soft border-t border-line flex items-center justify-between">
+            <span className="text-xs text-ink-faint">
               Click save when finished recording student status.
             </span>
             <button
               onClick={handleSubmit}
               disabled={saving}
-              className="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-md transition-colors disabled:opacity-50"
+              className="btn btn-primary px-5 py-2"
             >
               {saving ? "Saving..." : alreadyMarked ? "Update Attendance" : "Submit Attendance"}
             </button>

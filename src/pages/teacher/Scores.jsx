@@ -349,8 +349,8 @@ export default function Scores() {
     return (
       <TeacherLayout>
         <div className="animate-pulse space-y-6 max-w-5xl mx-auto">
-          <div className="h-16 bg-slate-100 rounded-lg"></div>
-          <div className="h-64 bg-slate-100 rounded-lg"></div>
+          <div className="h-16 bg-brand-soft rounded-xl"></div>
+          <div className="h-64 bg-brand-soft rounded-xl"></div>
         </div>
       </TeacherLayout>
     );
@@ -360,14 +360,14 @@ export default function Scores() {
   if (teacherAssignments.length === 0 || !selectedTermId) {
     return (
       <TeacherLayout>
-        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center max-w-lg mx-auto my-12 shadow-xs">
-          <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mx-auto mb-4 text-xl">
+        <div className="card p-12 text-center max-w-lg mx-auto my-12">
+          <div className="w-12 h-12 rounded-full bg-brand-soft text-ink-muted flex items-center justify-center mx-auto mb-4 text-xl">
             📝
           </div>
-          <h3 className="font-semibold text-slate-800 text-base">
+          <h3 className="font-semibold text-ink text-base">
             {!selectedTermId ? "No Active Term" : "No Assigned Subjects"}
           </h3>
-          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+          <p className="text-xs text-ink-muted mt-1 leading-relaxed">
             {!selectedTermId 
               ? "Please contact the headmaster to activate a term." 
               : "You haven't been assigned to teach any subjects this term."}
@@ -379,18 +379,18 @@ export default function Scores() {
 
   return (
     <TeacherLayout>
-      <div className="space-y-6 max-w-5xl mx-auto text-slate-800">
+      <div className="space-y-6 max-w-5xl mx-auto text-ink">
 
         {/* Page Header */}
-        <div className="border-b border-slate-200 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="border-b border-line pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="font-serif text-2xl font-normal text-slate-900">
+            <h1 className="text-2xl font-bold text-ink tracking-tight">
               Student Grade Entry
             </h1>
-            <p className="text-xs text-slate-500 mt-1 flex items-center gap-2">
+            <p className="text-xs text-ink-muted mt-1 flex items-center gap-2">
               Record assessment and exam scores for your assigned classes.
               {currentTermName && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-medium border border-emerald-200">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-success-soft text-success-ink text-[10px] font-medium border border-success-line">
                   {currentTermName}
                 </span>
               )}
@@ -399,8 +399,8 @@ export default function Scores() {
 
           {/* Status Indicator */}
           {submissionStatus.isLocked && (
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700">
-              <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-brand-soft border border-line text-xs font-medium text-ink-soft">
+              <svg className="w-3.5 h-3.5 text-ink-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
               Scores Submitted (Locked)
@@ -410,20 +410,20 @@ export default function Scores() {
 
         {/* Alerts */}
         {successMessage && (
-          <div className="p-3 bg-green-50 border border-green-200 text-green-800 text-xs rounded-md">
+          <div className="p-3 bg-success-soft border border-success-line text-success-ink text-xs rounded-lg">
             {successMessage}
           </div>
         )}
         {formError && (
-          <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-xs rounded-md">
+          <div className="alert-error">
             {formError}
           </div>
         )}
 
         {/* Control Panel */}
-        <div className="bg-white border border-slate-200 rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">
+            <label className="label block mb-1">
               Select Class & Subject
             </label>
             <select
@@ -434,7 +434,7 @@ export default function Scores() {
                 const assignment = teacherAssignments.find(a => a.subjectId === subjectId);
                 if (assignment) fetchStudents(assignment.classId);
               }}
-              className="w-full border border-slate-300 rounded px-3 py-2 text-sm text-slate-800 bg-white focus:border-slate-500 focus:outline-none"
+              className="input"
             >
               {teacherAssignments.map((assignment) => (
                 <option key={`${assignment.classId}_${assignment.subjectId}`} value={assignment.subjectId}>
@@ -445,10 +445,10 @@ export default function Scores() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">
+            <label className="label block mb-1">
               Academic Term
             </label>
-            <div className="w-full border border-slate-300 rounded px-3 py-2 text-sm text-slate-800 bg-slate-50">
+            <div className="input bg-brand-soft">
               {currentTermName || "No active term"}
             </div>
           </div>
@@ -457,9 +457,9 @@ export default function Scores() {
         {/* Main Table */}
         {students.length > 0 ? (
           <form onSubmit={handleSaveScores} className="space-y-4">
-            <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+            <div className="card overflow-hidden">
               <table className="w-full text-left text-sm">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs font-medium uppercase tracking-wider">
+                <thead className="bg-brand-soft border-b border-line text-ink-muted text-xs font-semibold uppercase tracking-wider">
                   <tr>
                     <th className="py-3 px-4 w-12 text-center">#</th>
                     <th className="py-3 px-4">Student Name</th>
@@ -469,13 +469,13 @@ export default function Scores() {
                     <th className="py-3 px-4 text-center w-24">Grade</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody className="divide-y divide-line">
                   {students.map((student, index) => {
                     const score = scores[student.id] || { classScore: "", examScore: "", total: 0, grade: "" };
                     return (
-                      <tr key={student.id} className="hover:bg-slate-50/60">
-                        <td className="py-3 px-4 text-center text-slate-400 text-xs">{index + 1}</td>
-                        <td className="py-3 px-4 font-medium text-slate-900">
+                      <tr key={student.id} className="hover:bg-brand-soft">
+                        <td className="py-3 px-4 text-center text-ink-faint text-xs">{index + 1}</td>
+                        <td className="py-3 px-4 font-medium text-ink">
                           {student.firstName} {student.lastName}
                         </td>
                         <td className="py-3 px-4 text-center">
@@ -488,7 +488,7 @@ export default function Scores() {
                             value={score.classScore}
                             onChange={(e) => handleScoreChange(student.id, 'classScore', e.target.value)}
                             disabled={submissionStatus.isLocked}
-                            className="w-20 border border-slate-300 rounded px-2 py-1 text-center text-sm focus:border-slate-500 focus:outline-none disabled:bg-slate-100 disabled:text-slate-400"
+                            className="input w-20 px-2 py-1 text-center disabled:bg-brand-soft disabled:text-ink-faint"
                           />
                         </td>
                         <td className="py-3 px-4 text-center">
@@ -501,14 +501,14 @@ export default function Scores() {
                             value={score.examScore}
                             onChange={(e) => handleScoreChange(student.id, 'examScore', e.target.value)}
                             disabled={submissionStatus.isLocked}
-                            className="w-20 border border-slate-300 rounded px-2 py-1 text-center text-sm focus:border-slate-500 focus:outline-none disabled:bg-slate-100 disabled:text-slate-400"
+                            className="input w-20 px-2 py-1 text-center disabled:bg-brand-soft disabled:text-ink-faint"
                           />
                         </td>
-                        <td className="py-3 px-4 text-center font-medium text-slate-800">
+                        <td className="py-3 px-4 text-center font-medium text-ink">
                           {score.total || 0}
                         </td>
                         <td className="py-3 px-4 text-center">
-                          <span className="inline-block px-2 py-0.5 border border-slate-200 bg-slate-50 rounded text-xs font-medium text-slate-700 min-w-[32px]">
+                          <span className="inline-block px-2 py-0.5 border border-line bg-brand-soft rounded text-xs font-medium text-ink-soft min-w-[32px]">
                             {score.grade || "—"}
                           </span>
                         </td>
@@ -522,14 +522,14 @@ export default function Scores() {
             {/* Actions */}
             {!submissionStatus.isLocked && (
               <div className="flex items-center justify-between pt-2">
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-ink-faint">
                   Scores are automatically totaled and graded upon entry.
                 </span>
                 <div className="flex gap-3">
                   <button
                     type="submit"
                     disabled={saving}
-                    className="px-4 py-2 border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded transition-colors disabled:opacity-50"
+                    className="btn btn-secondary"
                   >
                     {saving ? "Saving..." : "Save Draft"}
                   </button>
@@ -537,7 +537,7 @@ export default function Scores() {
                     type="button"
                     onClick={handleSubmitToClassTeacher}
                     disabled={submitting}
-                    className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded transition-colors disabled:opacity-50"
+                    className="btn btn-primary"
                   >
                     {submitting ? "Submitting..." : "Final Submit"}
                   </button>
@@ -546,7 +546,7 @@ export default function Scores() {
             )}
           </form>
         ) : (
-          <div className="bg-white border border-slate-200 rounded-lg p-12 text-center text-slate-500 text-xs">
+          <div className="card p-12 text-center text-ink-muted text-xs">
             No students found for the selected class.
           </div>
         )}

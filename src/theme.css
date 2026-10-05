@@ -1,0 +1,147 @@
+/* src/theme.css
+   Shared design tokens and components for the whole School Management System.
+   Import once in your main CSS file, right after the Tailwind import:
+
+     @import "tailwindcss";
+     @import "./theme.css";
+
+   To rebrand later, change the values in @theme only. */
+
+@theme {
+  /* Typography: Montserrat everywhere (serif is mapped too, so any
+     page not yet restyled that still uses font-serif stays consistent) */
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+
+  /* Surfaces */
+  --color-canvas: #f7f7f8;        /* page background */
+  --color-surface: #ffffff;       /* cards, header, sidebar */
+
+  /* Lines */
+  --color-line: #e5e7eb;          /* default borders and dividers */
+  --color-line-strong: #d1d5db;   /* inputs and hover borders */
+
+  /* Text */
+  --color-ink: #111827;           /* headings, primary text */
+  --color-ink-soft: #4b5563;      /* body, secondary text */
+  --color-ink-muted: #6b7280;     /* captions, labels */
+  --color-ink-faint: #9ca3af;     /* icons, placeholders */
+
+  /* The single accent: near-black. Swap this when you get brand colors. */
+  --color-brand: #111827;
+  --color-brand-soft: #f3f4f6;    /* active and hover fills */
+
+  /* Status colors, used only where they carry meaning */
+  --color-success: #16a34a;
+  --color-success-soft: #f0fdf4;
+  --color-success-ink: #166534;
+  --color-success-line: #bbf7d0;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fef2f2;
+  --color-danger-ink: #991b1b;
+  --color-danger-line: #fecaca;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-canvas);
+    color: var(--color-ink);
+  }
+}
+
+/* Shared components. Reuse these class names on every page. */
+@layer components {
+  /* Surfaces */
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  }
+
+  .notice {
+    background: var(--color-brand-soft);
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    padding: 0.875rem;
+    font-size: 0.75rem;
+    color: var(--color-ink-soft);
+  }
+
+  .alert-error {
+    background: var(--color-danger-soft);
+    border: 1px solid var(--color-danger-line);
+    border-radius: 0.5rem;
+    padding: 0.75rem 0.875rem;
+    font-size: 0.75rem;
+    color: var(--color-danger-ink);
+  }
+
+  /* Text helpers */
+  .eyebrow,
+  .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .label {
+    color: var(--color-ink-soft);
+  }
+
+  /* Form controls (input, select, textarea) */
+  .input {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.75rem;
+    color: var(--color-ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .input::placeholder {
+    color: var(--color-ink-faint);
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px rgb(17 24 39 / 0.08);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--color-brand);
+    color: #ffffff;
+    border: 1px solid var(--color-brand);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: #1f2937;
+  }
+  .btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-ink-soft);
+    border: 1px solid var(--color-line-strong);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--color-brand-soft);
+  }
+}

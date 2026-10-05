@@ -86,20 +86,20 @@ export default function ParentChildren() {
   }
 
   const statusColors = {
-    active: "bg-emerald-50 text-emerald-700 border-emerald-100",
-    inactive: "bg-rose-50 text-rose-700 border-rose-100",
-    transferred: "bg-sky-50 text-sky-700 border-sky-100",
-    graduated: "bg-amber-50 text-amber-700 border-amber-100",
+    active: "bg-success-soft text-success-ink border-success-line",
+    inactive: "bg-danger-soft text-danger-ink border-danger-line",
+    transferred: "bg-brand-soft text-ink-soft border-line",
+    graduated: "bg-brand-soft text-ink-soft border-line-strong",
   };
 
   if (loading) {
     return (
       <ParentLayout>
-        <div className="font-['Montserrat',sans-serif] animate-pulse space-y-6 max-w-5xl mx-auto p-2">
-          <div className="h-20 bg-gray-100 border border-gray-200/80 rounded-xl"></div>
+        <div className="animate-pulse space-y-6 max-w-5xl mx-auto p-2">
+          <div className="h-20 bg-brand-soft border border-line rounded-xl"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-48 bg-gray-100 border border-gray-200/80 rounded-xl"></div>
+              <div key={i} className="h-48 bg-brand-soft border border-line rounded-xl"></div>
             ))}
           </div>
         </div>
@@ -110,11 +110,11 @@ export default function ParentChildren() {
   if (children.length === 0) {
     return (
       <ParentLayout>
-        <div className="font-['Montserrat',sans-serif] bg-white border border-gray-200/80 rounded-xl p-12 text-center shadow-sm max-w-xl mx-auto my-12">
-          <h3 className="text-sm font-semibold text-gray-900">
+        <div className="card p-12 text-center max-w-xl mx-auto my-12">
+          <h3 className="text-sm font-semibold text-ink">
             No Enrolled Children Found
           </h3>
-          <p className="text-xs text-gray-400 mt-1 max-w-sm mx-auto">
+          <p className="text-xs text-ink-faint mt-1 max-w-sm mx-auto">
             We couldn't locate any students associated with your parent account. Please contact the school administration to link your student profiles.
           </p>
         </div>
@@ -124,24 +124,24 @@ export default function ParentChildren() {
 
   return (
     <ParentLayout>
-      <div className="font-['Montserrat',sans-serif] space-y-6 max-w-5xl mx-auto text-gray-800">
+      <div className="space-y-6 max-w-5xl mx-auto text-ink">
 
         {/* Page Header */}
-        <div className="bg-white border border-gray-200/80 rounded-xl p-6 shadow-sm">
+        <div className="card p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <span className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+              <span className="eyebrow">
                 Parent Portal
               </span>
-              <h1 className="text-2xl font-bold text-gray-900 tracking-tight mt-0.5">
+              <h1 className="text-2xl font-bold text-ink tracking-tight mt-0.5">
                 My Children
               </h1>
-              <p className="text-xs text-gray-500 mt-1 font-medium">
-                You have <span className="font-semibold text-gray-800">{children.length}</span> {children.length === 1 ? "student" : "students"} registered under your account.
+              <p className="text-xs text-ink-muted mt-1 font-medium">
+                You have <span className="font-semibold text-ink">{children.length}</span> {children.length === 1 ? "student" : "students"} registered under your account.
               </p>
             </div>
             <div>
-              <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-gray-100 text-gray-800 text-xs font-semibold border border-gray-200/60">
+              <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-brand-soft text-ink text-xs font-semibold border border-line">
                 {children.length} {children.length === 1 ? "Child" : "Children"}
               </span>
             </div>
@@ -154,15 +154,15 @@ export default function ParentChildren() {
             <Link
               key={child.id}
               to={`/parent/child/${child.id}`}
-              className="bg-white border border-gray-200/80 rounded-xl p-6 shadow-sm hover:shadow-md hover:border-gray-300 transition-all group flex flex-col justify-between"
+              className="card p-6 hover:border-line-strong transition-colors group flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div>
-                    <h3 className="font-bold text-gray-900 text-base group-hover:text-gray-700 transition-colors">
+                    <h3 className="font-bold text-ink text-base group-hover:text-ink-soft transition-colors">
                       {getFullName(child)}
                     </h3>
-                    <p className="text-xs text-gray-400 font-medium mt-0.5">
+                    <p className="text-xs text-ink-faint font-medium mt-0.5">
                       {child.gender ? child.gender.charAt(0).toUpperCase() + child.gender.slice(1) : ""}
                       {child.dateOfBirth && ` • DOB: ${child.dateOfBirth}`}
                     </p>
@@ -174,23 +174,23 @@ export default function ParentChildren() {
                   </span>
                 </div>
 
-                <div className="bg-gray-50/70 border border-gray-100 rounded-lg p-3 grid grid-cols-2 gap-3 mb-4">
+                <div className="bg-brand-soft border border-line rounded-lg p-3 grid grid-cols-2 gap-3 mb-4">
                   <div>
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Class</span>
-                    <span className="text-xs font-semibold text-gray-800 mt-0.5 block">
+                    <span className="text-[10px] font-bold text-ink-faint uppercase tracking-wider block">Class</span>
+                    <span className="text-xs font-semibold text-ink mt-0.5 block">
                       {getClassName(child.classId)}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Index Number</span>
-                    <span className="text-xs font-mono font-bold text-gray-800 mt-0.5 block">
+                    <span className="text-[10px] font-bold text-ink-faint uppercase tracking-wider block">Index Number</span>
+                    <span className="text-xs font-mono font-bold text-ink mt-0.5 block">
                       {child.indexNumber || "—"}
                     </span>
                   </div>
                   {getClassLevel(child.classId) && (
-                    <div className="col-span-2 border-t border-gray-100 pt-2 mt-1">
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Academic Level</span>
-                      <span className="text-xs font-semibold text-gray-800 mt-0.5 block">
+                    <div className="col-span-2 border-t border-line pt-2 mt-1">
+                      <span className="text-[10px] font-bold text-ink-faint uppercase tracking-wider block">Academic Level</span>
+                      <span className="text-xs font-semibold text-ink mt-0.5 block">
                         {getClassLevel(child.classId)}
                       </span>
                     </div>
@@ -199,11 +199,11 @@ export default function ParentChildren() {
               </div>
 
               {/* Action */}
-              <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-semibold">
-                <span className="text-gray-400 font-normal">
+              <div className="pt-3 border-t border-line flex items-center justify-between text-xs font-semibold">
+                <span className="text-ink-faint font-normal">
                   View academic records
                 </span>
-                <span className="text-gray-900 group-hover:translate-x-0.5 transition-transform">
+                <span className="text-ink group-hover:translate-x-0.5 transition-transform">
                   Open Dashboard →
                 </span>
               </div>
@@ -212,11 +212,11 @@ export default function ParentChildren() {
         </div>
 
         {/* Tip Notice */}
-        <div className="bg-gray-50 border border-gray-200/80 rounded-xl p-4 shadow-sm flex items-start gap-3">
+        <div className="notice flex items-start gap-3">
           <span className="text-base leading-none"></span>
           <div>
-            <p className="text-xs font-bold text-gray-900">Portal Tip</p>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs font-bold text-ink">Portal Tip</p>
+            <p className="text-xs text-ink-muted mt-0.5">
               Select any student card to review attendance history, terminal marks, and downloadable report cards.
             </p>
           </div>
